@@ -1,0 +1,24 @@
+name: noteplan
+description: A new Flutter project.
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: '>=3.0.5 <4.0.0'
+
+dependencies:
+  firebase_auth: ^4.7.2
+  firebase_core: ^2.15.0
+  flutter:
+    sdk: flutter
+  google_sign_in: ^6.1.4
+
+dev_dependencies:
+  flutter_lints: ^2.0.0
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/logingoogle.png

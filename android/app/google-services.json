@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "572677323477",
+    "project_id": "noteplan-90992",
+    "storage_bucket": "noteplan-90992.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:572677323477:android:a792f017fd9f79577b405c",
+        "android_client_info": {
+          "package_name": "com.example.noteplan"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "572677323477-8ml9iit2jfrpo9h5m3v8k30hoe2gtp76.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.noteplan",
+            "certificate_hash": "22ce28ada0712fe3277451f4ae1da659b7e95515"
+          }
+        },
+        {
+          "client_id": "572677323477-qm086sdf5crbv0707j805qrmql7nevj2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDn51HkXjrJcy4JnUTP1G5VZ-j1h2jiRHs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "572677323477-qm086sdf5crbv0707j805qrmql7nevj2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
