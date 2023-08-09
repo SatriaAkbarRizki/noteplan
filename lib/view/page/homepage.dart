@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:noteplan/auth/authemail.dart';
 import 'package:noteplan/auth/authgoogle.dart';
+import 'package:noteplan/model/users.dart';
 import 'package:noteplan/presenter/presenter.dart';
+import 'package:noteplan/view/page/addnote.dart';
 import 'package:noteplan/view/page/loginpage.dart';
 
 class HomePage extends StatefulWidget {
@@ -17,19 +19,11 @@ class _HomePageState extends State<HomePage> {
   AuthGoogle authGoogle = AuthGoogle();
   AuthEmail authEmail = AuthEmail();
 
-  int? data;
-
   @override
   void initState() {
     // presetData();
     authGoogle.googleSignIn.signInSilently();
     super.initState();
-  }
-
-  void presetData() async {
-    presenter.parsingData().then((value) {
-      data = value!.length;
-    });
   }
 
   @override
@@ -39,9 +33,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    print('present: ${presenter.parsingData().then((value) {
-      print(value!.length);
-    })}');
     return Scaffold(
       appBar: AppBar(
         title: Text('HomePage'),
@@ -56,9 +47,41 @@ class _HomePageState extends State<HomePage> {
                   ));
             },
             icon: Icon(Icons.arrow_back)),
+        actions: [
+          IconButton(
+              onPressed: () async {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AddNote(),
+                    ));
+              },
+              icon: Icon(Icons.add))
+        ],
       ),
       body: Center(
-        child: Text('Welcome and uid you : ${widget.uid}'),
+        child: FutureBuilder<List<UserModel>?>(
+          future: presenter.readData(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator();
+            } else {
+              if (snapshot.hasData) {
+                return ListView.builder(
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      leading: Text('${snapshot.data![index].name}'),
+                      subtitle: Text('${snapshot.data![index].email}'),
+                    );
+                  },
+                );
+              } else {
+                return Text('Not Succes');
+              }
+            }
+          },
+        ),
       ),
     );
   }
