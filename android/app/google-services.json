@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "572677323477",
+    "firebase_url": "https://noteplan-90992-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "noteplan-90992",
     "storage_bucket": "noteplan-90992.appspot.com"
   },
@@ -22,7 +23,7 @@
           }
         },
         {
-          "client_id": "572677323477-qm086sdf5crbv0707j805qrmql7nevj2.apps.googleusercontent.com",
+          "client_id": "572677323477-5h41mb1c5vj2o3dv4co9rgheas8ungp9.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -35,7 +36,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "572677323477-qm086sdf5crbv0707j805qrmql7nevj2.apps.googleusercontent.com",
+              "client_id": "572677323477-5h41mb1c5vj2o3dv4co9rgheas8ungp9.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

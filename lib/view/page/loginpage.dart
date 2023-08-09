@@ -19,30 +19,22 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-  // @override
-  // void initState() {
-  //   authGoogle.googleSignIn.onCurrentUserChanged.listen((event) {
-  //     setState(() {
-  //       currentUser = event;
-  //     });
-  //   });
-
-  //   authGoogle.googleSignIn.signInSilently();
-
-  //   super.initState();
-  // }
-
   Future<String?> signEmail() async {
     if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
       final result =
           authEmail.signInEmail(emailController.text, passwordController.text);
-      String id = authEmail.user.uid.toString();
-      return id;
+
+      return result;
     } else {
       return null;
     }
   }
 
+  @override
+  void initState() {
+   authGoogle.googleSignIn.signInSilently();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     print('Status Account Google: ${currentUser}');
@@ -112,12 +104,17 @@ class _LoginPageState extends State<LoginPage> {
                 IconButton(
                     onPressed: () async {
                       final result = await authGoogle.SignInGoogle(context);
-                      if (result != null) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => HomePage(uid: result),
-                            ));
+                      try {
+                        if (result != null) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => HomePage(uid: result),
+                              ));
+                        }
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Not Succes')));
                       }
                     },
                     icon: Image.asset('assets/images/logingoogle.png'))

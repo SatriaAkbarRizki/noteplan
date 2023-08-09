@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 class AuthEmail {
   FirebaseAuth auth = FirebaseAuth.instance;
   get user => auth.currentUser;
-  Future signUpEmail(String email, String password) async {
+  Future<String?> signUpEmail(String email, String password) async {
     try {
       await auth.createUserWithEmailAndPassword(
           email: email, password: password);
@@ -12,9 +12,11 @@ class AuthEmail {
     }
   }
 
-  Future signInEmail(String email, String password) async {
+  Future<String?> signInEmail(String email, String password) async {
     try {
       await auth.signInWithEmailAndPassword(email: email, password: password);
+      String id = user.uid.toString();
+      return id;
     } on FirebaseAuthException catch (e) {
       print('Eror SignInEmail: ${e.toString()}');
     }
