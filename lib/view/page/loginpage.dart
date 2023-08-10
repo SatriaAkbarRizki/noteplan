@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:noteplan/auth/authemail.dart';
 import 'package:noteplan/auth/authgoogle.dart';
+import 'package:noteplan/view/page/homepage.dart';
 import 'package:noteplan/view/page/signup/up_email.dart';
 
 class LoginPage extends StatefulWidget {
@@ -42,6 +43,7 @@ class _LoginPageState extends State<LoginPage> {
   void dispose() {
     _focusNodeEmail.dispose();
     _focusNodePasword.dispose();
+    
     super.dispose();
   }
 
@@ -87,6 +89,7 @@ class _LoginPageState extends State<LoginPage> {
                     Padding(
                       padding: const EdgeInsets.all(25),
                       child: TextField(
+                        controller: emailController,
                         focusNode: _focusNodeEmail,
                         keyboardType: TextInputType.emailAddress,
                         style: TextStyle(
@@ -112,6 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                     Padding(
                       padding: const EdgeInsets.only(left: 25, right: 25),
                       child: TextField(
+                        controller: passwordController,
                         focusNode: _focusNodePasword,
                         obscureText: true,
                         keyboardType: TextInputType.visiblePassword,
@@ -152,7 +156,16 @@ class _LoginPageState extends State<LoginPage> {
                           height: 50,
                           width: 500,
                           child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () async {
+                                final uid = await signEmail();
+                                if (uid != null) {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              HomePage(uid: uid)));
+                                }
+                              },
                               style: const ButtonStyle(
                                   backgroundColor: MaterialStatePropertyAll(
                                       Color(0xffC7EBB3)),
@@ -199,7 +212,20 @@ class _LoginPageState extends State<LoginPage> {
                           height: 45,
                           width: 500,
                           child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () async {
+                                await authGoogle.SignInGoogle(context)
+                                    .then((value) {
+                                  if (value != null) {
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => HomePage(
+                                            uid: value,
+                                          ),
+                                        ));
+                                  }
+                                });
+                              },
                               style: const ButtonStyle(
                                   backgroundColor: MaterialStatePropertyAll(
                                       Color(0xffC7EBB3)),

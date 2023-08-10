@@ -65,6 +65,7 @@ class _SignUpEmailState extends State<SignUpEmail> {
                       padding: const EdgeInsets.all(25),
                       child: TextField(
                         focusNode: _focusNodeEmail,
+                        controller: emailController,
                         keyboardType: TextInputType.emailAddress,
                         style: TextStyle(
                             fontFamily: 'wixmadefor',
@@ -89,6 +90,7 @@ class _SignUpEmailState extends State<SignUpEmail> {
                     Padding(
                       padding: const EdgeInsets.only(left: 25, right: 25),
                       child: TextField(
+                        controller: passwordController,
                         focusNode: _focusNodePasword,
                         obscureText: true,
                         keyboardType: TextInputType.visiblePassword,
@@ -118,7 +120,31 @@ class _SignUpEmailState extends State<SignUpEmail> {
                           height: 50,
                           width: 500,
                           child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () async {
+                                final result = await authEmail.signUpEmail(
+                                    emailController.text,
+                                    passwordController.text);
+
+                                if (result != null) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content:
+                                              Text('Succes created email')));
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => LoginPage(),
+                                      ));
+                                } else {
+                                  if (emailController.text.isEmpty &&
+                                      passwordController.text.isEmpty) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                            content: Text(
+                                                'Please enter Email and Password')));
+                                  } 
+                                }
+                              },
                               style: const ButtonStyle(
                                   backgroundColor: MaterialStatePropertyAll(
                                       Color(0xffC7EBB3)),
@@ -186,62 +212,3 @@ class _SignUpEmailState extends State<SignUpEmail> {
     );
   }
 }
-
-
-// Padding(
-//         padding: const EdgeInsets.all(20),
-//         child: Column(
-//           children: [
-//             Container(
-//               margin: EdgeInsets.only(top: 180),
-//               child: TextField(
-//                 controller: emailController,
-//                 decoration: InputDecoration(
-//                     labelText: 'Email',
-//                     hintText: 'Email',
-//                     border: OutlineInputBorder()),
-//               ),
-//             ),
-//             Container(
-//               margin: EdgeInsets.only(top: 20),
-//               child: TextField(
-//                 controller: passwordController,
-//                 decoration: InputDecoration(
-//                     labelText: 'Password',
-//                     hintText: 'Password',
-//                     border: OutlineInputBorder()),
-//               ),
-//             ),
-//             Container(
-//               margin: EdgeInsets.only(top: 20),
-//               child: Row(
-//                 children: [
-//                   ElevatedButton(
-//                     onPressed: () async {
-//                       final result = await authEmail.signUpEmail(
-//                           emailController.text, passwordController.text);
-
-//                       if (result == null) {
-//                         ScaffoldMessenger.of(context).showSnackBar(
-//                             SnackBar(content: Text('Succes created email')));
-//                         Navigator.pop(context);
-//                       } else {
-//                         if (emailController.text.isEmpty &&
-//                             passwordController.text.isEmpty) {
-//                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-//                               content:
-//                                   Text('Please enter Email and Password')));
-//                         } else {
-//                           ScaffoldMessenger.of(context)
-//                               .showSnackBar(SnackBar(content: Text(result)));
-//                         }
-//                       }
-//                     },
-//                     child: Text('Sign Up'),
-//                   ),
-//                 ],
-//               ),
-//             ),
-//           ],
-//         ),
-//       )
