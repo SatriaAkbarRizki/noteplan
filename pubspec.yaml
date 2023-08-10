@@ -26,3 +26,14 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/logingoogle.png
+    - assets/logo/people.png
+    - assets/logo/password.png
+    - assets/logo/google.png
+
+  fonts:
+    - family: wixmadefor
+      fonts:
+        - asset: assets/fonts/wixmadefor.ttf
+    - family: ubuntu
+      fonts:
+        - asset : assets/fonts/ubuntu.ttf
