@@ -33,6 +33,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     authGoogle.googleSignIn.signInSilently();
+
     super.initState();
   }
 
@@ -256,7 +257,18 @@ class _LoginPageState extends State<LoginPage> {
                   ],
                 ),
               ),
-            )
+            ),
+            Positioned(
+                left: 140,
+                child: Image.asset(
+                  "assets/logo/notes.png",
+                )),
+            Positioned(
+                left: 20,
+                top: 670,
+                child: Image.asset(
+                  "assets/logo/notes2.png",
+                )),
           ],
         ),
       ),
