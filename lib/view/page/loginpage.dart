@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:noteplan/auth/authemail.dart';
 import 'package:noteplan/auth/authgoogle.dart';
+import 'package:noteplan/view/page/signup/up_email.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -60,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 Container(
                   height: 400,
-                  decoration: BoxDecoration(color: Colors.blue),
+                  decoration: BoxDecoration(color: Color(0xffADC4CE)),
                 ),
                 Expanded(
                   child: Container(
@@ -238,7 +239,11 @@ class _LoginPageState extends State<LoginPage> {
                                   alignment: PlaceholderAlignment.middle,
                                   child: TextButton(
                                     onPressed: () {
-                                      print('Button triggered.');
+                                      Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => SignUpEmail(),
+                                          ));
                                       // Tambahkan tindakan yang ingin Anda lakukan saat tombol ditekan di sini.
                                     },
                                     child: Text(
@@ -263,6 +268,26 @@ class _LoginPageState extends State<LoginPage> {
                 child: Image.asset(
                   "assets/logo/notes.png",
                 )),
+            Positioned(
+                left: 20,
+                top: 130,
+                child: RichText(
+                    text: TextSpan(children: [
+                  TextSpan(
+                      text: 'Sign in to your',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 30,
+                          fontFamily: 'poppins',
+                          fontWeight: FontWeight.w800)),
+                  TextSpan(
+                      text: '\nAccount',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 20,
+                        fontFamily: 'poppins',
+                      ))
+                ]))),
             Positioned(
                 left: 20,
                 top: 670,

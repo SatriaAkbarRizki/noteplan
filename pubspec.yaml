@@ -31,6 +31,7 @@ flutter:
     - assets/logo/google.png
     - assets/logo/notes.png
     - assets/logo/notes2.png
+    - assets/logo/back.png
 
   fonts:
     - family: wixmadefor
@@ -39,3 +40,6 @@ flutter:
     - family: ubuntu
       fonts:
         - asset : assets/fonts/ubuntu.ttf
+    - family: poppins
+      fonts:
+        - asset: assets/fonts/poppins.ttf
