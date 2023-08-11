@@ -1,6 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:noteplan/auth/authemail.dart';
-import 'package:noteplan/view/page/loginpage.dart';
+import 'package:noteplan/view/page/login/sign_in.dart';
 
 class SignUpEmail extends StatefulWidget {
   const SignUpEmail({super.key});
@@ -126,15 +127,22 @@ class _SignUpEmailState extends State<SignUpEmail> {
                                     passwordController.text);
 
                                 if (result != null) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          content:
-                                              Text('Succes created email')));
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => LoginPage(),
-                                      ));
+                                  print('Succes create account');
+                                  if (result == 'Succes') {
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => SignIn(),
+                                        ));
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                            content:
+                                                Text('Succes created email')));
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                            content: Text(result.toString())));
+                                  }
                                 } else {
                                   if (emailController.text.isEmpty &&
                                       passwordController.text.isEmpty) {
@@ -142,7 +150,7 @@ class _SignUpEmailState extends State<SignUpEmail> {
                                         SnackBar(
                                             content: Text(
                                                 'Please enter Email and Password')));
-                                  } 
+                                  }
                                 }
                               },
                               style: const ButtonStyle(
@@ -193,7 +201,7 @@ class _SignUpEmailState extends State<SignUpEmail> {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => LoginPage(),
+                            builder: (context) => SignIn(),
                           ));
                     },
                     icon: Image.asset(

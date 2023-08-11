@@ -3,8 +3,8 @@ import 'package:noteplan/auth/authemail.dart';
 import 'package:noteplan/auth/authgoogle.dart';
 import 'package:noteplan/model/users.dart';
 import 'package:noteplan/presenter/presenter.dart';
-import 'package:noteplan/view/page/addnote.dart';
-import 'package:noteplan/view/page/loginpage.dart';
+import 'package:noteplan/view/page/home/addnote.dart';
+import 'package:noteplan/view/page/login/sign_in.dart';
 
 class HomePage extends StatefulWidget {
   final String? uid;
@@ -21,7 +21,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    // presetData();
     authGoogle.googleSignIn.signInSilently();
     super.initState();
   }
@@ -43,7 +42,7 @@ class _HomePageState extends State<HomePage> {
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => LoginPage(),
+                    builder: (context) => SignIn(),
                   ));
             },
             icon: Icon(Icons.arrow_back)),

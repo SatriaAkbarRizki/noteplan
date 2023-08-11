@@ -1,18 +1,20 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:noteplan/auth/authemail.dart';
 import 'package:noteplan/auth/authgoogle.dart';
-import 'package:noteplan/view/page/homepage.dart';
-import 'package:noteplan/view/page/signup/up_email.dart';
+import 'package:noteplan/view/page/home/homepage.dart';
+import 'package:noteplan/view/page/login/reset_password.dart';
+import 'package:noteplan/view/page/login/sign_up.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class SignIn extends StatefulWidget {
+  const SignIn({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<SignIn> createState() => _SignInState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _SignInState extends State<SignIn> {
   AuthEmail authEmail = AuthEmail();
   AuthGoogle authGoogle = AuthGoogle();
   GoogleSignInAccount? currentUser;
@@ -43,7 +45,9 @@ class _LoginPageState extends State<LoginPage> {
   void dispose() {
     _focusNodeEmail.dispose();
     _focusNodePasword.dispose();
-    
+    authEmail.auth.signOut();
+    authGoogle.googleSignIn.disconnect();
+
     super.dispose();
   }
 
@@ -142,7 +146,13 @@ class _LoginPageState extends State<LoginPage> {
                       alignment: Alignment.centerRight,
                       padding: const EdgeInsets.only(top: 5, right: 15),
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ResetPass(),
+                              ));
+                        },
                         child: Text(
                           'Forget Password?',
                           style: TextStyle(
@@ -157,13 +167,34 @@ class _LoginPageState extends State<LoginPage> {
                           width: 500,
                           child: ElevatedButton(
                               onPressed: () async {
-                                final uid = await signEmail();
-                                if (uid != null) {
-                                  Navigator.push(
+                                try {
+                                  final uid = await signEmail();
+                                  if (uid != null) {
+                                    Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) =>
-                                              HomePage(uid: uid)));
+                                        builder: (context) =>
+                                            HomePage(uid: uid),
+                                      ),
+                                    );
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text(
+                                              'Email or password is incorrect.')),
+                                    );
+                                  }
+                                } on FirebaseAuthException catch (e) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content: Text(
+                                            e.message ?? 'An error occurred.')),
+                                  );
+                                } catch (e) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content: Text('An error occurred.')),
+                                  );
                                 }
                               },
                               style: const ButtonStyle(
@@ -326,87 +357,3 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
-
-// Padding(
-//         padding: const EdgeInsets.all(20),
-//         child: Column(
-//           children: [
-//             Container(
-//               margin: EdgeInsets.only(top: 180),
-//               child: TextField(
-//                 controller: emailController,
-//                 decoration: const InputDecoration(
-//                     labelText: 'Email',
-//                     hintText: 'Email',
-//                     border: OutlineInputBorder()),
-//               ),
-//             ),
-//             Container(
-//               margin: EdgeInsets.only(top: 20),
-//               child: TextField(
-//                 controller: passwordController,
-//                 decoration: const InputDecoration(
-//                     labelText: 'Password',
-//                     hintText: 'Password',
-//                     border: OutlineInputBorder()),
-//               ),
-//             ),
-//             Container(
-//               margin: EdgeInsets.only(top: 20),
-//               child: Row(
-//                 children: [
-//                   ElevatedButton(
-//                     onPressed: () async {
-//                       final uid = await signEmail();
-//                       if (uid != null) {
-//                         Navigator.push(
-//                             context,
-//                             MaterialPageRoute(
-//                                 builder: (context) => HomePage(uid: uid)));
-//                       }
-//                     },
-//                     child: Text('Sign In'),
-//                   ),
-//                   Container(
-//                     margin: EdgeInsets.only(left: 20),
-//                     child: ElevatedButton(
-//                       onPressed: () {
-//                         Navigator.push(
-//                             context,
-//                             MaterialPageRoute(
-//                                 builder: (context) => SignUpEmail()));
-//                       },
-//                       child: Text('Sign Up'),
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//             ),
-//             SizedBox(
-//               height: 50,
-//             ),
-//             Row(
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               children: [
-//                 IconButton(
-//                     onPressed: () async {
-//                       final result = await authGoogle.SignInGoogle(context);
-//                       try {
-//                         if (result != null) {
-//                           Navigator.push(
-//                               context,
-//                               MaterialPageRoute(
-//                                 builder: (context) => HomePage(uid: result),
-//                               ));
-//                         }
-//                       } catch (e) {
-//                         ScaffoldMessenger.of(context).showSnackBar(
-//                             SnackBar(content: Text('Not Succes')));
-//                       }
-//                     },
-//                     icon: Image.asset('assets/images/logingoogle.png'))
-//               ],
-//             )
-//           ],
-//         ),
-//       )

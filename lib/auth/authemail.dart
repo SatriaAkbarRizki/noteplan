@@ -5,10 +5,14 @@ class AuthEmail {
   get user => auth.currentUser;
   Future<String?> signUpEmail(String email, String password) async {
     try {
-      await auth.createUserWithEmailAndPassword(
+      final result = await auth.createUserWithEmailAndPassword(
           email: email, password: password);
+      final message = "Succes";
+      return message;
     } on FirebaseAuthException catch (e) {
-      print('Eror SignUp: ${e.toString()}');
+      final result = e.message.toString();
+      // print('Eror SignUp: ${e.message.toString()}');
+      return result;
     }
   }
 
@@ -20,9 +24,14 @@ class AuthEmail {
     } on FirebaseAuthException catch (e) {
       print('Eror SignInEmail: ${e.toString()}');
     }
+    return null;
   }
 
   Future signOutEmail() async {
     await auth.signOut();
+  }
+
+  Future resetPassword(String email) async {
+    await auth.sendPasswordResetEmail(email: email);
   }
 }
