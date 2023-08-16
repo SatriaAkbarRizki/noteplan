@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:noteplan/auth/authemail.dart';
 import 'package:noteplan/auth/authgoogle.dart';
 import 'package:noteplan/model/users.dart';
@@ -32,51 +33,111 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('HomePage'),
-        leading: IconButton(
-            onPressed: () async {
-              authEmail.auth.signOut();
-              authGoogle.googleSignIn.signOut();
-              Navigator.pushReplacementNamed(context, '/SignIn');
-            },
-            icon: Icon(Icons.arrow_back)),
-        actions: [
-          IconButton(
-              onPressed: () async {
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => AddNote(),
-                    ));
-              },
-              icon: Icon(Icons.add))
-        ],
+      body: Column(
+        children: [TittleBar(), ListNotes()],
       ),
-      body: Center(
-        child: FutureBuilder<List<UserModel>?>(
-          future: presenter.readData(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator();
-            } else {
-              if (snapshot.hasData) {
-                return ListView.builder(
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      leading: Text('${snapshot.data![index].name}'),
-                      subtitle: Text('${snapshot.data![index].email}'),
-                    );
-                  },
-                );
-              } else {
-                return Text('Not Succes');
-              }
-            }
-          },
+    );
+  }
+
+  Widget TittleBar() {
+    return Row(
+      children: [
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Text(
+              'your notes',
+              style: TextStyle(
+                fontSize: 30,
+                fontFamily: 'montserrat',
+                letterSpacing: 2,
+              ),
+            ),
+          ),
         ),
-      ),
+        Padding(
+          padding: EdgeInsets.all(20),
+          child: GestureDetector(
+            onTap: () {
+              print('Trigger Add');
+            },
+            child: Container(
+              height: 40,
+              width: 40,
+              decoration: BoxDecoration(
+                  border:
+                      Border.all(style: BorderStyle.solid, color: Colors.black),
+                  borderRadius: BorderRadius.circular(10)),
+              child: Icon(Icons.add),
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget ListNotes() {
+    return ListView.builder(
+      shrinkWrap: true,
+      scrollDirection: Axis.vertical,
+      itemCount: 1,
+      itemBuilder: (context, index) {
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(left: 30, right: 10, top: 20),
+              child: SizedBox(
+                height: 150,
+                width: 2,
+                child: VerticalDivider(
+                  thickness: 6,
+                  color: Color(0xffD8D9DA),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: FittedBox(
+                  fit: BoxFit.fitHeight,
+                  child: Container(
+                    width: 300,
+                    constraints: BoxConstraints(minHeight: 150),
+                    decoration: BoxDecoration(
+                      color: Color(0xffE19898),
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'sssafffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffaaaaaaaaaaa',
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Visibility(
+                              visible: true,
+                              child: Container(
+                                height: 200,
+                                width: 300,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(45),
+                                    color: Color(0xffFFE5AD)),
+                              )),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

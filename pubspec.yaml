@@ -44,3 +44,6 @@ flutter:
     - family: poppins
       fonts:
         - asset: assets/fonts/poppins.ttf
+    - family: montserrat
+      fonts:
+        - asset: assets/fonts/montserrat.ttf
