@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:noteplan/auth/authemail.dart';
 import 'package:noteplan/auth/authgoogle.dart';
-import 'package:noteplan/view/page/home/homepage.dart';
-import 'package:noteplan/view/page/login/reset_password.dart';
-import 'package:noteplan/view/page/login/sign_up.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -142,72 +139,8 @@ class _SignInState extends State<SignIn> {
                         ),
                       ),
                     ),
-                    Container(
-                      alignment: Alignment.centerRight,
-                      padding: const EdgeInsets.only(top: 5, right: 15),
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ResetPass(),
-                              ));
-                        },
-                        child: Text(
-                          'Forget Password?',
-                          style: TextStyle(
-                              fontFamily: 'ubuntu', color: Color(0xff68B984)),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                        padding: const EdgeInsets.only(left: 25, right: 25),
-                        child: SizedBox(
-                          height: 50,
-                          width: 500,
-                          child: ElevatedButton(
-                              onPressed: () async {
-                                try {
-                                  final uid = await signEmail();
-                                  if (uid != null) {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            HomePage(uid: uid),
-                                      ),
-                                    );
-                                  } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          content: Text(
-                                              'Email or password is incorrect.')),
-                                    );
-                                  }
-                                } on FirebaseAuthException catch (e) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text(
-                                            e.message ?? 'An error occurred.')),
-                                  );
-                                } catch (e) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text('An error occurred.')),
-                                  );
-                                }
-                              },
-                              style: const ButtonStyle(
-                                  backgroundColor: MaterialStatePropertyAll(
-                                      Color(0xffC7EBB3)),
-                                  foregroundColor:
-                                      MaterialStatePropertyAll(Colors.black)),
-                              child: Text(
-                                'Login',
-                                style: TextStyle(
-                                    fontSize: 15, fontFamily: 'ubuntu'),
-                              )),
-                        )),
+                    ResetPass(),
+                    ButtonLogin(),
                     Padding(
                         padding:
                             const EdgeInsets.only(left: 25, right: 25, top: 5),
@@ -237,85 +170,8 @@ class _SignInState extends State<SignIn> {
                             ],
                           ),
                         )),
-                    Padding(
-                        padding: const EdgeInsets.only(left: 25, right: 25),
-                        child: SizedBox(
-                          height: 45,
-                          width: 500,
-                          child: ElevatedButton(
-                              onPressed: () async {
-                                await authGoogle.SignInGoogle(context)
-                                    .then((value) {
-                                  if (value != null) {
-                                    Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => HomePage(
-                                            uid: value,
-                                          ),
-                                        ));
-                                  }
-                                });
-                              },
-                              style: const ButtonStyle(
-                                  backgroundColor: MaterialStatePropertyAll(
-                                      Color(0xffC7EBB3)),
-                                  foregroundColor:
-                                      MaterialStatePropertyAll(Colors.black)),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Image.asset(
-                                    "assets/logo/google.png",
-                                    height: 18,
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    'Google',
-                                    style: TextStyle(
-                                        fontSize: 15, fontFamily: 'ubuntu'),
-                                  ),
-                                ],
-                              )),
-                        )),
-                    Expanded(
-                      child: Container(
-                        alignment: Alignment.centerLeft,
-                        margin: const EdgeInsets.only(left: 25),
-                        child: Row(
-                          children: [
-                            RichText(
-                              text: TextSpan(children: [
-                                TextSpan(
-                                  text: 'Don’t Have Account?',
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                                WidgetSpan(
-                                  alignment: PlaceholderAlignment.middle,
-                                  child: TextButton(
-                                    onPressed: () {
-                                      Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => SignUpEmail(),
-                                          ));
-                                      // Tambahkan tindakan yang ingin Anda lakukan saat tombol ditekan di sini.
-                                    },
-                                    child: Text(
-                                      'Register',
-                                      style:
-                                          TextStyle(color: Color(0xff68B984)),
-                                    ),
-                                  ),
-                                ),
-                              ]),
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
+                    ButtonGoogle(),
+                    ButtonRegister()
                   ],
                 ),
               ),
@@ -352,6 +208,135 @@ class _SignInState extends State<SignIn> {
                   "assets/logo/notes2.png",
                 )),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget ButtonLogin() {
+    return Padding(
+        padding: const EdgeInsets.only(left: 25, right: 25),
+        child: SizedBox(
+          height: 50,
+          width: 500,
+          child: ElevatedButton(
+              onPressed: () async {
+                try {
+                  final uid = await signEmail();
+                  if (uid != null) {
+                    Navigator.pushReplacementNamed(
+                      context,
+                      '/Home',
+                      arguments: uid,
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                          content: Text('Email or password is incorrect.')),
+                    );
+                  }
+                } on FirebaseAuthException catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(e.message ?? 'An error occurred.')),
+                  );
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('An error occurred.')),
+                  );
+                }
+              },
+              style: const ButtonStyle(
+                  backgroundColor: MaterialStatePropertyAll(Color(0xffC7EBB3)),
+                  foregroundColor: MaterialStatePropertyAll(Colors.black)),
+              child: Text(
+                'Login',
+                style: TextStyle(fontSize: 15, fontFamily: 'ubuntu'),
+              )),
+        ));
+  }
+
+  Widget ButtonGoogle() {
+    return Padding(
+        padding: const EdgeInsets.only(left: 25, right: 25),
+        child: SizedBox(
+          height: 45,
+          width: 500,
+          child: ElevatedButton(
+              onPressed: () async {
+                await authGoogle.SignInGoogle(context).then((value) {
+                  if (value != null) {
+                    Navigator.pushReplacementNamed(context, '/Home',
+                        arguments: value);
+                  }
+                });
+              },
+              style: const ButtonStyle(
+                  backgroundColor: MaterialStatePropertyAll(Color(0xffC7EBB3)),
+                  foregroundColor: MaterialStatePropertyAll(Colors.black)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    "assets/logo/google.png",
+                    height: 18,
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    'Google',
+                    style: TextStyle(fontSize: 15, fontFamily: 'ubuntu'),
+                  ),
+                ],
+              )),
+        ));
+  }
+
+  Widget ButtonRegister() {
+    return Expanded(
+      child: Container(
+        alignment: Alignment.centerLeft,
+        margin: const EdgeInsets.only(left: 25),
+        child: Row(
+          children: [
+            RichText(
+              text: TextSpan(children: [
+                TextSpan(
+                  text: 'Don’t Have Account?',
+                  style: TextStyle(color: Colors.black),
+                ),
+                WidgetSpan(
+                  alignment: PlaceholderAlignment.middle,
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/SignUp');
+                      // Tambahkan tindakan yang ingin Anda lakukan saat tombol ditekan di sini.
+                    },
+                    child: Text(
+                      'Register',
+                      style: TextStyle(color: Color(0xff68B984)),
+                    ),
+                  ),
+                ),
+              ]),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget ResetPass() {
+    return Container(
+      alignment: Alignment.centerRight,
+      padding: const EdgeInsets.only(top: 5, right: 15),
+      child: TextButton(
+        onPressed: () {
+          Navigator.pushNamed(context, '/Reset');
+        },
+        child: Text(
+          'Forget Password?',
+          style: TextStyle(fontFamily: 'ubuntu', color: Color(0xff68B984)),
         ),
       ),
     );

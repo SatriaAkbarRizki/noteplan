@@ -4,7 +4,6 @@ import 'package:noteplan/auth/authgoogle.dart';
 import 'package:noteplan/model/users.dart';
 import 'package:noteplan/presenter/presenter.dart';
 import 'package:noteplan/view/page/home/addnote.dart';
-import 'package:noteplan/view/page/login/sign_in.dart';
 
 class HomePage extends StatefulWidget {
   final String? uid;
@@ -39,11 +38,7 @@ class _HomePageState extends State<HomePage> {
             onPressed: () async {
               authEmail.auth.signOut();
               authGoogle.googleSignIn.signOut();
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SignIn(),
-                  ));
+              Navigator.pushReplacementNamed(context, '/SignIn');
             },
             icon: Icon(Icons.arrow_back)),
         actions: [

@@ -113,7 +113,8 @@ class _ResetPassState extends State<ResetPass> {
                                   }
                                 } on FirebaseAuthException catch (e) {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text(e.message.toString())));
+                                      SnackBar(
+                                          content: Text(e.message.toString())));
                                 }
                               },
                               style: const ButtonStyle(
@@ -171,11 +172,7 @@ class _ResetPassState extends State<ResetPass> {
                 top: 20,
                 child: IconButton(
                     onPressed: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SignIn(),
-                          ));
+                      Navigator.pushReplacementNamed(context, '/SignIn');
                     },
                     icon: Image.asset(
                       "assets/logo/back.png",

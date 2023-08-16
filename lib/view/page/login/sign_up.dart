@@ -129,11 +129,10 @@ class _SignUpEmailState extends State<SignUpEmail> {
                                 if (result != null) {
                                   print('Succes create account');
                                   if (result == 'Succes') {
-                                    Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => SignIn(),
-                                        ));
+                                    Navigator.pushReplacementNamed(
+                                      context,
+                                      '/SignIn',
+                                    );
                                     ScaffoldMessenger.of(context).showSnackBar(
                                         SnackBar(
                                             content:
@@ -198,11 +197,7 @@ class _SignUpEmailState extends State<SignUpEmail> {
                 top: 20,
                 child: IconButton(
                     onPressed: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SignIn(),
-                          ));
+                      Navigator.pushReplacementNamed(context, '/SignIn');
                     },
                     icon: Image.asset(
                       "assets/logo/back.png",
