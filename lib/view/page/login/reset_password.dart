@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:noteplan/auth/authemail.dart';
-import 'package:noteplan/view/page/login/sign_in.dart';
 
 class ResetPass extends StatefulWidget {
   const ResetPass({super.key});
@@ -89,45 +88,7 @@ class _ResetPassState extends State<ResetPass> {
                         ),
                       ),
                     ),
-                    Padding(
-                        padding:
-                            const EdgeInsets.only(left: 25, right: 25, top: 10),
-                        child: SizedBox(
-                          height: 50,
-                          width: 500,
-                          child: ElevatedButton(
-                              onPressed: () async {
-                                try {
-                                  if (emailController.text.isNotEmpty) {
-                                    final result = await authEmail
-                                        .resetPassword(emailController.text);
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                            content: Text(
-                                                'Succes request reset password')));
-                                  } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                            content:
-                                                Text('Please enter email')));
-                                  }
-                                } on FirebaseAuthException catch (e) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          content: Text(e.message.toString())));
-                                }
-                              },
-                              style: const ButtonStyle(
-                                  backgroundColor: MaterialStatePropertyAll(
-                                      Color(0xffC7EBB3)),
-                                  foregroundColor:
-                                      MaterialStatePropertyAll(Colors.black)),
-                              child: Text(
-                                'Reset Password',
-                                style: TextStyle(
-                                    fontSize: 15, fontFamily: 'ubuntu'),
-                              )),
-                        )),
+                    ResetPass(),
                     Padding(
                       padding:
                           const EdgeInsets.only(left: 25, top: 50, right: 25),
@@ -188,5 +149,38 @@ class _ResetPassState extends State<ResetPass> {
         ),
       ),
     );
+  }
+
+  Widget ResetPass() {
+    return Padding(
+        padding: const EdgeInsets.only(left: 25, right: 25, top: 10),
+        child: SizedBox(
+          height: 50,
+          width: 500,
+          child: ElevatedButton(
+              onPressed: () async {
+                try {
+                  if (emailController.text.isNotEmpty) {
+                    final result =
+                        await authEmail.resetPassword(emailController.text);
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text('Succes request reset password')));
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Please enter email')));
+                  }
+                } on FirebaseAuthException catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(e.message.toString())));
+                }
+              },
+              style: const ButtonStyle(
+                  backgroundColor: MaterialStatePropertyAll(Color(0xffC7EBB3)),
+                  foregroundColor: MaterialStatePropertyAll(Colors.black)),
+              child: Text(
+                'Reset Password',
+                style: TextStyle(fontSize: 15, fontFamily: 'ubuntu'),
+              )),
+        ));
   }
 }
