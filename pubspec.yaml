@@ -7,6 +7,7 @@ environment:
   sdk: '>=3.0.5 <4.0.0'
 
 dependencies:
+  intl: ^0.18.1
   firebase_auth: ^4.7.2
   firebase_core: ^2.15.0
   flutter:
@@ -33,6 +34,7 @@ flutter:
     - assets/logo/notes2.png
     - assets/logo/back.png
     - assets/logo/reset.png
+    - assets/images/write.png
 
   fonts:
     - family: wixmadefor
