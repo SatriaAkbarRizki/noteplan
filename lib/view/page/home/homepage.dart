@@ -3,9 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:noteplan/auth/authemail.dart';
 import 'package:noteplan/auth/authgoogle.dart';
-import 'package:noteplan/model/users.dart';
 import 'package:noteplan/presenter/presenter.dart';
-import 'package:noteplan/view/page/home/addnote.dart';
 
 class HomePage extends StatefulWidget {
   final String? uid;
@@ -47,14 +45,15 @@ class _HomePageState extends State<HomePage> {
   Widget TittleBar() {
     return Row(
       children: [
-        Expanded(
+        const Expanded(
           child: Padding(
-            padding: const EdgeInsets.all(20),
+            padding: EdgeInsets.all(20),
             child: Text(
-              'your notes',
+              'Your Notes',
               style: TextStyle(
                 fontSize: 30,
-                fontFamily: 'montserrat',
+                fontFamily: 'poppins',
+                fontWeight: FontWeight.w500,
                 letterSpacing: 2,
               ),
             ),
@@ -83,26 +82,58 @@ class _HomePageState extends State<HomePage> {
 }
 
 class ListNotes extends StatelessWidget {
-  final date = DateFormat("h:mm a' '-' 'E'").format(DateTime.now());
+  final date = DateFormat("d/M/y").format(DateTime.now());
+  final time = DateFormat("h:mm a' '-' 'E'").format(DateTime.now());
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: ListView.builder(
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
-        itemCount: 10,
+        itemCount: 2,
         itemBuilder: (context, index) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                 margin: EdgeInsets.only(left: 30, top: 25),
-                child: Text(
-                  '${date}',
-                  style: TextStyle(
-                      fontFamily: 'wixmadefor',
-                      fontSize: 16,
-                      color: Color(0xffB9B4C7)),
+                child: GestureDetector(
+                  onTap: () {
+                    print('trigger button');
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        shape: BeveledRectangleBorder(
+                            borderRadius: BorderRadiusDirectional.circular(5)),
+                        backgroundColor: Color(0xffF8F0E5),
+                        title: Text(
+                          'Date note created',
+                          style: TextStyle(fontFamily: 'wixmadefor'),
+                        ),
+                        content: SingleChildScrollView(
+                            child: ListBody(
+                          children: [
+                            Text('Date: ${date}',
+                                style: TextStyle(
+                                  fontFamily: 'wixmadefor',
+                                )),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            Text('Time: ${time}',
+                                style: TextStyle(fontFamily: 'wixmadefor'))
+                          ],
+                        )),
+                      ),
+                    );
+                  },
+                  child: Text(
+                    '${time}',
+                    style: TextStyle(
+                        fontFamily: 'wixmadefor',
+                        fontSize: 16,
+                        color: Color.fromARGB(255, 166, 161, 179)),
+                  ),
                 ),
               ),
               Row(
@@ -138,6 +169,8 @@ class ListNotes extends StatelessWidget {
                               children: [
                                 Text(
                                   'sssafffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffaaaaaaaaaaa',
+                                  style: TextStyle(
+                                      fontFamily: 'wixmadefor', height: 2),
                                 ),
                                 SizedBox(
                                   height: 15,
@@ -165,6 +198,50 @@ class ListNotes extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+}
+
+class EmptyNote extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 40, right: 40, top: 150),
+              child: Image.asset("assets/images/thinking.png"),
+            ),
+            Positioned(
+                left: 230,
+                bottom: 240,
+                child: Image.asset(
+                  "assets/images/idea.png",
+                  height: 100,
+                )),
+          ],
+        ),
+        Container(
+            margin: EdgeInsets.only(top: 30),
+            child: RichText(
+                text: const TextSpan(
+                    text: "Notes is Empty, let's ",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontFamily: 'poppins',
+                        fontWeight: FontWeight.w200,
+                        fontSize: 18),
+                    children: [
+                  TextSpan(
+                      text: "Create",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'poppins',
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18))
+                ])))
+      ],
     );
   }
 }

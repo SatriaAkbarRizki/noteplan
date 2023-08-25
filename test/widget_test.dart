@@ -1,7 +1,9 @@
 import 'package:intl/intl.dart';
 
 void main() {
-  final date = DateFormat("h:mm a' '-' 'E'").format(DateTime.now());
-  print(date);
+  final time = DateFormat("h:mm a' '-' 'E'").format(DateTime.now());
+  print(time);
 
+  final date = DateFormat("d/M/y").format(DateTime.now());
+  print(date);
 }
