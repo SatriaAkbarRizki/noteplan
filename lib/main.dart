@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:noteplan/view/page/home/addnote.dart';
 import 'package:noteplan/view/page/home/homepage.dart';
 import 'package:noteplan/view/page/login/reset_password.dart';
 import 'package:noteplan/view/page/login/sign_in.dart';
@@ -27,7 +28,8 @@ class MainApp extends StatelessWidget {
         '/Home' : (context) => HomePage(uid: null),
         '/SignIn': (context) => SignIn(),
         '/SignUp': (context) => SignUpEmail(),
-        '/Reset' : (context) => ResetPass()
+        '/Reset' : (context) => ResetPass(),
+        '/AddNote' : (context) => AddNote()
       },
       debugShowCheckedModeBanner: false,
       home: SignIn(),

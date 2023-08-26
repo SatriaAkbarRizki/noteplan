@@ -36,6 +36,9 @@ flutter:
     - assets/logo/reset.png
     - assets/images/thinking.png
     - assets/images/idea.png
+    - assets/icons/bold.png
+    - assets/icons/italic.png
+    - assets/icons/image.png
 
   fonts:
     - family: wixmadefor

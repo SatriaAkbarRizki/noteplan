@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:noteplan/auth/authemail.dart';
 import 'package:noteplan/auth/authgoogle.dart';
+import 'package:noteplan/color/colors.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -64,12 +65,14 @@ class _SignInState extends State<SignIn> {
               children: [
                 Container(
                   height: 400,
-                  decoration: BoxDecoration(color: Color(0xffADC4CE)),
+                  decoration:
+                      BoxDecoration(color: MyColors.colorBackgroundLoginOne),
                 ),
                 Expanded(
                   child: Container(
                     height: 400,
-                    decoration: BoxDecoration(color: Color(0xffD9D9D9)),
+                    decoration:
+                        BoxDecoration(color: MyColors.colorBackgroundLogonTwo),
                   ),
                 ),
               ],
@@ -245,8 +248,9 @@ class _SignInState extends State<SignIn> {
                   );
                 }
               },
-              style: const ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll(Color(0xffC7EBB3)),
+              style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStatePropertyAll(MyColors.colorButtonLogin),
                   foregroundColor: MaterialStatePropertyAll(Colors.black)),
               child: Text(
                 'Login',
@@ -270,8 +274,9 @@ class _SignInState extends State<SignIn> {
                   }
                 });
               },
-              style: const ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll(Color(0xffC7EBB3)),
+              style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStatePropertyAll(MyColors.colorButtonLogin),
                   foregroundColor: MaterialStatePropertyAll(Colors.black)),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,

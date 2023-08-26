@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:noteplan/auth/authemail.dart';
+import 'package:noteplan/color/colors.dart';
 import 'package:noteplan/view/page/login/sign_in.dart';
 
 class SignUpEmail extends StatefulWidget {
@@ -39,12 +40,12 @@ class _SignUpEmailState extends State<SignUpEmail> {
               children: [
                 Container(
                   height: 400,
-                  decoration: BoxDecoration(color: Color(0xffADC4CE)),
+                  decoration: BoxDecoration(color: MyColors.colorBackgroundLoginOne),
                 ),
                 Expanded(
                   child: Container(
                     height: 400,
-                    decoration: BoxDecoration(color: Color(0xffD9D9D9)),
+                    decoration: BoxDecoration(color: MyColors.colorBackgroundLogonTwo),
                   ),
                 ),
               ],

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:noteplan/auth/authemail.dart';
 import 'package:noteplan/auth/authgoogle.dart';
+import 'package:noteplan/color/colors.dart';
 import 'package:noteplan/presenter/presenter.dart';
 
 class HomePage extends StatefulWidget {
@@ -32,7 +33,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffF8F0E5),
+      backgroundColor: MyColors.colorBackgroundHome,
       body: Column(
         children: [
           TittleBar(),
@@ -63,7 +64,7 @@ class _HomePageState extends State<HomePage> {
           padding: EdgeInsets.all(20),
           child: GestureDetector(
             onTap: () {
-              print('Trigger Add');
+              Navigator.pushNamed(context, '/AddNote');
             },
             child: Container(
               height: 40,

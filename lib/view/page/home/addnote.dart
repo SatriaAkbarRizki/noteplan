@@ -1,6 +1,6 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:noteplan/color/colors.dart';
 import 'package:noteplan/model/users.dart';
 import 'package:noteplan/presenter/presenter.dart';
 
@@ -13,9 +13,6 @@ class AddNote extends StatefulWidget {
 
 class _AddNoteState extends State<AddNote> {
   Presenter? presenter;
-  TextEditingController nameController = TextEditingController();
-  TextEditingController addressController = TextEditingController();
-
   @override
   void sendData(String name, String email, String profile_image) async {
     // Perabiki logic disini
@@ -27,43 +24,138 @@ class _AddNoteState extends State<AddNote> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(
-              onPressed: () async {
-                sendData(nameController.text, addressController.text,
-                    'example images 2');
-              },
-              icon: Icon(Icons.add))
-        ],
-      ),
+      backgroundColor: MyColors.colorBackgroundHome,
       body: Padding(
         padding: const EdgeInsets.all(20),
-        child: Column(
+        child: WriteNote(),
+      ),
+    );
+  }
+}
+
+class WriteNote extends StatelessWidget {
+  TextEditingController nameController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+
+  WriteNote({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      children: [
+        Column(
           children: [
             Container(
-              margin: EdgeInsets.only(top: 180),
-              child: TextField(
-                controller: nameController,
-                decoration: const InputDecoration(
-                    labelText: 'Email',
-                    hintText: 'Email',
-                    border: OutlineInputBorder()),
+              height: 550,
+              width: 350,
+              margin: EdgeInsets.only(top: 30),
+              decoration: BoxDecoration(
+                  border: Border.all(style: BorderStyle.solid),
+                  borderRadius: BorderRadius.circular(5)),
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: ListView(
+                  children: [
+                    TextField(
+                      keyboardType: TextInputType.multiline,
+                      controller: nameController,
+                      maxLines: null,
+                      decoration: InputDecoration.collapsed(
+                        hintText: "Let's Write Notes..",
+                      ),
+                    )
+                  ],
+                ),
               ),
+            ),
+            SizedBox(
+              height: 20,
             ),
             Container(
-              margin: EdgeInsets.only(top: 20),
-              child: TextField(
-                controller: addressController,
-                decoration: const InputDecoration(
-                    labelText: 'Password',
-                    hintText: 'Password',
-                    border: OutlineInputBorder()),
+              height: 50,
+              width: 350,
+              decoration: BoxDecoration(
+                  color: Colors.black, borderRadius: BorderRadius.circular(10)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    "assets/icons/bold.png",
+                    color: Colors.white,
+                    scale: 5,
+                  ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Image.asset(
+                    "assets/icons/italic.png",
+                    color: Colors.white,
+                    scale: 2.5,
+                  ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Image.asset(
+                    "assets/icons/image.png",
+                    color: Colors.white,
+                    scale: 2.5,
+                  )
+                ],
               ),
             ),
+            SizedBox(
+              height: 20,
+            ),
+            Row(
+              children: [
+                SizedBox(
+                  height: 50,
+                  width: 160,
+                  child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/Home');
+                      },
+                      child: Text('Cancel'),
+                      style: ButtonStyle(
+                          overlayColor:
+                              MaterialStatePropertyAll(MyColors.colorCancel),
+                          backgroundColor: MaterialStatePropertyAll(
+                              MyColors.colorBackgroundHome),
+                          foregroundColor:
+                              MaterialStatePropertyAll(Colors.black),
+                          shape:
+                              MaterialStatePropertyAll(BeveledRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            side: BorderSide(color: Colors.black),
+                          )))),
+                ),
+                SizedBox(
+                  width: 30,
+                ),
+                SizedBox(
+                  height: 50,
+                  width: 160,
+                  child: ElevatedButton(
+                      onPressed: () {},
+                      child: Text('Save'),
+                      style: ButtonStyle(
+                          overlayColor: MaterialStatePropertyAll(
+                              MyColors.colorButtonLogin),
+                          backgroundColor: MaterialStatePropertyAll(
+                              MyColors.colorButtonLogin),
+                          foregroundColor:
+                              MaterialStatePropertyAll(Colors.black),
+                          shape:
+                              MaterialStatePropertyAll(BeveledRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            side: BorderSide(color: Colors.black),
+                          )))),
+                )
+              ],
+            )
           ],
-        ),
-      ),
+        )
+      ],
     );
   }
 }
