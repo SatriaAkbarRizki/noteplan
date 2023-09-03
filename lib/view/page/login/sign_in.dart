@@ -35,7 +35,6 @@ class _SignInState extends State<SignIn> {
   @override
   void initState() {
     authGoogle.googleSignIn.signInSilently();
-
     super.initState();
   }
 
@@ -45,7 +44,6 @@ class _SignInState extends State<SignIn> {
     _focusNodePasword.dispose();
     authEmail.auth.signOut();
     authGoogle.googleSignIn.disconnect();
-
     super.dispose();
   }
 

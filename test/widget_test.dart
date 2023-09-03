@@ -1,9 +1,7 @@
-import 'package:intl/intl.dart';
-
 void main() {
-  final time = DateFormat("h:mm a' '-' 'E'").format(DateTime.now());
-  print(time);
+  String text = 'Makanan Indonesia Raya sangant populer';
+  String change = 'Hidup';
+  String newString = text.replaceAll('Makanan', 'Hidup');
+  print(newString);
 
-  final date = DateFormat("d/M/y").format(DateTime.now());
-  print(date);
 }
