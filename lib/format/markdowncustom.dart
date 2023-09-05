@@ -42,6 +42,8 @@ class CustomTextEditingController extends TextEditingController {
         formatText = match[0]!.replaceAll("-", " ");
       } else if (patternMached == r'```(.*?)```') {
         formatText = match[0]!.replaceAll("```", " ");
+      } else if (patternMached == r"-(.*?)\-") {
+        formatText = match[0]!.replaceAll("-", " ");
       } else {
         formatText = match[0];
       }

@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:noteplan/color/colors.dart';
 import 'package:noteplan/format/markdowncustom.dart';
 import 'package:noteplan/model/users.dart';
@@ -13,6 +17,7 @@ class AddNote extends StatefulWidget {
 }
 
 class _AddNoteState extends State<AddNote> {
+  XFile? _image;
   FocusNode focusCursos = FocusNode();
   final CustomTextEditingController textController =
       CustomTextEditingController({
@@ -30,7 +35,28 @@ class _AddNoteState extends State<AddNote> {
     ),
     r'\*(.*?)\*': const TextStyle(
       fontWeight: FontWeight.bold,
-    )
+    ),
+    r"-(.*?)\-": const TextStyle(color: Colors.red)
+  });
+
+  final CustomTextEditingController titleController =
+      CustomTextEditingController({
+    r"@.\w+": const TextStyle(
+      color: Colors.blue,
+    ),
+    r"#.\w+": const TextStyle(
+      color: Colors.blue,
+    ),
+    r'_(.*?)\_': const TextStyle(
+      fontStyle: FontStyle.italic,
+    ),
+    '~(.*?)~': const TextStyle(
+      decoration: TextDecoration.lineThrough,
+    ),
+    r'\*(.*?)\*': const TextStyle(
+      fontWeight: FontWeight.bold,
+    ),
+    r"-(.*?)\-": const TextStyle(color: Colors.red)
   });
   Presenter? presenter;
 
@@ -41,8 +67,157 @@ class _AddNoteState extends State<AddNote> {
 
   @override
   void dispose() {
+    focusCursos.dispose();
     textController.dispose();
     super.dispose();
+  }
+
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: MyColors.colorBackgroundHome,
+      body: GestureDetector(
+        onTap: () => focusCursos.unfocus(),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: ListView(
+            children: [WriteNotes(), ActionNote()],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget WriteNotes() {
+    return Column(
+      children: [
+        Container(
+          height: 550,
+          width: 350,
+          margin: EdgeInsets.only(top: 30),
+          decoration: BoxDecoration(
+              border: Border.all(style: BorderStyle.solid),
+              borderRadius: BorderRadius.circular(5)),
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: ListView(
+              children: [
+                TextField(
+                  onChanged: (value) {
+                    print(textController.text);
+                  },
+                  keyboardType: TextInputType.multiline,
+                  textAlign: TextAlign.left,
+                  controller: titleController,
+                  maxLines: null,
+                  decoration: InputDecoration.collapsed(
+                    hintText: "Whats title here..",
+                    hintStyle: TextStyle(fontSize: 25),
+                  ),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Visibility(
+                    visible: _image == null ? false : true,
+                    child: Container(
+                      width: 200,
+                      height: 200,
+                      decoration: BoxDecoration(
+                          border: Border.all(style: BorderStyle.solid),
+                          borderRadius: BorderRadius.circular(5)),
+                      child: Image.file(File(_image?.path ?? ''),
+                          fit: BoxFit.cover),
+                    )),
+                Visibility(
+                  visible: _image != null ? true : false,
+                  child: SizedBox(
+                    height: 15,
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () => focusCursos.requestFocus(),
+                  child: TextField(
+                    onChanged: (value) {
+                      print(textController.text);
+                    },
+                    focusNode: focusCursos,
+                    keyboardType: TextInputType.multiline,
+                    textAlign: TextAlign.left,
+                    controller: textController,
+                    maxLines: null,
+                    decoration: InputDecoration.collapsed(
+                      hintText: "Let's Write Notes..",
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        Container(
+          height: 50,
+          width: 350,
+          decoration: BoxDecoration(
+              color: Colors.black, borderRadius: BorderRadius.circular(10)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  print(
+                      textController.selection.textInside(textController.text));
+                  boldText();
+                },
+                child: Image.asset(
+                  "assets/icons/bold.png",
+                  color: Colors.white,
+                  scale: 5,
+                ),
+              ),
+              SizedBox(
+                width: 20,
+              ),
+              GestureDetector(
+                onTap: () => italicText(),
+                child: Image.asset(
+                  "assets/icons/italic.png",
+                  color: Colors.white,
+                  scale: 2.5,
+                ),
+              ),
+              SizedBox(
+                width: 20,
+              ),
+              GestureDetector(
+                onTap: () async {
+                  _image = await getImage();
+                  print('Source Image : ${_image!.path}');
+                  setState(() {});
+                  // var value = "-${_image!.path}-";
+                  // if (_image!.path.isNotEmpty) {
+                  //   setState(() {
+                  //     textController.text = textController.text.replaceRange(
+                  //         textController.text.length, null, ' ${value}');
+                  //   });
+                  // }
+                },
+                child: Image.asset(
+                  "assets/icons/image.png",
+                  color: Colors.white,
+                  scale: 2.5,
+                ),
+              )
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+      ],
+    );
   }
 
   void sendData(String name, String email, String profile_image) async {
@@ -97,99 +272,16 @@ class _AddNoteState extends State<AddNote> {
     }
   }
 
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: MyColors.colorBackgroundHome,
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: ListView(
-          children: [WriteNotes(), ActionNote()],
-        ),
-      ),
-    );
-  }
+  Future<XFile?> getImage() async {
+    try {
+      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (image == null) return null;
 
-  Widget WriteNotes() {
-    return Column(
-      children: [
-        Container(
-          height: 550,
-          width: 350,
-          margin: EdgeInsets.only(top: 30),
-          decoration: BoxDecoration(
-              border: Border.all(style: BorderStyle.solid),
-              borderRadius: BorderRadius.circular(5)),
-          child: Padding(
-            padding: const EdgeInsets.all(10),
-            child: ListView(
-              children: [
-                TextField(
-                  onChanged: (value) {
-                    print(textController.text);
-                  },
-                  autofocus: true,
-                  keyboardType: TextInputType.multiline,
-                  textAlign: TextAlign.left,
-                  controller: textController,
-                  maxLines: null,
-                  decoration: InputDecoration.collapsed(
-                    hintText: "Let's Write Notes..",
-                  ),
-                )
-              ],
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 20,
-        ),
-        Container(
-          height: 50,
-          width: 350,
-          decoration: BoxDecoration(
-              color: Colors.black, borderRadius: BorderRadius.circular(10)),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              GestureDetector(
-                onTap: () {
-                  print(
-                      textController.selection.textInside(textController.text));
-                  boldText();
-                },
-                child: Image.asset(
-                  "assets/icons/bold.png",
-                  color: Colors.white,
-                  scale: 5,
-                ),
-              ),
-              SizedBox(
-                width: 20,
-              ),
-              GestureDetector(
-                onTap: () => italicText(),
-                child: Image.asset(
-                  "assets/icons/italic.png",
-                  color: Colors.white,
-                  scale: 2.5,
-                ),
-              ),
-              SizedBox(
-                width: 20,
-              ),
-              Image.asset(
-                "assets/icons/image.png",
-                color: Colors.white,
-                scale: 2.5,
-              )
-            ],
-          ),
-        ),
-        SizedBox(
-          height: 20,
-        ),
-      ],
-    );
+      return image;
+    } on PlatformException catch (e) {
+      print(e.toString());
+      return null;
+    }
   }
 }
 

@@ -17,8 +17,8 @@ dependencies:
   firebase_database: ^10.2.4
   json_annotation: ^4.8.1
   json_serializable: ^6.7.1
-  typeset: ^1.0.1+1
   flutter_markdown: ^0.6.17+2
+  image_picker: ^1.0.1
 
 dev_dependencies:
   flutter_lints: ^2.0.0
