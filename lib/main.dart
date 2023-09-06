@@ -11,7 +11,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   SystemChrome.setEnabledSystemUIMode(
-    SystemUiMode.manual,
+    SystemUiMode.immersiveSticky,
     overlays: [SystemUiOverlay.bottom],
   );
 
@@ -29,7 +29,7 @@ class MainApp extends StatelessWidget {
         '/SignIn': (context) => SignIn(),
         '/SignUp': (context) => SignUpEmail(),
         '/Reset' : (context) => ResetPass(),
-        '/AddNote' : (context) => AddNote()
+        '/AddNote' : (context) => AddNote(uid: null)
       },
       debugShowCheckedModeBanner: false,
       home: SignIn(),
