@@ -32,18 +32,20 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)?.settings.arguments;
+    print('Get UID from SIgn In: ${args}');
     return Scaffold(
       backgroundColor: MyColors.colorBackgroundHome,
       body: Column(
         children: [
-          TittleBar(),
+          TittleBar(args),
           ListNotes(),
         ],
       ),
     );
   }
 
-  Widget TittleBar() {
+  Widget TittleBar(Object? args) {
     return Row(
       children: [
         const Expanded(
@@ -64,7 +66,7 @@ class _HomePageState extends State<HomePage> {
           padding: EdgeInsets.all(20),
           child: GestureDetector(
             onTap: () {
-              Navigator.pushNamed(context, '/AddNote');
+              Navigator.pushNamed(context, '/AddNote',arguments:  args );
             },
             child: Container(
               height: 40,

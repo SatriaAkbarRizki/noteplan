@@ -7,18 +7,19 @@ environment:
   sdk: '>=3.0.5 <4.0.0'
 
 dependencies:
-  intl: ^0.18.1
+  build_runner: ^2.4.6
   firebase_auth: ^4.7.2
   firebase_core: ^2.15.0
+  firebase_database: ^10.2.4
+  firebase_storage: ^11.2.6
   flutter:
     sdk: flutter
+  flutter_markdown: ^0.6.17+2
   google_sign_in: ^6.1.4
-  build_runner: ^2.4.6
-  firebase_database: ^10.2.4
+  image_picker: ^1.0.1
+  intl: ^0.18.1
   json_annotation: ^4.8.1
   json_serializable: ^6.7.1
-  flutter_markdown: ^0.6.17+2
-  image_picker: ^1.0.1
 
 dev_dependencies:
   flutter_lints: ^2.0.0
@@ -48,7 +49,7 @@ flutter:
         - asset: assets/fonts/wixmadefor.ttf
     - family: ubuntu
       fonts:
-        - asset : assets/fonts/ubuntu.ttf
+        - asset: assets/fonts/ubuntu.ttf
     - family: poppins
       fonts:
         - asset: assets/fonts/poppins.ttf

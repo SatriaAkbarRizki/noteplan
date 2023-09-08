@@ -267,6 +267,7 @@ class _SignInState extends State<SignIn> {
               onPressed: () async {
                 await authGoogle.SignInGoogle(context).then((value) {
                   if (value != null) {
+                    print('Have value?? : ${value}');
                     Navigator.pushReplacementNamed(context, '/Home',
                         arguments: value);
                   }

@@ -6,11 +6,14 @@ import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:noteplan/color/colors.dart';
 import 'package:noteplan/format/markdowncustom.dart';
-import 'package:noteplan/model/users.dart';
+import 'package:noteplan/model/note.dart';
+import 'package:noteplan/presenter/adding.dart';
+import 'package:noteplan/storage/cloudstorage.dart';
 import 'package:noteplan/presenter/presenter.dart';
 
 class AddNote extends StatefulWidget {
-  const AddNote({super.key});
+  String? uid;
+  AddNote({required this.uid, super.key});
 
   @override
   State<AddNote> createState() => _AddNoteState();
@@ -18,7 +21,9 @@ class AddNote extends StatefulWidget {
 
 class _AddNoteState extends State<AddNote> {
   XFile? _image;
-  FocusNode focusCursos = FocusNode();
+  Presenter? presenter;
+  static FocusNode focusTitle = FocusNode();
+  static FocusNode focusDesc = FocusNode();
   final CustomTextEditingController textController =
       CustomTextEditingController({
     r"@.\w+": const TextStyle(
@@ -58,7 +63,6 @@ class _AddNoteState extends State<AddNote> {
     ),
     r"-(.*?)\-": const TextStyle(color: Colors.red)
   });
-  Presenter? presenter;
 
   @override
   void initState() {
@@ -67,20 +71,32 @@ class _AddNoteState extends State<AddNote> {
 
   @override
   void dispose() {
-    focusCursos.dispose();
     textController.dispose();
     super.dispose();
   }
 
   Widget build(BuildContext context) {
+    final uid = ModalRoute.of(context)?.settings.arguments;
+    print('Have UID in addnote?? : ${uid}');
     return Scaffold(
       backgroundColor: MyColors.colorBackgroundHome,
       body: GestureDetector(
-        onTap: () => focusCursos.unfocus(),
+        onTap: () {
+          focusTitle.unfocus();
+          focusDesc.unfocus();
+        },
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: ListView(
-            children: [WriteNotes(), ActionNote()],
+            children: [
+              WriteNotes(),
+              ActionNote(
+                uid: uid,
+                title: titleController.text,
+                imagePath: _image,
+                description: textController.text,
+              )
+            ],
           ),
         ),
       ),
@@ -103,8 +119,9 @@ class _AddNoteState extends State<AddNote> {
               children: [
                 TextField(
                   onChanged: (value) {
-                    print(textController.text);
+                    setState(() {});
                   },
+                  textInputAction: TextInputAction.done,
                   keyboardType: TextInputType.multiline,
                   textAlign: TextAlign.left,
                   controller: titleController,
@@ -135,12 +152,12 @@ class _AddNoteState extends State<AddNote> {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () => focusCursos.requestFocus(),
+                  onTap: () => focusTitle.requestFocus(),
                   child: TextField(
                     onChanged: (value) {
-                      print(textController.text);
+                      setState(() {});
                     },
-                    focusNode: focusCursos,
+                    focusNode: focusDesc,
                     keyboardType: TextInputType.multiline,
                     textAlign: TextAlign.left,
                     controller: textController,
@@ -220,14 +237,6 @@ class _AddNoteState extends State<AddNote> {
     );
   }
 
-  void sendData(String name, String email, String profile_image) async {
-    // Perabiki logic disini
-    presenter = Presenter(uid: 'afsafsfas1216');
-    final user =
-        UserModel(name: name, email: email, profile_image: profile_image);
-    presenter!.saveData(user);
-  }
-
   void boldText() {
     var cursosPos = textController.selection;
     final fullText = textController.text;
@@ -286,10 +295,25 @@ class _AddNoteState extends State<AddNote> {
 }
 
 class ActionNote extends StatelessWidget {
-  ActionNote({super.key});
+  CloudStorage cloudStorage = CloudStorage();
+  AddingNote? addingNote;
+  final Object? uid;
+  final String? title;
+  final XFile? imagePath;
+  final String? description;
+  ActionNote(
+      {required this.uid,
+      required this.title,
+      required this.imagePath,
+      required this.description,
+      super.key});
+
+  File? imageFile;
+  String? linkImage;
 
   @override
   Widget build(BuildContext context) {
+    imageFile = File(imagePath?.path != null ? imagePath!.path : "");
     return Column(
       children: [
         Row(
@@ -320,7 +344,20 @@ class ActionNote extends StatelessWidget {
               height: 50,
               width: 160,
               child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    _AddNoteState.focusTitle.unfocus();
+                    _AddNoteState.focusDesc.unfocus();
+                    await cloudStorage.uploadImage(imageFile).then((value) {
+                      linkImage = value;
+                      print('result links??: ${value}');
+                    }).whenComplete(() async{
+                      await addingData(uid, title!, linkImage, description!)
+                        .whenComplete(
+                            () => Navigator.pushNamed(context, '/Home'));
+                    });
+
+                    
+                  },
                   child: Text('Save'),
                   style: ButtonStyle(
                       overlayColor:
@@ -337,5 +374,13 @@ class ActionNote extends StatelessWidget {
         )
       ],
     );
+  }
+
+  Future addingData(
+      Object? uid, String title, String? image, String description) async {
+    addingNote = AddingNote(uid: uid.toString());
+    final note =
+        NoteModel(title: title, image: image, description: description);
+    addingNote!.saveNote(note);
   }
 }

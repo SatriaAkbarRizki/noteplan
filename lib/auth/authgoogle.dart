@@ -20,7 +20,7 @@ class AuthGoogle {
 
       if (user != null) {
         String uid = user.uid; // UID dari user
-        print('UID: $uid');
+        print('UID Auth: $uid');
         return uid.toString();
       } else {
         print('User tidak berhasil login.');
@@ -28,7 +28,8 @@ class AuthGoogle {
       }
     } on FirebaseAuthException catch (e) {
       print('Error SignIn Google: ${e.toString()}');
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('data')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('data')));
     }
   }
 
