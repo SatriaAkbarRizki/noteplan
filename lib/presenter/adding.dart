@@ -20,29 +20,31 @@ class AddingNote {
     if (databaseReference.key == uid) {
       updateData(uid, noteModel);
     } else {
-
       return databaseReference.push().set(noteModel.toJson());
     }
   }
 
-  Future<List<NoteModel>?> readData(NoteModel noteModel) async {
+  Future<List<NoteModel>?> readData() async {
+    notemodelList = [];
+    notemodelList!.clear();
     final reference = await FirebaseDatabase.instance
         .ref()
         .child('Users/UID/${uid}/Note')
         .once();
 
-    final data = reference.snapshot.value as Map<String, dynamic>;
+    final data = reference.snapshot.value as Map<dynamic, dynamic>;
+    print('data in firebase: ${data.length}');
 
-    if (data.isEmpty) {
-      return null;
-    } else {
-      notemodelList = [];
-      final convertToModel = data.map((key, value) => MapEntry(key, value));
+    final convertToModel = data.map((key, value) => MapEntry(key, value));
 
-      NoteModel noteModel = NoteModel.fromJson(convertToModel);
+    data.forEach((key, value) {
+      NoteModel noteModel = NoteModel.fromMap(value);
+
       notemodelList!.add(noteModel);
-      return notemodelList;
-    }
+    });
+
+    print('length in notemodelist: ${notemodelList!.length}');
+    return notemodelList!;
   }
 
   Future updateData(String uid, NoteModel noteModel) async {

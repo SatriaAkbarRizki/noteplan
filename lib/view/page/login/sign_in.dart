@@ -4,6 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:noteplan/auth/authemail.dart';
 import 'package:noteplan/auth/authgoogle.dart';
 import 'package:noteplan/color/colors.dart';
+import 'package:noteplan/presenter/saveuid.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -13,6 +14,7 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
+  SaveUid _saveUid = SaveUid();
   AuthEmail authEmail = AuthEmail();
   AuthGoogle authGoogle = AuthGoogle();
   GoogleSignInAccount? currentUser;
@@ -267,6 +269,7 @@ class _SignInState extends State<SignIn> {
               onPressed: () async {
                 await authGoogle.SignInGoogle(context).then((value) {
                   if (value != null) {
+                     _saveUid.saveUid(value);
                     print('Have value?? : ${value}');
                     Navigator.pushReplacementNamed(context, '/Home',
                         arguments: value);

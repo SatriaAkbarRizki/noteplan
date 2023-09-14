@@ -1,10 +1,15 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:noteplan/auth/authemail.dart';
 import 'package:noteplan/auth/authgoogle.dart';
 import 'package:noteplan/color/colors.dart';
+import 'package:noteplan/model/note.dart';
+import 'package:noteplan/presenter/adding.dart';
 import 'package:noteplan/presenter/presenter.dart';
+import 'package:noteplan/presenter/saveuid.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   final String? uid;
@@ -16,30 +21,59 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   Presenter presenter = Presenter(uid: 'afsafsfas1213');
+  AddingNote addingNote = AddingNote(uid: SaveUid.uidUser.toString());
   AuthGoogle authGoogle = AuthGoogle();
   AuthEmail authEmail = AuthEmail();
+  var _listnote = <NoteModel>{};
+  List<NoteModel>? toListNote;
+  String? uidCurrent;
 
   @override
   void initState() {
+    parsingData();
     authGoogle.googleSignIn.signInSilently();
     super.initState();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
+  Future parsingData() async {
+    await addingNote.readData().then((value) {
+      _listnote = value!.toSet();
+      toListNote = _listnote.toList();
+    });
+
+    print('length listnote: ${_listnote?.length}');
   }
 
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)?.settings.arguments;
-    print('Get UID from SIgn In: ${args}');
+    setState(() {});
+    print('length listnote: ${_listnote.length}');
     return Scaffold(
       backgroundColor: MyColors.colorBackgroundHome,
       body: Column(
         children: [
-          TittleBar(args),
-          ListNotes(),
+          TittleBar(uidCurrent),
+          FutureBuilder<List<NoteModel>?>(
+            future: addingNote!.readData(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Expanded(
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              } else {
+                if (snapshot.hasData) {
+                  return ListNotes(toListNote!);
+                } else {
+                  return Expanded(
+                      child:
+                          Center(child: Text('Eror Found: ${snapshot.error}')));
+                }
+              }
+            },
+          )
         ],
       ),
     );
@@ -66,7 +100,8 @@ class _HomePageState extends State<HomePage> {
           padding: EdgeInsets.all(20),
           child: GestureDetector(
             onTap: () {
-              Navigator.pushNamed(context, '/AddNote',arguments:  args );
+              Navigator.pushNamed(context, '/AddNote',
+                  arguments: SaveUid.uidUser);
             },
             child: Container(
               height: 40,
@@ -82,18 +117,18 @@ class _HomePageState extends State<HomePage> {
       ],
     );
   }
-}
 
-class ListNotes extends StatelessWidget {
-  final date = DateFormat("d/M/y").format(DateTime.now());
-  final time = DateFormat("h:mm a' '-' 'E'").format(DateTime.now());
-  @override
-  Widget build(BuildContext context) {
+  Widget ListNotes(List<NoteModel> notemodelList) {
+    print('length: ${notemodelList.length}');
+
+    // Note Solve
+    final date = DateFormat("d/M/y").format(DateTime.now());
+    final time = DateFormat("h:mm a' '-' 'E'").format(DateTime.now());
     return Expanded(
       child: ListView.builder(
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
-        itemCount: 2,
+        itemCount: notemodelList!.length,
         itemBuilder: (context, index) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -116,14 +151,14 @@ class ListNotes extends StatelessWidget {
                         content: SingleChildScrollView(
                             child: ListBody(
                           children: [
-                            Text('Date: ${date}',
+                            Text('Date: ${notemodelList![index].date}',
                                 style: TextStyle(
                                   fontFamily: 'wixmadefor',
                                 )),
                             SizedBox(
                               height: 15,
                             ),
-                            Text('Time: ${time}',
+                            Text('Time: ${notemodelList![index].time}',
                                 style: TextStyle(fontFamily: 'wixmadefor'))
                           ],
                         )),
@@ -131,7 +166,7 @@ class ListNotes extends StatelessWidget {
                     );
                   },
                   child: Text(
-                    '${time}',
+                    '${notemodelList![index].date}',
                     style: TextStyle(
                         fontFamily: 'wixmadefor',
                         fontSize: 16,
@@ -171,21 +206,41 @@ class ListNotes extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'sssafffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffaaaaaaaaaaa',
+                                  '${notemodelList![index].title}',
                                   style: TextStyle(
-                                      fontFamily: 'wixmadefor', height: 2),
+                                      fontSize: 18,
+                                      fontFamily: 'wixmadefor',
+                                      height: 2,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                Text(
+                                  '${notemodelList![index].description}',
+                                  maxLines: 2,
+                                  style: TextStyle(
+                                    fontFamily: 'wixmadefor',
+                                    height: 2,
+                                  ),
                                 ),
                                 SizedBox(
                                   height: 15,
                                 ),
                                 Visibility(
-                                    visible: false,
+                                    visible: notemodelList![index].image != null
+                                        ? true
+                                        : false,
                                     child: Container(
                                       height: 200,
                                       width: 300,
                                       decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                              image: NetworkImage(
+                                                notemodelList![index]
+                                                    .image
+                                                    .toString(),
+                                              ),
+                                              fit: BoxFit.fill),
                                           borderRadius:
-                                              BorderRadius.circular(45),
+                                              BorderRadius.circular(15),
                                           color: Color(0xffFFE5AD)),
                                     )),
                               ],

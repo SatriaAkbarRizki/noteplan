@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "572677323477-uifig4dgk922v52blcmll3soki08s06b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.noteplan",
+            "certificate_hash": "8613efadfd835620b448e196fa5768a2730ed96e"
+          }
+        },
+        {
           "client_id": "572677323477-5h41mb1c5vj2o3dv4co9rgheas8ungp9.apps.googleusercontent.com",
           "client_type": 3
         }

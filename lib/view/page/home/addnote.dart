@@ -1,8 +1,7 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:noteplan/color/colors.dart';
 import 'package:noteplan/format/markdowncustom.dart';
@@ -295,6 +294,8 @@ class _AddNoteState extends State<AddNote> {
 }
 
 class ActionNote extends StatelessWidget {
+  final date = DateFormat("d/M/y").format(DateTime.now());
+  final time = DateFormat("h:mm a' '-' 'E'").format(DateTime.now());
   CloudStorage cloudStorage = CloudStorage();
   AddingNote? addingNote;
   final Object? uid;
@@ -350,13 +351,11 @@ class ActionNote extends StatelessWidget {
                     await cloudStorage.uploadImage(imageFile).then((value) {
                       linkImage = value;
                       print('result links??: ${value}');
-                    }).whenComplete(() async{
+                    }).whenComplete(() async {
                       await addingData(uid, title!, linkImage, description!)
-                        .whenComplete(
-                            () => Navigator.pushNamed(context, '/Home'));
+                          .whenComplete(
+                              () => Navigator.pushNamed(context, '/Home'));
                     });
-
-                    
                   },
                   child: Text('Save'),
                   style: ButtonStyle(
@@ -379,8 +378,12 @@ class ActionNote extends StatelessWidget {
   Future addingData(
       Object? uid, String title, String? image, String description) async {
     addingNote = AddingNote(uid: uid.toString());
-    final note =
-        NoteModel(title: title, image: image, description: description);
+    final note = NoteModel(
+        title: title,
+        image: image,
+        description: description,
+        date: date,
+        time: time);
     addingNote!.saveNote(note);
   }
 }
