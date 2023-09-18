@@ -174,83 +174,91 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 30, right: 10, top: 20),
-                    child: SizedBox(
-                      height: 150,
-                      width: 2,
-                      child: VerticalDivider(
-                        thickness: 6,
-                        color: Color(0xffD8D9DA),
+              GestureDetector(
+                onTap: () {
+                  print('tap list : ${index}');
+                  Navigator.pushNamed(context, '/ViewNote',
+                      arguments: notemodelList[index]);
+                },
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: 30, right: 10, top: 20),
+                      child: SizedBox(
+                        height: 150,
+                        width: 2,
+                        child: VerticalDivider(
+                          thickness: 6,
+                          color: Color(0xffD8D9DA),
+                        ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: FittedBox(
-                        fit: BoxFit.fitHeight,
-                        child: Container(
-                          width: 300,
-                          constraints: BoxConstraints(minHeight: 150),
-                          decoration: BoxDecoration(
-                            color: Color(0xffE19898),
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.all(20),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '${notemodelList![index].title}',
-                                  style: TextStyle(
-                                      fontSize: 18,
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: FittedBox(
+                          fit: BoxFit.fitHeight,
+                          child: Container(
+                            width: 300,
+                            constraints: BoxConstraints(minHeight: 150),
+                            decoration: BoxDecoration(
+                              color: Color(0xffE19898),
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '${notemodelList![index].title}',
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontFamily: 'wixmadefor',
+                                        height: 2,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                  Text(
+                                    '${notemodelList![index].description}',
+                                    maxLines: 2,
+                                    style: TextStyle(
                                       fontFamily: 'wixmadefor',
                                       height: 2,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                                Text(
-                                  '${notemodelList![index].description}',
-                                  maxLines: 2,
-                                  style: TextStyle(
-                                    fontFamily: 'wixmadefor',
-                                    height: 2,
+                                    ),
                                   ),
-                                ),
-                                SizedBox(
-                                  height: 15,
-                                ),
-                                Visibility(
-                                    visible: notemodelList![index].image != null
-                                        ? true
-                                        : false,
-                                    child: Container(
-                                      height: 200,
-                                      width: 300,
-                                      decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                              image: NetworkImage(
-                                                notemodelList![index]
-                                                    .image
-                                                    .toString(),
-                                              ),
-                                              fit: BoxFit.fill),
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                          color: Color(0xffFFE5AD)),
-                                    )),
-                              ],
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  Visibility(
+                                      visible:
+                                          notemodelList![index].image != null
+                                              ? true
+                                              : false,
+                                      child: Container(
+                                        height: 200,
+                                        width: 300,
+                                        decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                                image: NetworkImage(
+                                                  notemodelList![index]
+                                                      .image
+                                                      .toString(),
+                                                ),
+                                                fit: BoxFit.fill),
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            color: Color(0xffFFE5AD)),
+                                      )),
+                                ],
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           );

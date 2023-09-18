@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:noteplan/view/page/home/addnote.dart';
 import 'package:noteplan/view/page/home/homepage.dart';
+import 'package:noteplan/view/page/home/viewnote.dart';
 import 'package:noteplan/view/page/login/reset_password.dart';
 import 'package:noteplan/view/page/login/sign_in.dart';
 import 'package:noteplan/view/page/login/sign_up.dart';
@@ -25,11 +26,14 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
-        '/Home' : (context) => HomePage(uid: null),
+        '/Home': (context) => HomePage(uid: null),
         '/SignIn': (context) => SignIn(),
         '/SignUp': (context) => SignUpEmail(),
-        '/Reset' : (context) => ResetPass(),
-        '/AddNote' : (context) => AddNote(uid: null)
+        '/Reset': (context) => ResetPass(),
+        '/AddNote': (context) => AddNote(uid: null),
+        '/ViewNote': (context) => ViewNote(
+              currentNote: null,
+            )
       },
       debugShowCheckedModeBanner: false,
       home: SignIn(),

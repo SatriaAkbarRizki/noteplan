@@ -33,7 +33,7 @@ class AddingNote {
         .once();
 
     final data = reference.snapshot.value as Map<dynamic, dynamic>;
-    print('data in firebase: ${data.length}');
+    // print('data in firebase: ${data.length}');
 
     final convertToModel = data.map((key, value) => MapEntry(key, value));
 
@@ -43,7 +43,7 @@ class AddingNote {
       notemodelList!.add(noteModel);
     });
 
-    print('length in notemodelist: ${notemodelList!.length}');
+    // print('length in notemodelist: ${notemodelList!.length}');
     return notemodelList!;
   }
 
