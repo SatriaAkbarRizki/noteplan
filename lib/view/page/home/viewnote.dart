@@ -1,6 +1,9 @@
 import 'dart:io';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:noteplan/color/colors.dart';
@@ -21,6 +24,8 @@ class ViewNote extends StatefulWidget {
 
 class _ViewNoteState extends State<ViewNote> {
   XFile? _image;
+  String? keyData;
+  String? oldImageLink;
   Presenter? presenter;
   static FocusNode focusTitle = FocusNode();
   static FocusNode focusDesc = FocusNode();
@@ -66,21 +71,54 @@ class _ViewNoteState extends State<ViewNote> {
 
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      handleCurrentData();
+    });
     super.initState();
   }
 
   @override
   void dispose() {
     textController.dispose();
+    titleController.dispose();
     super.dispose();
   }
 
-  Widget build(BuildContext context) {
-    final uid = SaveUid.uidUser;
+  Future handleCurrentData() async {
     final current = ModalRoute.of(context)?.settings.arguments as NoteModel;
 
-    // print('Have UID in view?? : ${uid}');
-    // print('Have currentNote? : ${current.description}');
+    // print('see key current: ${current.keyData}');
+    // print('image name :${current.image}');
+    if (current.title.isNotEmpty) {
+      titleController.text = current.title;
+      textController.text = current.description;
+      keyData = current!.keyData;
+      oldImageLink = await current!.image;
+      final data = await convertUrl(current.image.toString())
+          .then((value) => _image = value);
+      setState(() {
+        data;
+      });
+      // print('Have image now?? ${_image?.path}');
+    }
+  }
+
+  Future<String> testingImage(String url) async {
+    // Not Solve
+    final storageRef = FirebaseStorage.instance.ref().child('images/');
+    // final listAll = await storageRef;
+    final gsReference = await FirebaseStorage.instance.refFromURL("${url}");
+    print(gsReference.fullPath);
+    return gsReference.toString();
+
+    // for (var index in listAll.items) {
+    //   print('Name File Storage:${index}');
+    // }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final uid = SaveUid.uidUser;
     return Scaffold(
       backgroundColor: MyColors.colorBackgroundHome,
       body: GestureDetector(
@@ -92,11 +130,13 @@ class _ViewNoteState extends State<ViewNote> {
           padding: const EdgeInsets.all(20),
           child: ListView(
             children: [
-              WriteNotes(current),
+              WriteNotes(),
               ActionNote(
+                keyData: keyData!,
                 uid: uid,
                 title: titleController.text,
-                imagePath: _image,
+                oldImageLink: oldImageLink,
+                imagePath: _image ?? null,
                 description: textController.text,
               )
             ],
@@ -106,11 +146,7 @@ class _ViewNoteState extends State<ViewNote> {
     );
   }
 
-  Widget WriteNotes(NoteModel? noteModel) {
-    if (noteModel != null) {
-      titleController.text = noteModel.title;
-      textController.text = noteModel.description;
-    }
+  Widget WriteNotes() {
     return Column(
       children: [
         Container(
@@ -220,13 +256,6 @@ class _ViewNoteState extends State<ViewNote> {
                   _image = await getImage();
                   print('Source Image : ${_image!.path}');
                   setState(() {});
-                  // var value = "-${_image!.path}-";
-                  // if (_image!.path.isNotEmpty) {
-                  //   setState(() {
-                  //     textController.text = textController.text.replaceRange(
-                  //         textController.text.length, null, ' ${value}');
-                  //   });
-                  // }
                 },
                 child: Image.asset(
                   "assets/icons/image.png",
@@ -291,6 +320,7 @@ class _ViewNoteState extends State<ViewNote> {
   Future<XFile?> getImage() async {
     try {
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+
       if (image == null) return null;
 
       return image;
@@ -300,11 +330,12 @@ class _ViewNoteState extends State<ViewNote> {
     }
   }
 
-  // Future<XFile?> convertUrl() async{
-  //   try{
-  //     final File = await DefaultCacheManager().
-  //   }
-  // }
+  Future<XFile?> convertUrl(String? url) async {
+    final file = await DefaultCacheManager().getSingleFile("${url!}");
+
+    XFile image = await XFile(file.path);
+    return image;
+  }
 }
 
 class ActionNote extends StatelessWidget {
@@ -312,13 +343,17 @@ class ActionNote extends StatelessWidget {
   final time = DateFormat("h:mm a' '-' 'E'").format(DateTime.now());
   CloudStorage cloudStorage = CloudStorage();
   AddingNote? addingNote;
+  final String keyData;
   final Object? uid;
   final String? title;
+  final String? oldImageLink;
   final XFile? imagePath;
   final String? description;
   ActionNote(
-      {required this.uid,
+      {required this.keyData,
+      required this.uid,
       required this.title,
+      required this.oldImageLink,
       required this.imagePath,
       required this.description,
       super.key});
@@ -328,6 +363,7 @@ class ActionNote extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // print('have image link?? :${oldImageLink!}');
     imageFile = File(imagePath?.path != null ? imagePath!.path : "");
     return Column(
       children: [
@@ -362,14 +398,34 @@ class ActionNote extends StatelessWidget {
                   onPressed: () async {
                     _ViewNoteState.focusTitle.unfocus();
                     _ViewNoteState.focusDesc.unfocus();
-                    await cloudStorage.uploadImage(imageFile).then((value) {
-                      linkImage = value;
-                      print('result links??: ${value}');
-                    }).whenComplete(() async {
-                      await addingData(uid, title!, linkImage, description!)
-                          .whenComplete(
-                              () => Navigator.pushNamed(context, '/Home'));
-                    });
+
+                    // Not Solve
+                    //
+                    if (oldImageLink!.isNotEmpty) {
+                      await cloudStorage
+                          .deleteImage(oldImageLink)
+                          .whenComplete(() async {
+                        await cloudStorage.uploadImage(imageFile).then((value) {
+                          linkImage = value;
+                          print('result links??: ${value}');
+                        }).whenComplete(() async {
+                          await updateData(
+                                  keyData, uid, title!, linkImage, description!)
+                              .whenComplete(
+                                  () => Navigator.pushNamed(context, '/Home'));
+                        });
+                      });
+                    } else {
+                      await cloudStorage.uploadImage(imageFile).then((value) {
+                        linkImage = value;
+                        print('result links??: ${value}');
+                      }).whenComplete(() async {
+                        await updateData(
+                                keyData, uid, title!, linkImage, description!)
+                            .whenComplete(
+                                () => Navigator.pushNamed(context, '/Home'));
+                      });
+                    }
                   },
                   child: Text('Save'),
                   style: ButtonStyle(
@@ -389,15 +445,16 @@ class ActionNote extends StatelessWidget {
     );
   }
 
-  Future addingData(
-      Object? uid, String title, String? image, String description) async {
+  Future updateData(String key, Object? uid, String title, String? image,
+      String description) async {
     addingNote = AddingNote(uid: uid.toString());
     final note = NoteModel(
+        keyData: key,
         title: title,
         image: image,
         description: description,
         date: date,
         time: time);
-    addingNote!.saveNote(note);
+    addingNote!.updateData(SaveUid.uidUser.toString(), note);
   }
 }

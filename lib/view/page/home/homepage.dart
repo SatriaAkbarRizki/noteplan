@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)?.settings.arguments;
     setState(() {});
-    print('length listnote: ${_listnote.length}');
+    // print('length listnote: ${_listnote.length}');
     return Scaffold(
       backgroundColor: MyColors.colorBackgroundHome,
       body: Column(
@@ -67,9 +67,7 @@ class _HomePageState extends State<HomePage> {
                 if (snapshot.hasData) {
                   return ListNotes(toListNote!);
                 } else {
-                  return Expanded(
-                      child:
-                          Center(child: Text('Eror Found: ${snapshot.error}')));
+                  return Expanded(child: EmptyNote());
                 }
               }
             },
@@ -119,7 +117,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget ListNotes(List<NoteModel> notemodelList) {
-    print('length: ${notemodelList.length}');
+    // print('length: ${notemodelList.length}');
 
     // Note Solve
     final date = DateFormat("d/M/y").format(DateTime.now());
@@ -175,10 +173,12 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               GestureDetector(
-                onTap: () {
-                  print('tap list : ${index}');
-                  Navigator.pushNamed(context, '/ViewNote',
-                      arguments: notemodelList[index]);
+                onTap: () async {
+                  setState(() {});
+                  if (notemodelList.isNotEmpty) {
+                    Navigator.pushNamed(context, '/ViewNote',
+                        arguments: notemodelList[index]);
+                  }
                 },
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -232,7 +232,7 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                   Visibility(
                                       visible:
-                                          notemodelList![index].image != null
+                                          notemodelList[index].image != null
                                               ? true
                                               : false,
                                       child: Container(

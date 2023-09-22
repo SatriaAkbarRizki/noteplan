@@ -4,6 +4,7 @@ import 'package:noteplan/model/note.dart';
 class AddingNote {
   final String uid;
   List<NoteModel>? notemodelList;
+  Map<String, NoteModel>? dataUser;
 
   AddingNote({required this.uid});
 
@@ -33,12 +34,12 @@ class AddingNote {
         .once();
 
     final data = reference.snapshot.value as Map<dynamic, dynamic>;
+
     // print('data in firebase: ${data.length}');
 
-    final convertToModel = data.map((key, value) => MapEntry(key, value));
-
+    // print('see data: ${data}');
     data.forEach((key, value) {
-      NoteModel noteModel = NoteModel.fromMap(value);
+      NoteModel noteModel = NoteModel.fromMap(key, value);
 
       notemodelList!.add(noteModel);
     });
@@ -51,7 +52,7 @@ class AddingNote {
     final note = noteModel.toJson();
 
     Map<String, dynamic> update = {};
-    update['Users/UID/${uid}/Note'] = note;
+    update['Users/UID/${uid}/Note/${noteModel.keyData}'] = note;
     return FirebaseDatabase.instance.ref().update(update);
   }
 }

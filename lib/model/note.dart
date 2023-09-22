@@ -4,6 +4,7 @@ part 'note.g.dart';
 
 @JsonSerializable()
 class NoteModel {
+  String keyData;
   String title;
   String? image;
   String description;
@@ -11,7 +12,8 @@ class NoteModel {
   String time;
 
   NoteModel(
-      {required this.title,
+      {required this.keyData,
+      required this.title,
       required this.date,
       required this.time,
       required this.image,
@@ -22,17 +24,9 @@ class NoteModel {
 
   Map<String, dynamic> toJson() => _$NoteModelToJson(this);
 
-  // factory NoteModel.fromMap(Map<dynamic, dynamic> map) {
-  //   return NoteModel(
-  //       title: map['title'],
-  //       date: map['date'],
-  //       time: map['time'],
-  //       image: map['image'] ?? null,
-  //       description: map['description']);
-  // }
-
-    factory NoteModel.fromMap(Map<dynamic, dynamic> map) {
+  factory NoteModel.fromMap(String id, Map<dynamic, dynamic> map) {
     return NoteModel(
+        keyData: id,
         title: map['title'] ?? '',
         date: map['date'] ?? '',
         time: map['time'] ?? '',

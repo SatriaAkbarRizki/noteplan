@@ -76,7 +76,7 @@ class _AddNoteState extends State<AddNote> {
 
   Widget build(BuildContext context) {
     final uid = ModalRoute.of(context)?.settings.arguments;
-    print('Have UID in addnote?? : ${uid}');
+    // print('Have UID in addnote?? : ${uid}');
     return Scaffold(
       backgroundColor: MyColors.colorBackgroundHome,
       body: GestureDetector(
@@ -379,6 +379,7 @@ class ActionNote extends StatelessWidget {
       Object? uid, String title, String? image, String description) async {
     addingNote = AddingNote(uid: uid.toString());
     final note = NoteModel(
+        keyData: '',
         title: title,
         image: image,
         description: description,

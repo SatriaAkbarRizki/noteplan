@@ -29,12 +29,17 @@ class CloudStorage {
 
   Future deleteImage(String? links) async {
     try {
-      final url = links.toString();
-      Uri uri = Uri.parse(url);
-      final path = uri.path;
-      String imageName = path.substring(path.lastIndexOf('/images%2F') + 9);
-      final deleteRef =
-          FirebaseStorage.instance.ref().child("images/${imageName}");
+      final gsReference = await FirebaseStorage.instance.refFromURL("${links}");
+      print('Name Image Old: ${gsReference.name}');
+      // final u
+      //rl = links.toString();
+      // Uri uri = Uri.parse(url);
+      // final path = uri.path;
+      // String imageName = path.substring(path.lastIndexOf('/images%2F') + 10);
+      // print('name image filter: ${imageName}');
+      final deleteRef = FirebaseStorage.instance
+          .ref()
+          .child("images/${gsReference.name}");
       await deleteRef.delete();
     } on FirebaseException catch (e) {
       print('Eror Delete: ${e.toString()}');
