@@ -232,9 +232,9 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                   Visibility(
                                       visible:
-                                          notemodelList[index].image != null
-                                              ? true
-                                              : false,
+                                          notemodelList?[index].image == null
+                                              ? false
+                                              : true,
                                       child: Container(
                                         height: 200,
                                         width: 300,
@@ -245,7 +245,7 @@ class _HomePageState extends State<HomePage> {
                                                       .image
                                                       .toString(),
                                                 ),
-                                                fit: BoxFit.fill),
+                                                fit: BoxFit.contain),
                                             borderRadius:
                                                 BorderRadius.circular(15),
                                             color: Color(0xffFFE5AD)),

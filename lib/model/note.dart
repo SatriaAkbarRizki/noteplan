@@ -30,7 +30,7 @@ class NoteModel {
         title: map['title'] ?? '',
         date: map['date'] ?? '',
         time: map['time'] ?? '',
-        image: map['image'] ?? '',
+        image: map['image'] ?? null,
         description: map['description'] ?? '');
   }
 }
