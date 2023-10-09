@@ -90,6 +90,7 @@ class _AddNoteState extends State<AddNote> {
             children: [
               WriteNotes(),
               ActionNote(
+                keyData: uid.toString(),
                 uid: uid,
                 title: titleController.text,
                 imagePath: _image,
@@ -298,12 +299,14 @@ class ActionNote extends StatelessWidget {
   final time = DateFormat("h:mm a' '-' 'E'").format(DateTime.now());
   CloudStorage cloudStorage = CloudStorage();
   AddingNote? addingNote;
+  final String? keyData;
   final Object? uid;
   final String? title;
   final XFile? imagePath;
   final String? description;
   ActionNote(
-      {required this.uid,
+      {required this.keyData,
+      required this.uid,
       required this.title,
       required this.imagePath,
       required this.description,
@@ -352,7 +355,7 @@ class ActionNote extends StatelessWidget {
                       linkImage = value;
                       print('result links??: ${value}');
                     }).whenComplete(() async {
-                      await addingData(uid, title!, linkImage, description!)
+                      await addingData(keyData.toString() ,uid, title!, linkImage, description!)
                           .whenComplete(
                               () => Navigator.pushNamed(context, '/Home'));
                     });
@@ -375,11 +378,11 @@ class ActionNote extends StatelessWidget {
     );
   }
 
-  Future addingData(
-      Object? uid, String title, String? image, String description) async {
+  Future addingData(String keyData, Object? uid, String title, String? image,
+      String description) async {
     addingNote = AddingNote(uid: uid.toString());
     final note = NoteModel(
-        keyData: '',
+        keyData: keyData,
         title: title,
         image: image,
         description: description,

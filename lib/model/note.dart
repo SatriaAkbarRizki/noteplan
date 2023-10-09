@@ -26,7 +26,7 @@ class NoteModel {
 
   factory NoteModel.fromMap(String id, Map<dynamic, dynamic> map) {
     return NoteModel(
-        keyData: id,
+        keyData: map['id'],
         title: map['title'] ?? '',
         date: map['date'] ?? '',
         time: map['time'] ?? '',

@@ -38,10 +38,13 @@ class _HomePageState extends State<HomePage> {
   Future parsingData() async {
     await addingNote.readData().then((value) {
       _listnote = value!.toSet();
-      toListNote = _listnote.toList();
+    }).whenComplete(() {
+      setState(() {
+        toListNote = _listnote.toList();
+      });
     });
 
-    print('length listnote: ${_listnote?.length}');
+    print('length toListNote: ${toListNote?.length}');
   }
 
   @override
@@ -55,7 +58,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           TittleBar(uidCurrent),
           FutureBuilder<List<NoteModel>?>(
-            future: addingNote!.readData(),
+            future: addingNote.readData(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Expanded(
@@ -65,7 +68,7 @@ class _HomePageState extends State<HomePage> {
                 );
               } else {
                 if (snapshot.hasData) {
-                  return ListNotes(toListNote!);
+                  return ListNotes(toListNote);
                 } else {
                   return Expanded(child: EmptyNote());
                 }
@@ -116,7 +119,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget ListNotes(List<NoteModel> notemodelList) {
+  Widget ListNotes(List<NoteModel>? notemodelList) {
     // print('length: ${notemodelList.length}');
 
     // Note Solve
@@ -174,11 +177,14 @@ class _HomePageState extends State<HomePage> {
               ),
               GestureDetector(
                 onTap: () async {
-                  setState(() {});
-                  if (notemodelList.isNotEmpty) {
-                    Navigator.pushNamed(context, '/ViewNote',
-                        arguments: notemodelList[index]);
-                  }
+                  Navigator.pushNamed(context, '/ViewNote',
+                      arguments: notemodelList[index]);
+
+                  // if (notemodelList[index].image == null ||
+                  //     notemodelList[index].image != null) {
+                  //   Navigator.pushNamed(context, '/ViewNote',
+                  //       arguments: notemodelList[index]);
+                  // }
                 },
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -241,11 +247,11 @@ class _HomePageState extends State<HomePage> {
                                         decoration: BoxDecoration(
                                             image: DecorationImage(
                                                 image: NetworkImage(
-                                                  notemodelList![index]
+                                                  notemodelList[index]
                                                       .image
                                                       .toString(),
                                                 ),
-                                                fit: BoxFit.contain),
+                                                fit: BoxFit.fitHeight),
                                             borderRadius:
                                                 BorderRadius.circular(15),
                                             color: Color(0xffFFE5AD)),

@@ -41,7 +41,7 @@ class Presenter {
       UserModel userModel =
           UserModel.fromMap(convertedData); // Perlu diperbarui
 
-      dataprofile!.add(userModel);
+      dataprofile?.add(userModel);
       return dataprofile;
     }
   }

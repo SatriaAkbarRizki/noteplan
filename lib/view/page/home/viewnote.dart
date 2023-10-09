@@ -1,6 +1,5 @@
 import 'dart:io';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -92,33 +91,28 @@ class _ViewNoteState extends State<ViewNote> {
     if (current.title.isNotEmpty) {
       titleController.text = current.title;
       textController.text = current.description;
-      keyData = current!.keyData;
-      oldImageLink = await current!.image;
-      final data = await convertUrl(current.image.toString())
-          .then((value) => _image = value);
-      setState(() {
-        data;
-      });
+      keyData = current?.keyData;
+      oldImageLink = await current.image;
+      if (current.image!.isNotEmpty) {
+        final data = await convertUrl(current.image.toString())
+            .then((value) => _image = value);
+        setState(() {
+          data;
+        });
+      }else{
+        setState(() {
+          _image = null;
+        });
+      }
+
       // print('Have image now?? ${_image?.path}');
     }
-  }
-
-  Future<String> testingImage(String url) async {
-    // Not Solve
-    final storageRef = FirebaseStorage.instance.ref().child('images/');
-    // final listAll = await storageRef;
-    final gsReference = await FirebaseStorage.instance.refFromURL("${url}");
-    print(gsReference.fullPath);
-    return gsReference.toString();
-
-    // for (var index in listAll.items) {
-    //   print('Name File Storage:${index}');
-    // }
   }
 
   @override
   Widget build(BuildContext context) {
     final uid = SaveUid.uidUser;
+    print('Uid in View Page: ${uid}');
     return Scaffold(
       backgroundColor: MyColors.colorBackgroundHome,
       body: GestureDetector(
@@ -132,7 +126,7 @@ class _ViewNoteState extends State<ViewNote> {
             children: [
               WriteNotes(),
               ActionNote(
-                keyData: keyData!,
+                keyData: keyData,
                 uid: uid,
                 title: titleController.text,
                 oldImageLink: oldImageLink,
@@ -343,7 +337,7 @@ class ActionNote extends StatelessWidget {
   final time = DateFormat("h:mm a' '-' 'E'").format(DateTime.now());
   CloudStorage cloudStorage = CloudStorage();
   AddingNote? addingNote;
-  final String keyData;
+  final String? keyData;
   final Object? uid;
   final String? title;
   final String? oldImageLink;
@@ -398,8 +392,6 @@ class ActionNote extends StatelessWidget {
                   onPressed: () async {
                     _ViewNoteState.focusTitle.unfocus();
                     _ViewNoteState.focusDesc.unfocus();
-
-                    // Not Solve
                     //
                     if (oldImageLink!.isNotEmpty) {
                       await cloudStorage
@@ -410,7 +402,7 @@ class ActionNote extends StatelessWidget {
                           print('result links??: ${value}');
                         }).whenComplete(() async {
                           await updateData(
-                                  keyData, uid, title!, linkImage, description!)
+                                  keyData!, uid, title!, linkImage, description!)
                               .whenComplete(
                                   () => Navigator.pushNamed(context, '/Home'));
                         });
@@ -421,7 +413,7 @@ class ActionNote extends StatelessWidget {
                         print('result links??: ${value}');
                       }).whenComplete(() async {
                         await updateData(
-                                keyData, uid, title!, linkImage, description!)
+                                keyData!, uid, title!, linkImage, description!)
                             .whenComplete(
                                 () => Navigator.pushNamed(context, '/Home'));
                       });
