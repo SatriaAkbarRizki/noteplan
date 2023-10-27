@@ -1,4 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/material.dart';
 import 'package:noteplan/model/note.dart';
 
 class AddingNote {
@@ -35,9 +36,6 @@ class AddingNote {
 
     final data = reference.snapshot.value as Map<dynamic, dynamic>;
 
-    // print('data in firebase: ${data.length}');
-
-    // print('see data: ${data}');
     data.forEach((key, value) {
       NoteModel noteModel = NoteModel.fromMap(key, value);
 

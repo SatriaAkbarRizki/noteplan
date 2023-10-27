@@ -36,10 +36,9 @@ class Presenter {
     } else {
       dataprofile = [];
       final convertedData =
-          data.map((key, value) => MapEntry(key.toString(), value));
+           data.map((key, value) => MapEntry(key.toString(), value));
 
-      UserModel userModel =
-          UserModel.fromMap(convertedData); // Perlu diperbarui
+      UserModel userModel = UserModel.fromMap(convertedData);
 
       dataprofile?.add(userModel);
       return dataprofile;
@@ -48,7 +47,6 @@ class Presenter {
 
   Future updateData(String uid, UserModel userModel) async {
     final user = userModel.toJson();
-
 
     Map<String, dynamic> update = {};
     update['Users/${uid}'] = user;

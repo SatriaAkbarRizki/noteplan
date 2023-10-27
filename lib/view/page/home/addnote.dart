@@ -76,7 +76,7 @@ class _AddNoteState extends State<AddNote> {
 
   Widget build(BuildContext context) {
     final uid = ModalRoute.of(context)?.settings.arguments;
-    // print('Have UID in addnote?? : ${uid}');
+    // debugdebugPrint('Have UID in addnote?? : ${uid}');
     return Scaffold(
       backgroundColor: MyColors.colorBackgroundHome,
       body: GestureDetector(
@@ -184,7 +184,7 @@ class _AddNoteState extends State<AddNote> {
             children: [
               GestureDetector(
                 onTap: () {
-                  print(
+                  debugPrint(
                       textController.selection.textInside(textController.text));
                   boldText();
                 },
@@ -211,7 +211,7 @@ class _AddNoteState extends State<AddNote> {
               GestureDetector(
                 onTap: () async {
                   _image = await getImage();
-                  print('Source Image : ${_image!.path}');
+                  debugPrint('Source Image : ${_image!.path}');
                   setState(() {});
                   // var value = "-${_image!.path}-";
                   // if (_image!.path.isNotEmpty) {
@@ -288,7 +288,7 @@ class _AddNoteState extends State<AddNote> {
 
       return image;
     } on PlatformException catch (e) {
-      print(e.toString());
+      debugPrint(e.toString());
       return null;
     }
   }
@@ -318,6 +318,7 @@ class ActionNote extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     imageFile = File(imagePath?.path != null ? imagePath!.path : "");
+
     return Column(
       children: [
         Row(
@@ -353,9 +354,10 @@ class ActionNote extends StatelessWidget {
                     _AddNoteState.focusDesc.unfocus();
                     await cloudStorage.uploadImage(imageFile).then((value) {
                       linkImage = value;
-                      print('result links??: ${value}');
+                      debugPrint('result links??: ${value}');
                     }).whenComplete(() async {
-                      await addingData(keyData.toString() ,uid, title!, linkImage, description!)
+                      await addingData(keyData.toString(), uid, title!,
+                              linkImage, description!)
                           .whenComplete(
                               () => Navigator.pushNamed(context, '/Home'));
                     });

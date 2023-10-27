@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:noteplan/auth/authemail.dart';
 import 'package:noteplan/auth/authgoogle.dart';
 import 'package:noteplan/color/colors.dart';
+import 'package:noteplan/main.dart';
 import 'package:noteplan/model/note.dart';
 import 'package:noteplan/presenter/adding.dart';
 import 'package:noteplan/presenter/presenter.dart';
@@ -20,8 +21,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Presenter presenter = Presenter(uid: 'afsafsfas1213');
-  AddingNote addingNote = AddingNote(uid: SaveUid.uidUser.toString());
+  AddingNote addingNote = AddingNote(uid: MainState.currentUid.toString());
   AuthGoogle authGoogle = AuthGoogle();
   AuthEmail authEmail = AuthEmail();
   var _listnote = <NoteModel>{};
@@ -30,27 +30,34 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    signInCheck();
     parsingData();
-    authGoogle.googleSignIn.signInSilently();
     super.initState();
   }
 
+  Future signInCheck() async {
+    if (!await authGoogle.googleSignIn.isSignedIn()) {
+      authGoogle.googleSignIn.signInSilently();
+    }
+  }
+
   Future parsingData() async {
-    await addingNote.readData().then((value) {
-      _listnote = value!.toSet();
+    await addingNote.readData().then((value) async {
+      _listnote = await value!.toSet();
     }).whenComplete(() {
       setState(() {
         toListNote = _listnote.toList();
       });
     });
 
-    print('length toListNote: ${toListNote?.length}');
+    // print('length toListNote: ${toListNote?.length}');
   }
 
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)?.settings.arguments;
     setState(() {});
+    debugPrint('args value: ${args}');
     // print('length listnote: ${_listnote.length}');
     return Scaffold(
       backgroundColor: MyColors.colorBackgroundHome,
@@ -102,7 +109,7 @@ class _HomePageState extends State<HomePage> {
           child: GestureDetector(
             onTap: () {
               Navigator.pushNamed(context, '/AddNote',
-                  arguments: SaveUid.uidUser);
+                  arguments: MainState.currentUid);
             },
             child: Container(
               height: 40,
@@ -120,9 +127,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget ListNotes(List<NoteModel>? notemodelList) {
-    // print('length: ${notemodelList.length}');
-
-    // Note Solve
     final date = DateFormat("d/M/y").format(DateTime.now());
     final time = DateFormat("h:mm a' '-' 'E'").format(DateTime.now());
     return Expanded(
@@ -138,7 +142,7 @@ class _HomePageState extends State<HomePage> {
                 margin: EdgeInsets.only(left: 30, top: 25),
                 child: GestureDetector(
                   onTap: () {
-                    print('trigger button');
+                    debugPrint('trigger button');
                     showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
@@ -179,12 +183,6 @@ class _HomePageState extends State<HomePage> {
                 onTap: () async {
                   Navigator.pushNamed(context, '/ViewNote',
                       arguments: notemodelList[index]);
-
-                  // if (notemodelList[index].image == null ||
-                  //     notemodelList[index].image != null) {
-                  //   Navigator.pushNamed(context, '/ViewNote',
-                  //       arguments: notemodelList[index]);
-                  // }
                 },
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,

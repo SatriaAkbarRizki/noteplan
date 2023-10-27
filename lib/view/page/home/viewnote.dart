@@ -7,9 +7,9 @@ import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:noteplan/color/colors.dart';
 import 'package:noteplan/format/markdowncustom.dart';
+import 'package:noteplan/main.dart';
 import 'package:noteplan/model/note.dart';
 import 'package:noteplan/presenter/adding.dart';
-import 'package:noteplan/presenter/saveuid.dart';
 import 'package:noteplan/storage/cloudstorage.dart';
 import 'package:noteplan/presenter/presenter.dart';
 
@@ -93,26 +93,24 @@ class _ViewNoteState extends State<ViewNote> {
       textController.text = current.description;
       keyData = current?.keyData;
       oldImageLink = await current.image;
-      if (current.image!.isNotEmpty) {
+      if (current.image != null) {
         final data = await convertUrl(current.image.toString())
             .then((value) => _image = value);
         setState(() {
           data;
         });
-      }else{
+      } else {
         setState(() {
           _image = null;
         });
       }
-
-      // print('Have image now?? ${_image?.path}');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final uid = SaveUid.uidUser;
-    print('Uid in View Page: ${uid}');
+    final uid = MainState.currentUid;
+    debugPrint('Uid in View Page: ${uid}');
     return Scaffold(
       backgroundColor: MyColors.colorBackgroundHome,
       body: GestureDetector(
@@ -221,7 +219,7 @@ class _ViewNoteState extends State<ViewNote> {
             children: [
               GestureDetector(
                 onTap: () {
-                  print(
+                  debugPrint(
                       textController.selection.textInside(textController.text));
                   boldText();
                 },
@@ -248,7 +246,7 @@ class _ViewNoteState extends State<ViewNote> {
               GestureDetector(
                 onTap: () async {
                   _image = await getImage();
-                  print('Source Image : ${_image!.path}');
+                  debugPrint('Source Image : ${_image!.path}');
                   setState(() {});
                 },
                 child: Image.asset(
@@ -319,7 +317,7 @@ class _ViewNoteState extends State<ViewNote> {
 
       return image;
     } on PlatformException catch (e) {
-      print(e.toString());
+      debugPrint(e.toString());
       return null;
     }
   }
@@ -393,31 +391,14 @@ class ActionNote extends StatelessWidget {
                     _ViewNoteState.focusTitle.unfocus();
                     _ViewNoteState.focusDesc.unfocus();
                     //
-                    if (oldImageLink!.isNotEmpty) {
-                      await cloudStorage
-                          .deleteImage(oldImageLink)
-                          .whenComplete(() async {
-                        await cloudStorage.uploadImage(imageFile).then((value) {
-                          linkImage = value;
-                          print('result links??: ${value}');
-                        }).whenComplete(() async {
-                          await updateData(
-                                  keyData!, uid, title!, linkImage, description!)
-                              .whenComplete(
-                                  () => Navigator.pushNamed(context, '/Home'));
-                        });
-                      });
-                    } else {
-                      await cloudStorage.uploadImage(imageFile).then((value) {
-                        linkImage = value;
-                        print('result links??: ${value}');
-                      }).whenComplete(() async {
-                        await updateData(
-                                keyData!, uid, title!, linkImage, description!)
-                            .whenComplete(
-                                () => Navigator.pushNamed(context, '/Home'));
-                      });
-                    }
+                    await cloudStorage.uploadImage(imageFile).then((value) {
+                      linkImage = value;
+                    }).whenComplete(() async {
+                      await updateData(
+                              keyData!, uid, title!, linkImage, description!)
+                          .whenComplete(
+                              () => Navigator.pushNamed(context, '/Home'));
+                    });
                   },
                   child: Text('Save'),
                   style: ButtonStyle(
@@ -447,6 +428,6 @@ class ActionNote extends StatelessWidget {
         description: description,
         date: date,
         time: time);
-    addingNote!.updateData(SaveUid.uidUser.toString(), note);
+    addingNote!.updateData(MainState.currentUid.toString(), note);
   }
 }

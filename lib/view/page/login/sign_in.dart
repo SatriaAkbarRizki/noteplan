@@ -4,6 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:noteplan/auth/authemail.dart';
 import 'package:noteplan/auth/authgoogle.dart';
 import 'package:noteplan/color/colors.dart';
+import 'package:noteplan/main.dart';
 import 'package:noteplan/presenter/saveuid.dart';
 
 class SignIn extends StatefulWidget {
@@ -36,8 +37,14 @@ class _SignInState extends State<SignIn> {
 
   @override
   void initState() {
-    authGoogle.googleSignIn.signInSilently();
+    signInCheck();
     super.initState();
+  }
+
+  Future signInCheck() async {
+    if (!await authGoogle.googleSignIn.isSignedIn()) {
+      authGoogle.googleSignIn.signInSilently();
+    }
   }
 
   @override
@@ -227,6 +234,8 @@ class _SignInState extends State<SignIn> {
                 try {
                   final uid = await signEmail();
                   if (uid != null) {
+                    await _saveUid.saveUid(uid);
+                    // print('uid email : ${SaveUid.currentUID}');
                     Navigator.pushReplacementNamed(
                       context,
                       '/Home',
@@ -267,14 +276,20 @@ class _SignInState extends State<SignIn> {
           width: 500,
           child: ElevatedButton(
               onPressed: () async {
-                await authGoogle.SignInGoogle(context).then((value) {
-                  if (value != null) {
-                     _saveUid.saveUid(value);
-                    print('Have value?? : ${value}');
-                    Navigator.pushReplacementNamed(context, '/Home',
-                        arguments: value);
-                  }
-                });
+                if (MainState.currentUid != null) {
+                  Navigator.pushReplacementNamed(context, '/Home',
+                      arguments: MainState.currentUid);
+                  ;
+                } else {
+                  await authGoogle.SignInGoogle(context).then((value) async {
+                    if (value != null) {
+                      await _saveUid.saveUid(value);
+                      // print('Have value?? : ${value}');
+                      Navigator.pushReplacementNamed(context, '/Home',
+                          arguments: value);
+                    }
+                  });
+                }
               },
               style: ButtonStyle(
                   backgroundColor:

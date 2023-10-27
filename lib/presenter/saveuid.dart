@@ -1,11 +1,18 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SaveUid {
-  static String? uidUser;
+  static String? currentUID;
 
   Future saveUid(String uid) async {
     final SharedPreferences pref = await SharedPreferences.getInstance();
-    pref.setString('uid', uid);
-    uidUser = pref.getString('uid');
+    await pref
+        .setString('uid', uid)
+        .whenComplete(() => currentUID = pref.getString('uid'));
+  }
+
+  Future<String?> getUid() async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+
+    return pref.getString('uid');
   }
 }
