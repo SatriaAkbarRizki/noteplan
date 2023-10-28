@@ -15,12 +15,10 @@ class _ResetPassState extends State<ResetPass> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   final FocusNode _focusNodeEmail = FocusNode();
-  final FocusNode _focusNodePasword = FocusNode();
 
   @override
   void dispose() {
     _focusNodeEmail.dispose();
-    _focusNodePasword.dispose();
     super.dispose();
   }
 
@@ -31,7 +29,6 @@ class _ResetPassState extends State<ResetPass> {
       body: GestureDetector(
         onTap: () {
           _focusNodeEmail.unfocus();
-          _focusNodePasword.unfocus();
         },
         child: Stack(
           children: [
@@ -39,28 +36,30 @@ class _ResetPassState extends State<ResetPass> {
               children: [
                 Container(
                   height: 400,
-                  decoration: BoxDecoration(color: MyColors.colorBackgroundLoginOne),
+                  decoration:
+                      BoxDecoration(color: MyColors.colorBackgroundLoginOne),
                 ),
                 Expanded(
                   child: Container(
                     height: 400,
-                    decoration: BoxDecoration(color: MyColors.colorBackgroundLogonTwo),
+                    decoration:
+                        BoxDecoration(color: MyColors.colorBackgroundLogonTwo),
                   ),
                 ),
               ],
             ),
             Center(
               child: Container(
-                margin: EdgeInsets.only(top: 150),
+                margin: const EdgeInsets.only(top: 150),
                 width: 350,
                 height: 300,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                     color: Color(0xffF5F3F3),
                     borderRadius: BorderRadius.all(Radius.circular(25))),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     Padding(
@@ -69,12 +68,12 @@ class _ResetPassState extends State<ResetPass> {
                         focusNode: _focusNodeEmail,
                         controller: emailController,
                         keyboardType: TextInputType.emailAddress,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontFamily: 'wixmadefor',
                             fontWeight: FontWeight.w600),
                         decoration: InputDecoration(
                           labelText: 'Email',
-                          labelStyle: TextStyle(
+                          labelStyle: const TextStyle(
                               fontFamily: 'wixmadefor',
                               fontWeight: FontWeight.w500),
                           prefixIcon: Image.asset(
@@ -82,17 +81,21 @@ class _ResetPassState extends State<ResetPass> {
                             scale: 1.8,
                           ),
                           prefixIconColor: Colors.black,
-                          border: OutlineInputBorder(
+                          border: const OutlineInputBorder(
                             borderRadius:
                                 BorderRadius.only(topLeft: Radius.circular(20)),
                           ),
                         ),
                       ),
                     ),
-                    ResetPass(),
-                    Padding(
+                    ButtonResetPass(
+                      authEmail: authEmail,
+                      emailController: emailController,
+                      passwordController: passwordController,
+                    ),
+                    const Padding(
                       padding:
-                          const EdgeInsets.only(left: 25, top: 50, right: 25),
+                          EdgeInsets.only(left: 25, top: 50, right: 25),
                       child: Text(
                         '*this will reset your password aaccount, please be careful!',
                         style: TextStyle(color: Color(0xffFF8989)),
@@ -110,10 +113,10 @@ class _ResetPassState extends State<ResetPass> {
                   scale: 1.2,
                 )),
             Positioned(
-                left: 20,
+                left: 30,
                 top: 150,
                 child: RichText(
-                    text: TextSpan(children: [
+                    text: const TextSpan(children: [
                   TextSpan(
                       text: 'Reset in to your',
                       style: TextStyle(
@@ -151,8 +154,21 @@ class _ResetPassState extends State<ResetPass> {
       ),
     );
   }
+}
 
-  Widget ResetPass() {
+class ButtonResetPass extends StatelessWidget {
+  final AuthEmail authEmail;
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+
+  ButtonResetPass(
+      {required this.authEmail,
+      required this.emailController,
+      required this.passwordController,
+      super.key});
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
         padding: const EdgeInsets.only(left: 25, right: 25, top: 10),
         child: SizedBox(
@@ -164,11 +180,13 @@ class _ResetPassState extends State<ResetPass> {
                   if (emailController.text.isNotEmpty) {
                     final result =
                         await authEmail.resetPassword(emailController.text);
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         content: Text('Succes request reset password')));
+                    Future.delayed(const Duration(milliseconds: 2000)).whenComplete(
+                        () => Navigator.pushNamed(context, '/SignIn'));
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Please enter email')));
+                        const SnackBar(content: Text('Please enter email')));
                   }
                 } on FirebaseAuthException catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -178,7 +196,7 @@ class _ResetPassState extends State<ResetPass> {
               style: const ButtonStyle(
                   backgroundColor: MaterialStatePropertyAll(Color(0xffC7EBB3)),
                   foregroundColor: MaterialStatePropertyAll(Colors.black)),
-              child: Text(
+              child: const Text(
                 'Reset Password',
                 style: TextStyle(fontSize: 15, fontFamily: 'ubuntu'),
               )),

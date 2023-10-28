@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -15,7 +17,7 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
-  SaveUid _saveUid = SaveUid();
+  final SaveUid _saveUid = SaveUid();
   AuthEmail authEmail = AuthEmail();
   AuthGoogle authGoogle = AuthGoogle();
   GoogleSignInAccount? currentUser;
@@ -58,7 +60,7 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
-    print('Status Account Google: ${currentUser}');
+    debugPrint('Status Account Google: $currentUser');
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: GestureDetector(
@@ -86,15 +88,15 @@ class _SignInState extends State<SignIn> {
             ),
             Center(
               child: Container(
-                margin: EdgeInsets.only(top: 150),
+                margin: const EdgeInsets.only(top: 150),
                 width: 350,
                 height: 450,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                     color: Color(0xffF5F3F3),
                     borderRadius: BorderRadius.all(Radius.circular(25))),
                 child: Column(
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     Padding(
@@ -103,12 +105,12 @@ class _SignInState extends State<SignIn> {
                         controller: emailController,
                         focusNode: _focusNodeEmail,
                         keyboardType: TextInputType.emailAddress,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontFamily: 'wixmadefor',
                             fontWeight: FontWeight.w600),
                         decoration: InputDecoration(
                           labelText: 'Email',
-                          labelStyle: TextStyle(
+                          labelStyle: const TextStyle(
                               fontFamily: 'wixmadefor',
                               fontWeight: FontWeight.w500),
                           prefixIcon: Image.asset(
@@ -116,7 +118,7 @@ class _SignInState extends State<SignIn> {
                             scale: 1.8,
                           ),
                           prefixIconColor: Colors.black,
-                          border: OutlineInputBorder(
+                          border: const OutlineInputBorder(
                             borderRadius:
                                 BorderRadius.only(topLeft: Radius.circular(20)),
                           ),
@@ -130,27 +132,27 @@ class _SignInState extends State<SignIn> {
                         focusNode: _focusNodePasword,
                         obscureText: true,
                         keyboardType: TextInputType.visiblePassword,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontFamily: 'wixmadefor',
                             fontWeight: FontWeight.w600),
                         decoration: InputDecoration(
                           labelText: 'Password',
-                          labelStyle: TextStyle(
+                          labelStyle: const TextStyle(
                               fontFamily: 'wixmadefor',
                               fontWeight: FontWeight.w500),
                           prefixIcon: Image.asset(
                             "assets/logo/password.png",
                             scale: 1.8,
                           ),
-                          border: OutlineInputBorder(
+                          border: const OutlineInputBorder(
                             borderRadius: BorderRadius.only(
                                 bottomRight: Radius.circular(20)),
                           ),
                         ),
                       ),
                     ),
-                    ResetPass(),
-                    ButtonLogin(),
+                    const ButtonResset(),
+                    buttonLogin(),
                     Padding(
                         padding:
                             const EdgeInsets.only(left: 25, right: 25, top: 5),
@@ -159,19 +161,20 @@ class _SignInState extends State<SignIn> {
                           width: 500,
                           child: Row(
                             children: [
-                              SizedBox(
+                              const SizedBox(
                                 width: 100,
                                 child: Divider(
                                   color: Colors.black,
                                 ),
                               ),
                               Container(
-                                  margin: EdgeInsets.only(left: 10, right: 10),
-                                  child: Text(
+                                  margin: const EdgeInsets.only(
+                                      left: 10, right: 10),
+                                  child: const Text(
                                     'Or login with',
                                     style: TextStyle(fontFamily: 'ubuntu'),
                                   )),
-                              SizedBox(
+                              const SizedBox(
                                 width: 90,
                                 child: Divider(
                                   color: Colors.black,
@@ -180,8 +183,8 @@ class _SignInState extends State<SignIn> {
                             ],
                           ),
                         )),
-                    ButtonGoogle(),
-                    ButtonRegister()
+                    buttonGoogle(),
+                    const ButtonRegister()
                   ],
                 ),
               ),
@@ -192,10 +195,10 @@ class _SignInState extends State<SignIn> {
                   "assets/logo/notes.png",
                 )),
             Positioned(
-                left: 20,
+                left: 30,
                 top: 130,
                 child: RichText(
-                    text: TextSpan(children: [
+                    text: const TextSpan(children: [
                   TextSpan(
                       text: 'Sign in to your',
                       style: TextStyle(
@@ -223,7 +226,7 @@ class _SignInState extends State<SignIn> {
     );
   }
 
-  Widget ButtonLogin() {
+  Widget buttonLogin() {
     return Padding(
         padding: const EdgeInsets.only(left: 25, right: 25),
         child: SizedBox(
@@ -243,7 +246,7 @@ class _SignInState extends State<SignIn> {
                     );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
+                      const SnackBar(
                           content: Text('Email or password is incorrect.')),
                     );
                   }
@@ -253,22 +256,23 @@ class _SignInState extends State<SignIn> {
                   );
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('An error occurred.')),
+                    const SnackBar(content: Text('An error occurred.')),
                   );
                 }
               },
               style: ButtonStyle(
                   backgroundColor:
                       MaterialStatePropertyAll(MyColors.colorButtonLogin),
-                  foregroundColor: MaterialStatePropertyAll(Colors.black)),
-              child: Text(
+                  foregroundColor:
+                      const MaterialStatePropertyAll(Colors.black)),
+              child: const Text(
                 'Login',
                 style: TextStyle(fontSize: 15, fontFamily: 'ubuntu'),
               )),
         ));
   }
 
-  Widget ButtonGoogle() {
+  Widget buttonGoogle() {
     return Padding(
         padding: const EdgeInsets.only(left: 25, right: 25),
         child: SizedBox(
@@ -279,7 +283,6 @@ class _SignInState extends State<SignIn> {
                 if (MainState.currentUid != null) {
                   Navigator.pushReplacementNamed(context, '/Home',
                       arguments: MainState.currentUid);
-                  ;
                 } else {
                   await authGoogle.SignInGoogle(context).then((value) async {
                     if (value != null) {
@@ -294,7 +297,8 @@ class _SignInState extends State<SignIn> {
               style: ButtonStyle(
                   backgroundColor:
                       MaterialStatePropertyAll(MyColors.colorButtonLogin),
-                  foregroundColor: MaterialStatePropertyAll(Colors.black)),
+                  foregroundColor:
+                      const MaterialStatePropertyAll(Colors.black)),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -302,10 +306,10 @@ class _SignInState extends State<SignIn> {
                     "assets/logo/google.png",
                     height: 18,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
-                  Text(
+                  const Text(
                     'Google',
                     style: TextStyle(fontSize: 15, fontFamily: 'ubuntu'),
                   ),
@@ -313,8 +317,34 @@ class _SignInState extends State<SignIn> {
               )),
         ));
   }
+}
 
-  Widget ButtonRegister() {
+class ButtonResset extends StatelessWidget {
+  const ButtonResset({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.centerRight,
+      padding: const EdgeInsets.only(top: 5, right: 15),
+      child: TextButton(
+        onPressed: () {
+          Navigator.pushNamed(context, '/Reset');
+        },
+        child: const Text(
+          'Forget Password?',
+          style: TextStyle(fontFamily: 'ubuntu', color: Color(0xff68B984)),
+        ),
+      ),
+    );
+  }
+}
+
+class ButtonRegister extends StatelessWidget {
+  const ButtonRegister({super.key});
+
+  @override
+  Widget build(BuildContext context) {
     return Expanded(
       child: Container(
         alignment: Alignment.centerLeft,
@@ -323,7 +353,7 @@ class _SignInState extends State<SignIn> {
           children: [
             RichText(
               text: TextSpan(children: [
-                TextSpan(
+                const TextSpan(
                   text: 'Don’t Have Account?',
                   style: TextStyle(color: Colors.black),
                 ),
@@ -334,7 +364,7 @@ class _SignInState extends State<SignIn> {
                       Navigator.pushNamed(context, '/SignUp');
                       // Tambahkan tindakan yang ingin Anda lakukan saat tombol ditekan di sini.
                     },
-                    child: Text(
+                    child: const Text(
                       'Register',
                       style: TextStyle(color: Color(0xff68B984)),
                     ),
@@ -343,22 +373,6 @@ class _SignInState extends State<SignIn> {
               ]),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget ResetPass() {
-    return Container(
-      alignment: Alignment.centerRight,
-      padding: const EdgeInsets.only(top: 5, right: 15),
-      child: TextButton(
-        onPressed: () {
-          Navigator.pushNamed(context, '/Reset');
-        },
-        child: Text(
-          'Forget Password?',
-          style: TextStyle(fontFamily: 'ubuntu', color: Color(0xff68B984)),
         ),
       ),
     );

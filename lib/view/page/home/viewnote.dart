@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -119,7 +118,7 @@ class _ViewNoteState extends State<ViewNote> {
           focusDesc.unfocus();
         },
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.only(left: 20, right: 20),
           child: ListView(
             children: [
               WriteNotes(),
@@ -144,7 +143,7 @@ class _ViewNoteState extends State<ViewNote> {
         Container(
           height: 550,
           width: 350,
-          margin: EdgeInsets.only(top: 30),
+          margin: const EdgeInsets.only(top: 30),
           decoration: BoxDecoration(
               border: Border.all(style: BorderStyle.solid),
               borderRadius: BorderRadius.circular(5)),
@@ -161,12 +160,12 @@ class _ViewNoteState extends State<ViewNote> {
                   textAlign: TextAlign.left,
                   controller: titleController,
                   maxLines: null,
-                  decoration: InputDecoration.collapsed(
+                  decoration: const InputDecoration.collapsed(
                     hintText: "Whats title here..",
                     hintStyle: TextStyle(fontSize: 25),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 15,
                 ),
                 Visibility(
@@ -182,7 +181,7 @@ class _ViewNoteState extends State<ViewNote> {
                     )),
                 Visibility(
                   visible: _image != null ? true : false,
-                  child: SizedBox(
+                  child: const SizedBox(
                     height: 15,
                   ),
                 ),
@@ -197,7 +196,7 @@ class _ViewNoteState extends State<ViewNote> {
                     textAlign: TextAlign.left,
                     controller: textController,
                     maxLines: null,
-                    decoration: InputDecoration.collapsed(
+                    decoration: const InputDecoration.collapsed(
                       hintText: "Let's Write Notes..",
                     ),
                   ),
@@ -206,7 +205,7 @@ class _ViewNoteState extends State<ViewNote> {
             ),
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 20,
         ),
         Container(
@@ -229,7 +228,7 @@ class _ViewNoteState extends State<ViewNote> {
                   scale: 5,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 20,
               ),
               GestureDetector(
@@ -240,7 +239,7 @@ class _ViewNoteState extends State<ViewNote> {
                   scale: 2.5,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 20,
               ),
               GestureDetector(
@@ -258,7 +257,7 @@ class _ViewNoteState extends State<ViewNote> {
             ],
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 20,
         ),
       ],
@@ -368,19 +367,21 @@ class ActionNote extends StatelessWidget {
                   onPressed: () {
                     Navigator.pushNamed(context, '/Home');
                   },
-                  child: Text('Cancel'),
+                  child: const Text('Cancel'),
                   style: ButtonStyle(
                       overlayColor:
                           MaterialStatePropertyAll(MyColors.colorCancel),
                       backgroundColor: MaterialStatePropertyAll(
                           MyColors.colorBackgroundHome),
-                      foregroundColor: MaterialStatePropertyAll(Colors.black),
-                      shape: MaterialStatePropertyAll(BeveledRectangleBorder(
+                      foregroundColor:
+                          const MaterialStatePropertyAll(Colors.black),
+                      shape:
+                          const MaterialStatePropertyAll(BeveledRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(5)),
                         side: BorderSide(color: Colors.black),
                       )))),
             ),
-            SizedBox(
+            const SizedBox(
               width: 30,
             ),
             SizedBox(
@@ -400,14 +401,16 @@ class ActionNote extends StatelessWidget {
                               () => Navigator.pushNamed(context, '/Home'));
                     });
                   },
-                  child: Text('Save'),
+                  child: const Text('Save'),
                   style: ButtonStyle(
                       overlayColor:
                           MaterialStatePropertyAll(MyColors.colorButtonLogin),
                       backgroundColor:
                           MaterialStatePropertyAll(MyColors.colorButtonLogin),
-                      foregroundColor: MaterialStatePropertyAll(Colors.black),
-                      shape: MaterialStatePropertyAll(BeveledRectangleBorder(
+                      foregroundColor:
+                          const MaterialStatePropertyAll(Colors.black),
+                      shape:
+                          const MaterialStatePropertyAll(BeveledRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(5)),
                         side: BorderSide(color: Colors.black),
                       )))),

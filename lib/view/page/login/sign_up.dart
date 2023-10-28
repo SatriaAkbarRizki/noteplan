@@ -1,8 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:noteplan/auth/authemail.dart';
 import 'package:noteplan/color/colors.dart';
-import 'package:noteplan/view/page/login/sign_in.dart';
 
 class SignUpEmail extends StatefulWidget {
   const SignUpEmail({super.key});
@@ -40,27 +40,29 @@ class _SignUpEmailState extends State<SignUpEmail> {
               children: [
                 Container(
                   height: 400,
-                  decoration: BoxDecoration(color: MyColors.colorBackgroundLoginOne),
+                  decoration:
+                      BoxDecoration(color: MyColors.colorBackgroundLoginOne),
                 ),
                 Expanded(
                   child: Container(
                     height: 400,
-                    decoration: BoxDecoration(color: MyColors.colorBackgroundLogonTwo),
+                    decoration:
+                        BoxDecoration(color: MyColors.colorBackgroundLogonTwo),
                   ),
                 ),
               ],
             ),
             Center(
               child: Container(
-                margin: EdgeInsets.only(top: 150),
+                margin: const EdgeInsets.only(top: 150),
                 width: 350,
                 height: 350,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                     color: Color(0xffF5F3F3),
                     borderRadius: BorderRadius.all(Radius.circular(25))),
                 child: Column(
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     Padding(
@@ -69,12 +71,12 @@ class _SignUpEmailState extends State<SignUpEmail> {
                         focusNode: _focusNodeEmail,
                         controller: emailController,
                         keyboardType: TextInputType.emailAddress,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontFamily: 'wixmadefor',
                             fontWeight: FontWeight.w600),
                         decoration: InputDecoration(
                           labelText: 'Email',
-                          labelStyle: TextStyle(
+                          labelStyle: const TextStyle(
                               fontFamily: 'wixmadefor',
                               fontWeight: FontWeight.w500),
                           prefixIcon: Image.asset(
@@ -82,7 +84,7 @@ class _SignUpEmailState extends State<SignUpEmail> {
                             scale: 1.8,
                           ),
                           prefixIconColor: Colors.black,
-                          border: OutlineInputBorder(
+                          border: const OutlineInputBorder(
                             borderRadius:
                                 BorderRadius.only(topLeft: Radius.circular(20)),
                           ),
@@ -96,26 +98,30 @@ class _SignUpEmailState extends State<SignUpEmail> {
                         focusNode: _focusNodePasword,
                         obscureText: true,
                         keyboardType: TextInputType.visiblePassword,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontFamily: 'wixmadefor',
                             fontWeight: FontWeight.w600),
                         decoration: InputDecoration(
                           labelText: 'Password',
-                          labelStyle: TextStyle(
+                          labelStyle: const TextStyle(
                               fontFamily: 'wixmadefor',
                               fontWeight: FontWeight.w500),
                           prefixIcon: Image.asset(
                             "assets/logo/password.png",
                             scale: 1.8,
                           ),
-                          border: OutlineInputBorder(
+                          border: const OutlineInputBorder(
                             borderRadius: BorderRadius.only(
                                 bottomRight: Radius.circular(20)),
                           ),
                         ),
                       ),
                     ),
-                    registerAccount(),
+                    RegisterAccount(
+                      authEmail: authEmail,
+                      emailController: emailController,
+                      passwordController: passwordController,
+                    ),
                   ],
                 ),
               ),
@@ -129,7 +135,7 @@ class _SignUpEmailState extends State<SignUpEmail> {
                 left: 20,
                 top: 130,
                 child: RichText(
-                    text: TextSpan(children: [
+                    text: const TextSpan(children: [
                   TextSpan(
                       text: 'Register in to your',
                       style: TextStyle(
@@ -167,8 +173,20 @@ class _SignUpEmailState extends State<SignUpEmail> {
       ),
     );
   }
+}
 
-  Widget registerAccount() {
+class RegisterAccount extends StatelessWidget {
+  final AuthEmail authEmail;
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+  const RegisterAccount(
+      {required this.authEmail,
+      required this.emailController,
+      required this.passwordController,
+      super.key});
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
         padding: const EdgeInsets.only(left: 25, right: 25, top: 25),
         child: SizedBox(
@@ -180,14 +198,14 @@ class _SignUpEmailState extends State<SignUpEmail> {
                     emailController.text, passwordController.text);
 
                 if (result != null) {
-                  print('Succes create account');
+                  debugPrint('Succes create account');
                   if (result == 'Succes') {
                     Navigator.pushReplacementNamed(
                       context,
                       '/SignIn',
                     );
                     ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Succes created email')));
+                        const SnackBar(content: Text('Succes created email')));
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text(result.toString())));
@@ -195,7 +213,7 @@ class _SignUpEmailState extends State<SignUpEmail> {
                 } else {
                   if (emailController.text.isEmpty &&
                       passwordController.text.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         content: Text('Please enter Email and Password')));
                   }
                 }
@@ -203,7 +221,7 @@ class _SignUpEmailState extends State<SignUpEmail> {
               style: const ButtonStyle(
                   backgroundColor: MaterialStatePropertyAll(Color(0xffC7EBB3)),
                   foregroundColor: MaterialStatePropertyAll(Colors.black)),
-              child: Text(
+              child: const Text(
                 'Register',
                 style: TextStyle(fontSize: 15, fontFamily: 'ubuntu'),
               )),
