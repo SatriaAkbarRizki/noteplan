@@ -1,5 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/material.dart';
+import 'package:noteplan/main.dart';
 import 'package:noteplan/model/note.dart';
 
 class AddingNote {
@@ -28,22 +28,20 @@ class AddingNote {
 
   Future<List<NoteModel>?> readData() async {
     notemodelList = [];
-    notemodelList!.clear();
     final reference = await FirebaseDatabase.instance
         .ref()
-        .child('Users/UID/${uid}/Note')
+        .child('Users/UID/${MainState.currentUid.toString()}/Note')
         .once();
 
     final data = reference.snapshot.value as Map<dynamic, dynamic>;
 
-    data.forEach((key, value) {
+    data?.forEach((key, value) {
       NoteModel noteModel = NoteModel.fromMap(key, value);
-
-      notemodelList!.add(noteModel);
+      notemodelList?.add(noteModel);
     });
 
     // print('length in notemodelist: ${notemodelList!.length}');
-    return notemodelList!;
+    return notemodelList;
   }
 
   Future updateData(String uid, NoteModel noteModel) async {

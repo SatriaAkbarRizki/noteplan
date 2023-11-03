@@ -5,6 +5,7 @@ import 'package:noteplan/color/colors.dart';
 import 'package:noteplan/main.dart';
 import 'package:noteplan/model/note.dart';
 import 'package:noteplan/presenter/adding.dart';
+import 'package:noteplan/presenter/saveuid.dart';
 
 class HomePage extends StatefulWidget {
   final String? uid;
@@ -15,7 +16,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  AddingNote addingNote = AddingNote(uid: MainState.currentUid.toString());
+  SaveUid saveUid = SaveUid();
+  late AddingNote addingNote;
   AuthGoogle authGoogle = AuthGoogle();
   AuthEmail authEmail = AuthEmail();
   var _listnote = <NoteModel>{};
@@ -24,41 +26,35 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    addingNote = AddingNote(uid: MainState.currentUid.toString());
     signInCheck();
     parsingData();
     super.initState();
   }
 
   Future signInCheck() async {
-    if (!await authGoogle.googleSignIn.isSignedIn()) {
-      authGoogle.googleSignIn.signInSilently();
-    }
+    authGoogle.googleSignIn.signInSilently();
   }
 
   Future parsingData() async {
     await addingNote.readData().then((value) async {
       _listnote = value!.toSet();
-    }).whenComplete(() {
-      setState(() {
-        toListNote = _listnote.toList();
-      });
-    });
+      return _listnote;
+    }).then((value) => toListNote = value.toList());
 
+    setState(() {});
     // print('length toListNote: ${toListNote?.length}');
   }
 
   Future refreshData() async {
     setState(() {
-      addingNote.readData();
+      parsingData();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute.of(context)?.settings.arguments;
-    setState(() {});
-    debugPrint('args value: $args');
-    // print('length listnote: ${_listnote.length}');
+    debugPrint('Uid on Home: ${MainState.currentUid}');
     return Scaffold(
       backgroundColor: MyColors.colorBackgroundHome,
       floatingActionButton: GestureDetector(
@@ -108,145 +104,151 @@ class _HomePageState extends State<HomePage> {
 
   Widget listNotes(List<NoteModel>? notemodelList) {
     return Expanded(
-      child: ListView.builder(
-        physics: const BouncingScrollPhysics(),
-        shrinkWrap: true,
-        itemCount: notemodelList!.length,
-        itemBuilder: (context, index) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                margin: const EdgeInsets.only(
-                  left: 30,
-                ),
-                child: GestureDetector(
-                  onTap: () {
-                    debugPrint('trigger button');
-                    showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        shape: BeveledRectangleBorder(
-                            borderRadius: BorderRadiusDirectional.circular(5)),
-                        backgroundColor: const Color(0xffF8F0E5),
-                        title: const Text(
-                          'Date note created',
-                          style: TextStyle(fontFamily: 'wixmadefor'),
+      child: NotificationListener<OverscrollIndicatorNotification>(
+        onNotification: (overScroll) {
+          overScroll.disallowIndicator();
+          return true;
+        },
+        child: ListView.builder(
+          physics: const AlwaysScrollableScrollPhysics(),
+          shrinkWrap: true,
+          scrollDirection: Axis.vertical,
+          itemCount: notemodelList!.length,
+          itemBuilder: (context, index) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(left: 30, top: 25),
+                  child: GestureDetector(
+                    onTap: () {
+                      debugPrint('trigger button');
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          shape: BeveledRectangleBorder(
+                              borderRadius:
+                                  BorderRadiusDirectional.circular(5)),
+                          backgroundColor: const Color(0xffF8F0E5),
+                          title: const Text(
+                            'Date note created',
+                            style: TextStyle(fontFamily: 'wixmadefor'),
+                          ),
+                          content: ListBody(
+                            children: [
+                              Text('Date: ${notemodelList[index].date}',
+                                  style: const TextStyle(
+                                    fontFamily: 'wixmadefor',
+                                  )),
+                              const SizedBox(
+                                height: 15,
+                              ),
+                              Text('Time: ${notemodelList[index].time}',
+                                  style:
+                                      const TextStyle(fontFamily: 'wixmadefor'))
+                            ],
+                          ),
                         ),
-                        content: ListBody(
-                          children: [
-                            Text('Date: ${notemodelList[index].date}',
-                                style: const TextStyle(
-                                  fontFamily: 'wixmadefor',
-                                )),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            Text('Time: ${notemodelList[index].time}',
-                                style:
-                                    const TextStyle(fontFamily: 'wixmadefor'))
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                  child: Text(
-                    notemodelList[index].date,
-                    style: const TextStyle(
-                        fontFamily: 'wixmadefor',
-                        fontSize: 16,
-                        color: Color.fromARGB(255, 166, 161, 179)),
+                      );
+                    },
+                    child: Text(
+                      notemodelList[index].date,
+                      style: const TextStyle(
+                          fontFamily: 'wixmadefor',
+                          fontSize: 16,
+                          color: Color.fromARGB(255, 166, 161, 179)),
+                    ),
                   ),
                 ),
-              ),
-              GestureDetector(
-                onTap: () async {
-                  Navigator.pushNamed(context, '/ViewNote',
-                      arguments: notemodelList[index]);
-                },
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(left: 30, right: 10, top: 20),
-                      child: SizedBox(
-                        height: 150,
-                        width: 2,
-                        child: VerticalDivider(
-                          thickness: 6,
-                          color: Color(0xffD8D9DA),
+                GestureDetector(
+                  onTap: () async {
+                    Navigator.pushNamed(context, '/ViewNote',
+                        arguments: notemodelList[index]);
+                  },
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(left: 30, right: 10, top: 20),
+                        child: SizedBox(
+                          height: 150,
+                          width: 2,
+                          child: VerticalDivider(
+                            thickness: 6,
+                            color: Color(0xffD8D9DA),
+                          ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: FittedBox(
-                          fit: BoxFit.fitHeight,
-                          child: Container(
-                            width: 300,
-                            constraints: const BoxConstraints(minHeight: 150),
-                            decoration: BoxDecoration(
-                              color: const Color(0xffE19898),
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(20),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    notemodelList[index].title,
-                                    style: const TextStyle(
-                                        fontSize: 18,
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: FittedBox(
+                            fit: BoxFit.fitHeight,
+                            child: Container(
+                              width: 300,
+                              constraints: const BoxConstraints(minHeight: 150),
+                              decoration: BoxDecoration(
+                                color: const Color(0xffE19898),
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(20),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      notemodelList[index].title,
+                                      style: const TextStyle(
+                                          fontSize: 18,
+                                          fontFamily: 'wixmadefor',
+                                          height: 2,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    Text(
+                                      notemodelList[index].description,
+                                      maxLines: 2,
+                                      style: const TextStyle(
                                         fontFamily: 'wixmadefor',
                                         height: 2,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                  Text(
-                                    notemodelList[index].description,
-                                    maxLines: 2,
-                                    style: const TextStyle(
-                                      fontFamily: 'wixmadefor',
-                                      height: 2,
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(
-                                    height: 15,
-                                  ),
-                                  Visibility(
-                                      visible:
-                                          notemodelList[index].image == null
-                                              ? false
-                                              : true,
-                                      child: Container(
-                                        height: 200,
-                                        width: 300,
-                                        decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                              image: NetworkImage(
-                                                notemodelList[index]
-                                                    .image
-                                                    .toString(),
-                                              ),
-                                              fit: BoxFit.cover),
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                        ),
-                                      )),
-                                ],
+                                    const SizedBox(
+                                      height: 15,
+                                    ),
+                                    Visibility(
+                                        visible:
+                                            notemodelList[index].image == null
+                                                ? false
+                                                : true,
+                                        child: Container(
+                                          height: 200,
+                                          width: 300,
+                                          decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                                image: NetworkImage(
+                                                  notemodelList[index]
+                                                      .image
+                                                      .toString(),
+                                                ),
+                                                fit: BoxFit.cover),
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                          ),
+                                        )),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          );
-        },
+              ],
+            );
+          },
+        ),
       ),
     );
   }

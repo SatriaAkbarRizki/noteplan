@@ -34,3 +34,6 @@ class NoteModel {
         description: map['description'] ?? '');
   }
 }
+
+
+// Coba dengan manual

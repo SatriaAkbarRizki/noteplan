@@ -1,8 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:noteplan/main.dart';
+import 'package:noteplan/presenter/saveuid.dart';
 
 class AuthGoogle {
+  SaveUid saveUid = SaveUid();
   GoogleSignIn googleSignIn = GoogleSignIn(scopes: ['email']);
   Future<String?> SignInGoogle(BuildContext context) async {
     try {
@@ -21,6 +24,7 @@ class AuthGoogle {
       if (user != null) {
         String uid = user.uid; // UID dari user
         print('UID Auth: $uid');
+
         return uid.toString();
       } else {
         print('User tidak berhasil login.');

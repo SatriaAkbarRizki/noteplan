@@ -23,6 +23,7 @@ void main() async {
 class MainApp extends StatefulWidget {
   MainApp({super.key});
 
+
   @override
   State<StatefulWidget> createState() {
     return MainState();
@@ -53,17 +54,17 @@ class MainState extends State<MainApp> {
     debugPrint('curretn: ${currentUid}');
     return MaterialApp(
       routes: {
-        '/Home': (context) => HomePage(uid: null),
-        '/SignIn': (context) => SignIn(),
-        '/SignUp': (context) => SignUpEmail(),
-        '/Reset': (context) => ResetPass(),
+        '/Home': (context) => const HomePage(uid: null),
+        '/SignIn': (context) => const SignIn(),
+        '/SignUp': (context) => const SignUpEmail(),
+        '/Reset': (context) => const ResetPass(),
         '/AddNote': (context) => AddNote(uid: null),
         '/ViewNote': (context) => ViewNote(
               currentNote: [],
             )
       },
       debugShowCheckedModeBanner: false,
-      home: currentUid != null ? HomePage(uid: currentUid!) : SignIn(),
+      home: currentUid != null ? HomePage(uid: currentUid!) : const SignIn(),
     );
   }
 }
