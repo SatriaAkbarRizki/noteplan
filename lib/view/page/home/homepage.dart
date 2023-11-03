@@ -123,33 +123,7 @@ class _HomePageState extends State<HomePage> {
                   child: GestureDetector(
                     onTap: () {
                       debugPrint('trigger button');
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          shape: BeveledRectangleBorder(
-                              borderRadius:
-                                  BorderRadiusDirectional.circular(5)),
-                          backgroundColor: const Color(0xffF8F0E5),
-                          title: const Text(
-                            'Date note created',
-                            style: TextStyle(fontFamily: 'wixmadefor'),
-                          ),
-                          content: ListBody(
-                            children: [
-                              Text('Date: ${notemodelList[index].date}',
-                                  style: const TextStyle(
-                                    fontFamily: 'wixmadefor',
-                                  )),
-                              const SizedBox(
-                                height: 15,
-                              ),
-                              Text('Time: ${notemodelList[index].time}',
-                                  style:
-                                      const TextStyle(fontFamily: 'wixmadefor'))
-                            ],
-                          ),
-                        ),
-                      );
+                      showAlertDialog(notemodelList[index]);
                     },
                     child: Text(
                       notemodelList[index].date,
@@ -251,6 +225,19 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  Future<void> showAlertDialog(NoteModel notemodelList) async {
+    await Future.delayed(Duration(milliseconds: 200))
+        .whenComplete(() => showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: Text('Date note created'),
+                content: Text(
+                    'Date: ${notemodelList.date}\nTime: ${notemodelList.time}'),
+              ),
+            ));
+    ;
   }
 }
 
