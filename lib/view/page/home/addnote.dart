@@ -77,7 +77,7 @@ class _AddNoteState extends State<AddNote> {
   @override
   Widget build(BuildContext context) {
     final uid = ModalRoute.of(context)?.settings.arguments;
-    // debugdebugPrint('Have UID in addnote?? : ${uid}');
+
     return Scaffold(
       backgroundColor: MyColors.colorBackgroundHome,
       body: GestureDetector(
@@ -91,7 +91,6 @@ class _AddNoteState extends State<AddNote> {
             children: [
               writeNotes(),
               ActionNote(
-                keyData: uid.toString(),
                 uid: uid,
                 title: titleController.text,
                 imagePath: _image,
@@ -214,13 +213,6 @@ class _AddNoteState extends State<AddNote> {
                   _image = await getImage();
                   debugPrint('Source Image : ${_image!.path}');
                   setState(() {});
-                  // var value = "-${_image!.path}-";
-                  // if (_image!.path.isNotEmpty) {
-                  //   setState(() {
-                  //     textController.text = textController.text.replaceRange(
-                  //         textController.text.length, null, ' ${value}');
-                  //   });
-                  // }
                 },
                 child: Image.asset(
                   "assets/icons/image.png",
@@ -284,9 +276,9 @@ class _AddNoteState extends State<AddNote> {
 
   Future<XFile?> getImage() async {
     try {
-      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+      final image = await ImagePicker()
+          .pickImage(source: ImageSource.gallery, imageQuality: 80);
       if (image == null) return null;
-
       return image;
     } on PlatformException catch (e) {
       debugPrint(e.toString());
@@ -300,14 +292,12 @@ class ActionNote extends StatelessWidget {
   final time = DateFormat("h:mm a' '-' 'E'").format(DateTime.now());
   CloudStorage cloudStorage = CloudStorage();
   AddingNote? addingNote;
-  final String? keyData;
   final Object? uid;
   final String? title;
   final XFile? imagePath;
   final String? description;
   ActionNote(
-      {required this.keyData,
-      required this.uid,
+      {required this.uid,
       required this.title,
       required this.imagePath,
       required this.description,
@@ -359,8 +349,8 @@ class ActionNote extends StatelessWidget {
                       linkImage = value;
                       debugPrint('result links??: ${value}');
                     }).whenComplete(() async {
-                      await addingData(keyData.toString(), uid, title!,
-                              linkImage, description!)
+                      await addingData(
+                              uid.toString(), title!, linkImage, description!)
                           .whenComplete(
                               () => Navigator.pushNamed(context, '/Home'));
                     });
@@ -385,11 +375,11 @@ class ActionNote extends StatelessWidget {
     );
   }
 
-  Future addingData(String keyData, Object? uid, String title, String? image,
-      String description) async {
+  Future addingData(
+      Object? uid, String title, String? image, String description) async {
     addingNote = AddingNote(uid: uid.toString());
     final note = NoteModel(
-        keyData: keyData,
+        keyData: uid.toString(),
         title: title,
         image: image,
         description: description,

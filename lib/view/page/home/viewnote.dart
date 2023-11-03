@@ -85,14 +85,13 @@ class _ViewNoteState extends State<ViewNote> {
   Future handleCurrentData() async {
     final current = ModalRoute.of(context)?.settings.arguments as NoteModel;
 
-    // print('see key current: ${current.keyData}');
-    // print('image name :${current.image}');
     if (current.title.isNotEmpty) {
       titleController.text = current.title;
       textController.text = current.description;
       keyData = current?.keyData;
       oldImageLink = await current.image;
       if (current.image != null) {
+        // Donwload image
         final data = await convertUrl(current.image.toString())
             .then((value) => _image = value);
         setState(() {
@@ -109,7 +108,8 @@ class _ViewNoteState extends State<ViewNote> {
   @override
   Widget build(BuildContext context) {
     final uid = MainState.currentUid;
-    debugPrint('Uid in View Page: ${uid}');
+    debugPrint('imageFile : ${oldImageLink}');
+    debugPrint('_image: ${_image?.name}');
     return Scaffold(
       backgroundColor: MyColors.colorBackgroundHome,
       body: GestureDetector(
@@ -124,7 +124,7 @@ class _ViewNoteState extends State<ViewNote> {
               WriteNotes(),
               ActionNote(
                 keyData: keyData,
-                uid: uid,
+                uid: uid.toString(),
                 title: titleController.text,
                 oldImageLink: oldImageLink,
                 imagePath: _image ?? null,
@@ -310,7 +310,8 @@ class _ViewNoteState extends State<ViewNote> {
 
   Future<XFile?> getImage() async {
     try {
-      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+      final image = await ImagePicker()
+          .pickImage(source: ImageSource.gallery, imageQuality: 80);
 
       if (image == null) return null;
 
@@ -396,7 +397,7 @@ class ActionNote extends StatelessWidget {
                       linkImage = value;
                     }).whenComplete(() async {
                       await updateData(
-                              keyData!, uid, title!, linkImage, description!)
+                              keyData!, title!, linkImage, description!)
                           .whenComplete(
                               () => Navigator.pushNamed(context, '/Home'));
                     });
@@ -421,16 +422,16 @@ class ActionNote extends StatelessWidget {
     );
   }
 
-  Future updateData(String key, Object? uid, String title, String? image,
-      String description) async {
+  Future updateData(
+      String key, String title, String? image, String description) async {
     addingNote = AddingNote(uid: uid.toString());
     final note = NoteModel(
-        keyData: key,
+        keyData: uid.toString(),
         title: title,
         image: image,
         description: description,
         date: date,
         time: time);
-    addingNote!.updateData(MainState.currentUid.toString(), note);
+    addingNote!.updateData(keyData!, note);
   }
 }

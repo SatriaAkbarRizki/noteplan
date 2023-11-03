@@ -19,11 +19,7 @@ class AddingNote {
   Future saveNote(NoteModel noteModel) async {
     DatabaseReference databaseReference =
         FirebaseDatabase.instance.ref().child('Users/UID/${uid}/Note');
-    if (databaseReference.key == uid) {
-      updateData(uid, noteModel);
-    } else {
-      return databaseReference.push().set(noteModel.toJson());
-    }
+    databaseReference.push().set(noteModel.toJson());
   }
 
   Future<List<NoteModel>?> readData() async {
@@ -39,16 +35,18 @@ class AddingNote {
       NoteModel noteModel = NoteModel.fromMap(key, value);
       notemodelList?.add(noteModel);
     });
-
-    // print('length in notemodelist: ${notemodelList!.length}');
+    // notemodelList?.forEach((element) {
+    //   print(element.keyData);
+    // });
+    // print('length in notemodelist: ${n otemodelList!.length}');
     return notemodelList;
   }
 
-  Future updateData(String uid, NoteModel noteModel) async {
+  Future updateData(String key, NoteModel noteModel) async {
     final note = noteModel.toJson();
 
     Map<String, dynamic> update = {};
-    update['Users/UID/${uid}/Note/${noteModel.keyData}'] = note;
+    update['Users/UID/${noteModel.keyData}/Note/${key}'] = note;
     return FirebaseDatabase.instance.ref().update(update);
   }
 }

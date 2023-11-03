@@ -24,9 +24,9 @@ class NoteModel {
 
   Map<String, dynamic> toJson() => _$NoteModelToJson(this);
 
-  factory NoteModel.fromMap(String id, Map<dynamic, dynamic> map) {
+  factory NoteModel.fromMap(String key, Map<dynamic, dynamic> map) {
     return NoteModel(
-        keyData: map['id'],
+        keyData: key,
         title: map['title'] ?? '',
         date: map['date'] ?? '',
         time: map['time'] ?? '',

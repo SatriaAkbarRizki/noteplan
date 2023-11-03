@@ -54,7 +54,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('Uid on Home: ${MainState.currentUid}');
+    // debugPrint('Uid on Home: ${MainState.currentUid}');
     return Scaffold(
       backgroundColor: MyColors.colorBackgroundHome,
       floatingActionButton: GestureDetector(
