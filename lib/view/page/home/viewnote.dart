@@ -21,7 +21,8 @@ class ViewNote extends StatefulWidget {
 }
 
 class _ViewNoteState extends State<ViewNote> {
-  XFile? _image;
+  XFile? _imageName;
+  static XFile? _currentImage;
   String? keyData;
   String? oldImageLink;
   Presenter? presenter;
@@ -91,15 +92,18 @@ class _ViewNoteState extends State<ViewNote> {
       keyData = current?.keyData;
       oldImageLink = await current.image;
       if (current.image != null) {
-        // Donwload image
-        final data = await convertUrl(current.image.toString())
-            .then((value) => _image = value);
+        // Donwload image url
+        // Convert to name image
+        final data = await convertUrl(current.image.toString()).then((value) {
+          _imageName = value;
+          _currentImage = _imageName;
+        });
         setState(() {
           data;
         });
       } else {
         setState(() {
-          _image = null;
+          _imageName = null;
         });
       }
     }
@@ -108,8 +112,8 @@ class _ViewNoteState extends State<ViewNote> {
   @override
   Widget build(BuildContext context) {
     final uid = MainState.currentUid;
-    debugPrint('imageFile : ${oldImageLink}');
-    debugPrint('_image: ${_image?.name}');
+    // debugPrint('imageFile oldImageLink : ${oldImageLink}');
+    // debugPrint('_image: _imageName ${_currentImage?.name}');
     return Scaffold(
       backgroundColor: MyColors.colorBackgroundHome,
       body: GestureDetector(
@@ -127,7 +131,7 @@ class _ViewNoteState extends State<ViewNote> {
                 uid: uid.toString(),
                 title: titleController.text,
                 oldImageLink: oldImageLink,
-                imagePath: _image ?? null,
+                imagePath: _imageName ?? null,
                 description: textController.text,
               )
             ],
@@ -169,18 +173,18 @@ class _ViewNoteState extends State<ViewNote> {
                   height: 15,
                 ),
                 Visibility(
-                    visible: _image == null ? false : true,
+                    visible: _imageName == null ? false : true,
                     child: Container(
                       width: 200,
                       height: 200,
                       decoration: BoxDecoration(
                           border: Border.all(style: BorderStyle.solid),
                           borderRadius: BorderRadius.circular(5)),
-                      child: Image.file(File(_image?.path ?? ''),
+                      child: Image.file(File(_imageName?.path ?? ''),
                           fit: BoxFit.cover),
                     )),
                 Visibility(
-                  visible: _image != null ? true : false,
+                  visible: _imageName != null ? true : false,
                   child: const SizedBox(
                     height: 15,
                   ),
@@ -244,8 +248,8 @@ class _ViewNoteState extends State<ViewNote> {
               ),
               GestureDetector(
                 onTap: () async {
-                  _image = await getImage();
-                  debugPrint('Source Image : ${_image!.path}');
+                  _imageName = await getImage();
+                  debugPrint('Source Image : ${_imageName!.path}');
                   setState(() {});
                 },
                 child: Image.asset(
@@ -350,13 +354,17 @@ class ActionNote extends StatelessWidget {
       required this.description,
       super.key});
 
-  File? imageFile;
+  File? directoryImage;
+  String? nameImageNow;
   String? linkImage;
 
   @override
   Widget build(BuildContext context) {
     // print('have image link?? :${oldImageLink!}');
-    imageFile = File(imagePath?.path != null ? imagePath!.path : "");
+    directoryImage = File(imagePath?.path != null ? imagePath!.path : "");
+    nameImageNow = directoryImage!.path.split('/').last;
+    debugPrint('current image :${_ViewNoteState._currentImage?.name}');
+    debugPrint('image now: ${nameImageNow}');
     return Column(
       children: [
         Row(
@@ -393,14 +401,7 @@ class ActionNote extends StatelessWidget {
                     _ViewNoteState.focusTitle.unfocus();
                     _ViewNoteState.focusDesc.unfocus();
                     //
-                    await cloudStorage.uploadImage(imageFile).then((value) {
-                      linkImage = value;
-                    }).whenComplete(() async {
-                      await updateData(
-                              keyData!, title!, linkImage, description!)
-                          .whenComplete(
-                              () => Navigator.pushNamed(context, '/Home'));
-                    });
+                    cloudImage(context);
                   },
                   child: const Text('Save'),
                   style: ButtonStyle(
@@ -420,6 +421,25 @@ class ActionNote extends StatelessWidget {
         )
       ],
     );
+  }
+
+  Future cloudImage(BuildContext context) async {
+    if (_ViewNoteState._currentImage!.name == nameImageNow) {
+      await updateData(keyData!, title!, oldImageLink, description!)
+          .whenComplete(() => Navigator.pushNamed(context, '/Home'));
+    } else if (_ViewNoteState._currentImage?.name != nameImageNow) {
+      await cloudStorage.deleteImage(oldImageLink).whenComplete(() {
+        cloudStorage.uploadImage(directoryImage).then((value) {
+          linkImage = value;
+        }).whenComplete(() async {
+          await updateData(keyData!, title!, linkImage, description!)
+              .whenComplete(() => Navigator.pushNamed(context, '/Home'));
+        });
+      });
+    } else {
+      await updateData(keyData!, title!, linkImage, description!)
+          .whenComplete(() => Navigator.pushNamed(context, '/Home'));
+    }
   }
 
   Future updateData(
