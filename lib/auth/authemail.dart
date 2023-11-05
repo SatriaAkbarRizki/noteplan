@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 
 class AuthEmail {
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -22,7 +23,9 @@ class AuthEmail {
       String id = user.uid.toString();
       return id;
     } on FirebaseAuthException catch (e) {
-      print('Eror SignInEmail: ${e.toString()}');
+      if (kDebugMode) {
+        print('Eror SignInEmail: ${e.toString()}');
+      }
     }
     return null;
   }

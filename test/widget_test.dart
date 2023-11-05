@@ -6,5 +6,5 @@ void main() {
 
   String value = 'My name is Emporio';
   String valueUpdate = value.replaceRange(value.length, null, ' Satria');
-  print(valueUpdate);
+  // print(valueUpdate);
 }

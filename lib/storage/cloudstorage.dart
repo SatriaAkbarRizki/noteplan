@@ -14,15 +14,15 @@ class CloudStorage {
       final snapsot = await upload.then((v) async {
         if (v.state == TaskState.success) {
           final result = await storageRef.getDownloadURL();
-          print('Succes Upload : ${result}');
+          debugPrint('Succes Upload : $result');
           linkImages = result;
         } else {
-          print('Eror get Url:${v.toString()}');
+          debugPrint('Eror get Url:${v.toString()}');
           linkImages = null;
         }
       });
     } on FirebaseException catch (e) {
-      print('Eror Upload: ${e.toString()}');
+      debugPrint('Eror Upload: ${e.toString()}');
     }
     return linkImages;
   }
@@ -30,7 +30,7 @@ class CloudStorage {
   Future deleteImage(String? links) async {
     try {
       final gsReference = await FirebaseStorage.instance.refFromURL("${links}");
-      print('Name Image Old: ${gsReference.name}');
+      debugPrint('Name Image Old: ${gsReference.name}');
       // final u
       //rl = links.toString();
       // Uri uri = Uri.parse(url);
@@ -42,7 +42,7 @@ class CloudStorage {
           .child("images/${gsReference.name}");
       await deleteRef.delete();
     } on FirebaseException catch (e) {
-      print('Eror Delete: ${e.toString()}');
+      debugPrint('Eror Delete: ${e.toString()}');
     }
   }
 }

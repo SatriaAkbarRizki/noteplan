@@ -4,7 +4,7 @@ import 'package:noteplan/auth/authgoogle.dart';
 import 'package:noteplan/color/colors.dart';
 import 'package:noteplan/main.dart';
 import 'package:noteplan/model/note.dart';
-import 'package:noteplan/presenter/adding.dart';
+import 'package:noteplan/presenter/database_note.dart';
 import 'package:noteplan/presenter/saveuid.dart';
 
 class HomePage extends StatefulWidget {
@@ -17,7 +17,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   SaveUid saveUid = SaveUid();
-  late AddingNote addingNote;
+  late DatabaseNote addingNote;
   AuthGoogle authGoogle = AuthGoogle();
   AuthEmail authEmail = AuthEmail();
   var _listnote = <NoteModel>{};
@@ -26,7 +26,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    addingNote = AddingNote(uid: MainState.currentUid.toString());
+    addingNote = DatabaseNote(uid: MainState.currentUid.toString());
     signInCheck();
     parsingData();
     super.initState();
@@ -232,7 +232,7 @@ class _HomePageState extends State<HomePage> {
         .whenComplete(() => showDialog(
               context: context,
               builder: (context) => AlertDialog(
-                title: Text('Date note created'),
+                title: const Text('Date note created'),
                 content: Text(
                     'Date: ${notemodelList.date}\nTime: ${notemodelList.time}'),
               ),

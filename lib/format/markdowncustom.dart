@@ -8,7 +8,7 @@ class CustomTextEditingController extends TextEditingController {
       : pattern = RegExp(map.keys.map((e) => e).join('|'), multiLine: true);
 
   @override
-  set Text(String newText) {
+  set text(String newText) {
     value = value.copyWith(
         text: newText,
         selection: TextSelection.collapsed(offset: newText.length),

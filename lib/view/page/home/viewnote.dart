@@ -8,7 +8,7 @@ import 'package:noteplan/color/colors.dart';
 import 'package:noteplan/format/markdowncustom.dart';
 import 'package:noteplan/main.dart';
 import 'package:noteplan/model/note.dart';
-import 'package:noteplan/presenter/adding.dart';
+import 'package:noteplan/presenter/database_note.dart';
 import 'package:noteplan/storage/cloudstorage.dart';
 import 'package:noteplan/presenter/presenter.dart';
 
@@ -272,7 +272,7 @@ class _ViewNoteState extends State<ViewNote> {
     var cursosPos = textController.selection;
     final fullText = textController.text;
     final textSelect = textController.selection.textInside(textController.text);
-    final replaceText = fullText.replaceAll(textSelect, '*${textSelect}*');
+    final replaceText = fullText.replaceAll(textSelect, '*$textSelect*');
 
     //   isTextBold = !isTextBold;
     if (textController.text.isNotEmpty) {
@@ -338,7 +338,7 @@ class ActionNote extends StatelessWidget {
   final date = DateFormat("d/M/y").format(DateTime.now());
   final time = DateFormat("h:mm a' '-' 'E'").format(DateTime.now());
   CloudStorage cloudStorage = CloudStorage();
-  AddingNote? addingNote;
+  DatabaseNote? databaseNote;
   final String? keyData;
   final Object? uid;
   final String? title;
@@ -363,8 +363,8 @@ class ActionNote extends StatelessWidget {
     // print('have image link?? :${oldImageLink!}');
     directoryImage = File(imagePath?.path != null ? imagePath!.path : "");
     nameImageNow = directoryImage!.path.split('/').last;
-    debugPrint('current image :${_ViewNoteState._currentImage?.name}');
-    debugPrint('image now: ${nameImageNow}');
+    // debugPrint('current image :${_ViewNoteState._currentImage?.name}');
+    // debugPrint('image now: $nameImageNow');
     return Column(
       children: [
         Row(
@@ -444,7 +444,7 @@ class ActionNote extends StatelessWidget {
 
   Future updateData(
       String key, String title, String? image, String description) async {
-    addingNote = AddingNote(uid: uid.toString());
+    databaseNote = DatabaseNote(uid: uid.toString());
     final note = NoteModel(
         keyData: uid.toString(),
         title: title,
@@ -452,6 +452,6 @@ class ActionNote extends StatelessWidget {
         description: description,
         date: date,
         time: time);
-    addingNote!.updateData(keyData!, note);
+    databaseNote!.updateData(keyData!, note);
   }
 }

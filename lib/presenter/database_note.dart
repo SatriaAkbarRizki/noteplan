@@ -2,15 +2,14 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:noteplan/main.dart';
 import 'package:noteplan/model/note.dart';
 
-class AddingNote {
+class DatabaseNote {
   final String uid;
   List<NoteModel>? notemodelList;
   Map<String, NoteModel>? dataUser;
 
-  AddingNote({required this.uid});
+  DatabaseNote({required this.uid});
 
-  get reference =>
-      FirebaseDatabase.instance.ref().child('Users/UID/${uid}/Note');
+  get reference => FirebaseDatabase.instance.ref().child('Users/UID/$uid/Note');
 
   Query queryFirebase() {
     return reference;
@@ -18,7 +17,7 @@ class AddingNote {
 
   Future saveNote(NoteModel noteModel) async {
     DatabaseReference databaseReference =
-        FirebaseDatabase.instance.ref().child('Users/UID/${uid}/Note');
+        FirebaseDatabase.instance.ref().child('Users/UID/$uid/Note');
     databaseReference.push().set(noteModel.toJson());
   }
 
@@ -31,7 +30,7 @@ class AddingNote {
 
     final data = reference.snapshot.value as Map<dynamic, dynamic>;
 
-    data?.forEach((key, value) {
+    data.forEach((key, value) {
       NoteModel noteModel = NoteModel.fromMap(key, value);
       notemodelList?.add(noteModel);
     });
@@ -46,7 +45,7 @@ class AddingNote {
     final note = noteModel.toJson();
 
     Map<String, dynamic> update = {};
-    update['Users/UID/${noteModel.keyData}/Note/${key}'] = note;
+    update['Users/UID/${noteModel.keyData}/Note/$key'] = note;
     return FirebaseDatabase.instance.ref().update(update);
   }
 }

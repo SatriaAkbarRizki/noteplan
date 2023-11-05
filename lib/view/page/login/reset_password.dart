@@ -161,7 +161,7 @@ class ButtonResetPass extends StatelessWidget {
   final TextEditingController emailController;
   final TextEditingController passwordController;
 
-  ButtonResetPass(
+  const ButtonResetPass(
       {required this.authEmail,
       required this.emailController,
       required this.passwordController,

@@ -21,7 +21,7 @@ void main() async {
 }
 
 class MainApp extends StatefulWidget {
-  MainApp({super.key});
+  const MainApp({super.key});
 
 
   @override
@@ -60,7 +60,7 @@ class MainState extends State<MainApp> {
         '/Reset': (context) => const ResetPass(),
         '/AddNote': (context) => AddNote(uid: null),
         '/ViewNote': (context) => ViewNote(
-              currentNote: [],
+              currentNote: const [],
             )
       },
       debugShowCheckedModeBanner: false,
