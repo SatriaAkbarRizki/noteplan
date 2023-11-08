@@ -111,7 +111,7 @@ class _CustomProfileState extends State<CustomProfile> {
               Row(
                 children: [
                   const Flexible(
-                      flex: 4,
+                      flex: 8,
                       fit: FlexFit.tight,
                       child: Text(
                         'Mode Theme',
