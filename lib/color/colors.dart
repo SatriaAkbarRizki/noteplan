@@ -5,5 +5,5 @@ class MyColors {
   static Color colorBackgroundLogonTwo = const Color(0xffD9D9D9);
   static Color colorBackgroundHome = const Color(0xffF8F0E5);
   static Color colorCancel = Colors.red;
-  static Color colorButtonLogin = const Color(0xffC7EBB3);
+  static Color colorButton = const Color(0xffC7EBB3);
 }

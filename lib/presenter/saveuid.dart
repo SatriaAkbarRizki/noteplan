@@ -15,4 +15,10 @@ class SaveUid {
 
     return pref.getString('uid');
   }
+
+  Future removeUid() async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+
+    return pref.remove('uid');
+  }
 }

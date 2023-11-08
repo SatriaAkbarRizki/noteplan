@@ -406,9 +406,9 @@ class ActionNote extends StatelessWidget {
                   child: const Text('Save'),
                   style: ButtonStyle(
                       overlayColor:
-                          MaterialStatePropertyAll(MyColors.colorButtonLogin),
+                          MaterialStatePropertyAll(MyColors.colorButton),
                       backgroundColor:
-                          MaterialStatePropertyAll(MyColors.colorButtonLogin),
+                          MaterialStatePropertyAll(MyColors.colorButton),
                       foregroundColor:
                           const MaterialStatePropertyAll(Colors.black),
                       shape:

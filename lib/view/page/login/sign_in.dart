@@ -237,8 +237,10 @@ class _SignInState extends State<SignIn> {
                 try {
                   final uid = await signEmail();
                   if (uid != null) {
-                    await _saveUid.saveUid(uid);
-                    // print('uid email : ${SaveUid.currentUID}');
+                    await _saveUid
+                        .saveUid(uid)
+                        // print('uid email : ${SaveUid.currentUID}');
+                        .whenComplete(() => MainState.currentUid = uid);
                     Navigator.pushReplacementNamed(
                       context,
                       '/Home',
@@ -262,7 +264,7 @@ class _SignInState extends State<SignIn> {
               },
               style: ButtonStyle(
                   backgroundColor:
-                      MaterialStatePropertyAll(MyColors.colorButtonLogin),
+                      MaterialStatePropertyAll(MyColors.colorButton),
                   foregroundColor:
                       const MaterialStatePropertyAll(Colors.black)),
               child: const Text(
@@ -295,7 +297,7 @@ class _SignInState extends State<SignIn> {
               },
               style: ButtonStyle(
                   backgroundColor:
-                      MaterialStatePropertyAll(MyColors.colorButtonLogin),
+                      MaterialStatePropertyAll(MyColors.colorButton),
                   foregroundColor:
                       const MaterialStatePropertyAll(Colors.black)),
               child: Row(

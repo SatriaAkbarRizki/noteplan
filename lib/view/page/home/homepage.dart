@@ -4,8 +4,11 @@ import 'package:noteplan/auth/authgoogle.dart';
 import 'package:noteplan/color/colors.dart';
 import 'package:noteplan/main.dart';
 import 'package:noteplan/model/note.dart';
+import 'package:noteplan/model/profile.dart';
 import 'package:noteplan/presenter/database_note.dart';
 import 'package:noteplan/presenter/saveuid.dart';
+import 'package:noteplan/user/profile_user.dart';
+import 'package:noteplan/widget/custom_dialog.dart';
 
 class HomePage extends StatefulWidget {
   final String? uid;
@@ -16,19 +19,23 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  ProfileUser profileUser = ProfileUser();
   SaveUid saveUid = SaveUid();
-  late DatabaseNote addingNote;
+  late DatabaseNote databaseNote;
   AuthGoogle authGoogle = AuthGoogle();
   AuthEmail authEmail = AuthEmail();
   var _listnote = <NoteModel>{};
+
   List<NoteModel>? toListNote;
+  List<ProfileModel>? _profile;
   String? uidCurrent;
 
   @override
   void initState() {
-    addingNote = DatabaseNote(uid: MainState.currentUid.toString());
+    databaseNote = DatabaseNote(uid: MainState.currentUid.toString());
     signInCheck();
     parsingData();
+    parsingProfile();
     super.initState();
   }
 
@@ -37,13 +44,21 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future parsingData() async {
-    await addingNote.readData().then((value) async {
+    await databaseNote.readData().then((value) async {
       _listnote = value!.toSet();
       return _listnote;
     }).then((value) => toListNote = value.toList());
 
     setState(() {});
     // print('length toListNote: ${toListNote?.length}');
+  }
+
+  Future parsingProfile() async {
+    await profileUser.getProfile().then((value) async {
+      if (value != null) {
+        _profile = value;
+      }
+    });
   }
 
   Future refreshData() async {
@@ -66,7 +81,7 @@ class _HomePageState extends State<HomePage> {
           height: 60,
           width: 60,
           decoration: BoxDecoration(
-              color: MyColors.colorButtonLogin,
+              color: MyColors.colorButton,
               border: Border.all(style: BorderStyle.solid, color: Colors.black),
               borderRadius: BorderRadius.circular(10)),
           child: const Icon(Icons.add),
@@ -77,9 +92,9 @@ class _HomePageState extends State<HomePage> {
         onRefresh: refreshData,
         child: Column(
           children: [
-            const TittleBar(),
+            TittleBar(listProfile: _profile?[0]),
             FutureBuilder<List<NoteModel>?>(
-              future: addingNote.readData(),
+              future: databaseNote.readData(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Expanded(
@@ -242,19 +257,20 @@ class _HomePageState extends State<HomePage> {
 }
 
 class TittleBar extends StatelessWidget {
-  const TittleBar({super.key});
+  ProfileModel? listProfile;
+  TittleBar({required this.listProfile, super.key});
+
+  // Lempar list tersebut ke icon profile
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
+    return Row(
       children: [
-        Expanded(
+        const Flexible(
+          flex: 4,
+          fit: FlexFit.tight,
           child: Padding(
-            padding: EdgeInsets.only(
-              left: 20,
-              top: 20,
-              right: 20,
-            ),
+            padding: EdgeInsets.only(left: 20, top: 20, right: 20),
             child: Text(
               'Your Notes',
               style: TextStyle(
@@ -263,6 +279,24 @@ class TittleBar extends StatelessWidget {
                 fontWeight: FontWeight.w500,
                 letterSpacing: 2,
               ),
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (context) => CustomProfile(
+                  listProfile?.name, listProfile?.email, listProfile?.image),
+            );
+          },
+          child: Container(
+            margin: EdgeInsets.only(left: 20, top: 20, right: 20),
+            height: 40,
+            width: 40,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black),
+              shape: BoxShape.circle,
             ),
           ),
         ),

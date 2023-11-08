@@ -51,7 +51,7 @@ class MainState extends State<MainApp> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('curretn: ${currentUid}');
+    // debugPrint('curretn: ${currentUid}');
     return MaterialApp(
       routes: {
         '/Home': (context) => const HomePage(uid: null),

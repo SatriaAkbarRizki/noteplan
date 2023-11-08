@@ -11,7 +11,7 @@ class CloudStorage {
       final storageRef =
           FirebaseStorage.instance.ref().child('images/${nameImage}');
       final upload = storageRef.putFile(imagePath);
-      final snapsot = await upload.then((v) async {
+      final snapshot = await upload.then((v) async {
         if (v.state == TaskState.success) {
           final result = await storageRef.getDownloadURL();
           debugPrint('Succes Upload : $result');

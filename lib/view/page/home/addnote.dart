@@ -345,7 +345,9 @@ class ActionNote extends StatelessWidget {
                   onPressed: () async {
                     _AddNoteState.focusTitle.unfocus();
                     _AddNoteState.focusDesc.unfocus();
-                    await cloudStorage.uploadImage(directoryImage).then((value) {
+                    await cloudStorage
+                        .uploadImage(directoryImage)
+                        .then((value) {
                       linkImage = value;
                       debugPrint('result links??: ${value}');
                     }).whenComplete(() async {
@@ -358,9 +360,9 @@ class ActionNote extends StatelessWidget {
                   child: const Text('Save'),
                   style: ButtonStyle(
                       overlayColor:
-                          MaterialStatePropertyAll(MyColors.colorButtonLogin),
+                          MaterialStatePropertyAll(MyColors.colorButton),
                       backgroundColor:
-                          MaterialStatePropertyAll(MyColors.colorButtonLogin),
+                          MaterialStatePropertyAll(MyColors.colorButton),
                       foregroundColor:
                           const MaterialStatePropertyAll(Colors.black),
                       shape:
