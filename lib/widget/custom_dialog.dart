@@ -72,19 +72,24 @@ class _CustomProfileState extends State<CustomProfile> {
                 height: spacingWIdget,
               ),
               Align(
-                  alignment: Alignment.center,
-                  child: SizedBox(
-                    height: 150,
-                    width: 150,
-                    child: CircleAvatar(
+                alignment: Alignment.center,
+                child: SizedBox(
+                  height: 150,
+                  width: 150,
+                  child: CircleAvatar(
+                      backgroundImage: NetworkImage(
+                        widget.image.toString(),
+                      ),
                       backgroundColor: MyColors.colorButton,
                       radius: avatarRadius,
-                      child: Image.asset(
-                        "assets/images/profile.png",
-                        scale: 5.0,
-                      ),
-                    ),
-                  )),
+                      child: widget.image == null
+                          ? Image.asset(
+                              "assets/images/profile.png",
+                              scale: 5.0,
+                            )
+                          : Visibility(visible: true, child: SizedBox())),
+                ),
+              ),
               SizedBox(
                 height: spacingWIdget,
               ),
@@ -131,14 +136,17 @@ class _CustomProfileState extends State<CustomProfile> {
                 height: 45,
                 width: MediaQuery.of(context).size.width,
                 child: ElevatedButton(
-                    onPressed: ()  {
+                    onPressed: () {
                       // await authEmail.signOutEmail().whenComplete(() async =>
                       //     await localUid.removeUid().whenComplete(() {
                       //       AuthGoogle().googleSignIn.disconnect();
                       //       Navigator.pushReplacementNamed(context, '/SignIn');
                       //     }));
 
-                        showDialog(context: context, builder: (context) => CustomLogOut(),);
+                      showDialog(
+                        context: context,
+                        builder: (context) => CustomLogOut(),
+                      );
                     },
                     child: const Text('Log Out'),
                     style: ButtonStyle(
@@ -161,3 +169,8 @@ class _CustomProfileState extends State<CustomProfile> {
     );
   }
 }
+
+// Image.asset(
+//                         "assets/images/profile.png",
+//                         scale: 5.0,
+//                       )
