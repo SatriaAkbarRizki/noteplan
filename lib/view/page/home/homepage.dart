@@ -295,9 +295,14 @@ class TittleBar extends StatelessWidget {
             height: 40,
             width: 40,
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.black),
+              border: listProfile?.image == null ? Border.all(color: Colors.black) : Border.all(color: Colors.transparent) ,
               shape: BoxShape.circle,
             ),
+            child: listProfile?.image == null
+                ? Visibility(visible: true, child: SizedBox())
+                : ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.network(listProfile!.image.toString(),)),
           ),
         ),
       ],
