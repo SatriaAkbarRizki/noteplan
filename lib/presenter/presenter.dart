@@ -8,20 +8,20 @@ class Presenter {
 
   Presenter({required this.uid});
 
-  get reference => FirebaseDatabase.instance.ref().child('Users').child(uid);
+  late DatabaseReference reference =
+      FirebaseDatabase.instance.ref().child('Users').child(uid);
 
   Query queryFirebase() {
     return reference;
   }
 
   Future saveData(UserModel userModel) async {
-    DatabaseReference databaseReference =
-        FirebaseDatabase.instance.ref().child('Users/${uid}');
 
-    if (databaseReference.key == uid) {
+
+    if (reference.key == uid) {
       updateData(uid, userModel);
     } else {
-      return databaseReference.push().set(userModel.toJson());
+      return reference.push().set(userModel.toJson());
     }
   }
 
@@ -29,7 +29,7 @@ class Presenter {
     final reference = FirebaseDatabase.instance.ref();
     final snap = await reference.child('Users').child(uid).once();
 
-    final data =  snap.snapshot.value as Map<dynamic, dynamic>;
+    final data = snap.snapshot.value as Map<dynamic, dynamic>;
 
     if (data['keyData'] == null) {
       return null;

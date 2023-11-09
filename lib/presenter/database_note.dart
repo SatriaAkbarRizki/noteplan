@@ -9,16 +9,15 @@ class DatabaseNote {
 
   DatabaseNote({required this.uid});
 
-  get reference => FirebaseDatabase.instance.ref().child('Users/UID/$uid/Note');
+  late DatabaseReference reference =
+      FirebaseDatabase.instance.ref().child('Users/UID/$uid/Note');
 
   Query queryFirebase() {
     return reference;
   }
 
   Future saveNote(NoteModel noteModel) async {
-    DatabaseReference databaseReference =
-        FirebaseDatabase.instance.ref().child('Users/UID/$uid/Note');
-    databaseReference.push().set(noteModel.toJson());
+    reference.push().set(noteModel.toJson());
   }
 
   Future<List<NoteModel>?> readData() async {
@@ -34,10 +33,6 @@ class DatabaseNote {
       NoteModel noteModel = NoteModel.fromMap(key, value);
       notemodelList?.add(noteModel);
     });
-    // notemodelList?.forEach((element) {
-    //   print(element.keyData);
-    // });
-    // print('length in notemodelist: ${n otemodelList!.length}');
     return notemodelList;
   }
 
