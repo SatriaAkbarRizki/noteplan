@@ -10,7 +10,7 @@ import 'package:noteplan/main.dart';
 import 'package:noteplan/model/note.dart';
 import 'package:noteplan/presenter/database_note.dart';
 import 'package:noteplan/storage/cloudstorage.dart';
-import 'package:noteplan/presenter/presenter.dart';
+
 
 class ViewNote extends StatefulWidget {
   List<NoteModel>? currentNote;
@@ -25,7 +25,7 @@ class _ViewNoteState extends State<ViewNote> {
   static XFile? _currentImage;
   String? keyData;
   String? oldImageLink;
-  Presenter? presenter;
+
   static FocusNode focusTitle = FocusNode();
   static FocusNode focusDesc = FocusNode();
   final CustomTextEditingController textController =

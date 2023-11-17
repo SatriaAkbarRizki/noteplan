@@ -78,7 +78,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // debugPrint('Uid on Home: ${MainState.currentUid}');
+    debugPrint('Uid on Home: ${MainState.currentUid}');
     return Scaffold(
       backgroundColor: MyColors.colorBackgroundHome,
       floatingActionButton: GestureDetector(
@@ -301,7 +301,7 @@ class TittleBar extends StatelessWidget {
                     ));
           },
           child: Container(
-            margin: EdgeInsets.only(left: 20, top: 20, right: 20),
+            margin: const EdgeInsets.only(left: 20, top: 20, right: 20),
             height: 40,
             width: 40,
             decoration: BoxDecoration(

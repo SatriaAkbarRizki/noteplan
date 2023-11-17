@@ -171,9 +171,4 @@ class _CustomProfileState extends State<CustomProfile> {
       ],
     );
   }
-}
-
-// Image.asset(
-//                         "assets/images/profile.png",
-//                         scale: 5.0,
-//                       )
+}                     

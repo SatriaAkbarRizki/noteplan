@@ -8,7 +8,7 @@ import 'package:noteplan/format/markdowncustom.dart';
 import 'package:noteplan/model/note.dart';
 import 'package:noteplan/presenter/database_note.dart';
 import 'package:noteplan/storage/cloudstorage.dart';
-import 'package:noteplan/presenter/presenter.dart';
+
 
 class AddNote extends StatefulWidget {
   final String? uid;
@@ -20,7 +20,7 @@ class AddNote extends StatefulWidget {
 
 class _AddNoteState extends State<AddNote> {
   XFile? _image;
-  Presenter? presenter;
+
   static FocusNode focusTitle = FocusNode();
   static FocusNode focusDesc = FocusNode();
   final CustomTextEditingController textController =
@@ -70,6 +70,7 @@ class _AddNoteState extends State<AddNote> {
 
   @override
   void dispose() {
+    titleController.dispose();
     textController.dispose();
     super.dispose();
   }

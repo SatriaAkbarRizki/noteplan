@@ -8,7 +8,7 @@ class AuthEmail {
     try {
       final result = await auth.createUserWithEmailAndPassword(
           email: email, password: password);
-      final message = "Succes";
+      const message = "Succes";
       return message;
     } on FirebaseAuthException catch (e) {
       final result = e.message.toString();

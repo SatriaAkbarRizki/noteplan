@@ -9,6 +9,8 @@ class ProfileUser {
   DatabaseProfile databaseProfile =
       DatabaseProfile(uid: MainState.currentUid.toString());
   User? user = FirebaseAuth.instance.currentUser;
+
+  ProfileModel? profileModel;
   String? name;
   String? email;
   String? image;
@@ -19,20 +21,36 @@ class ProfileUser {
       email = user!.email;
       image = user!.photoURL;
       // debugPrint('name: ${name}');
-      // debugPrint('email ${email}');
+
       // debugPrint("image ${image}");
 
-      ProfileModel profileModel =
-          ProfileModel(key: null, name: name!, email: email!, image: image!);
-      _listProfile = [];
-      _listProfile!.add(profileModel);
+      if (name != null) {
+        profileModel =
+            ProfileModel(key: null, name: name!, email: email!, image: image!);
+        _listProfile = [];
+        _listProfile!.add(profileModel!);
+      } else {
+        setNameProfile(email!).then((value) {
+          name = value;
+          debugPrint('name ${value}');
+          profileModel = ProfileModel(
+              key: null, name: name!, email: email!, image: image!);
+          _listProfile = [];
+          _listProfile!.add(profileModel!);
+        });
+      }
 
-      databaseProfile.saveProfile(profileModel);
+      databaseProfile.saveProfile(profileModel!);
 
       return _listProfile!;
     } else {
       debugPrint('Null value profile');
     }
     return null;
+  }
+
+  Future<String> setNameProfile(String email) async {
+    String name = email.split('@').first;
+    return name;
   }
 }
