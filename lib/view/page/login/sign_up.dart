@@ -20,6 +20,8 @@ class _SignUpEmailState extends State<SignUpEmail> {
 
   @override
   void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
     _focusNodeEmail.dispose();
     _focusNodePasword.dispose();
     super.dispose();

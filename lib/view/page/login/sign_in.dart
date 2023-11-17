@@ -43,20 +43,25 @@ class _SignInState extends State<SignIn> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    _focusNodeEmail.dispose();
+    _focusNodePasword.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    authEmail.auth.signOut();
+    authGoogle.googleSignIn.disconnect();
+    super.dispose();
+  }
+
+
+
   Future signInCheck() async {
     if (!await authGoogle.googleSignIn.isSignedIn()) {
       authGoogle.googleSignIn.signInSilently();
     }
   }
 
-  @override
-  void dispose() {
-    _focusNodeEmail.dispose();
-    _focusNodePasword.dispose();
-    authEmail.auth.signOut();
-    authGoogle.googleSignIn.disconnect();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
