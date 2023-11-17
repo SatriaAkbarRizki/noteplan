@@ -7,8 +7,9 @@ import 'package:noteplan/widget/custom_logout.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomProfile extends StatefulWidget {
-  final String? name, email, image;
-  CustomProfile(this.name, this.email, this.image, {super.key});
+  final String? keyProfile, name, email, image;
+  CustomProfile(this.keyProfile, this.name, this.email, this.image,
+      {super.key});
 
   @override
   State<CustomProfile> createState() => _CustomProfileState();
@@ -24,6 +25,7 @@ class _CustomProfileState extends State<CustomProfile> {
 
   @override
   Widget build(BuildContext context) {
+
     return Dialog(
       shape:
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(padding)),
@@ -145,7 +147,8 @@ class _CustomProfileState extends State<CustomProfile> {
 
                       showDialog(
                         context: context,
-                        builder: (context) => CustomLogOut(),
+                        builder: (context) =>
+                            CustomLogOut(widget.keyProfile.toString()),
                       );
                     },
                     child: const Text('Log Out'),

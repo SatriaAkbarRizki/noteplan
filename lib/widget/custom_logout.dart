@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:noteplan/color/colors.dart';
+import 'package:noteplan/main.dart';
+import 'package:noteplan/presenter/database_profile.dart';
 
 import '../auth/authemail.dart';
 import '../auth/authgoogle.dart';
 import '../presenter/saveuid.dart';
 
 class CustomLogOut extends StatefulWidget {
-  const CustomLogOut({super.key});
+  final String keyProfile;
+  const CustomLogOut(this.keyProfile, {super.key});
 
   @override
   State<CustomLogOut> createState() => _CustomLogOutState();
 }
 
 class _CustomLogOutState extends State<CustomLogOut> {
+  DatabaseProfile databaseProfile =
+      DatabaseProfile(uid: MainState.currentUid.toString());
   final double padding = 20;
   final double avatarRadius = 45;
   final double spacingWIdget = 20;
@@ -94,7 +99,9 @@ class _CustomLogOutState extends State<CustomLogOut> {
                               side: BorderSide(color: Colors.black),
                             )))),
                   ),
-                  SizedBox(width: 25,),
+                  SizedBox(
+                    width: 25,
+                  ),
                   SizedBox(
                     height: 45,
                     width: 120,
@@ -103,9 +110,15 @@ class _CustomLogOutState extends State<CustomLogOut> {
                           await authEmail.signOutEmail().whenComplete(
                               () async =>
                                   await localUid.removeUid().whenComplete(() {
-                                    AuthGoogle().googleSignIn.disconnect();
-                                    Navigator.pushReplacementNamed(
-                                        context, '/SignIn');
+                                    AuthGoogle()
+                                        .googleSignIn
+                                        .disconnect()
+                                        .whenComplete(() async {
+                                      databaseProfile
+                                          .removeProfile(widget.keyProfile);
+                                      Navigator.pushReplacementNamed(
+                                          context, '/SignIn');
+                                    });
                                   }));
                         },
                         child: const Text('Yes'),

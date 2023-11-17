@@ -6,6 +6,7 @@ import 'package:noteplan/main.dart';
 import 'package:noteplan/model/note.dart';
 import 'package:noteplan/model/profile.dart';
 import 'package:noteplan/presenter/database_note.dart';
+import 'package:noteplan/presenter/database_profile.dart';
 import 'package:noteplan/presenter/saveuid.dart';
 import 'package:noteplan/user/profile_user.dart';
 import 'package:noteplan/widget/custom_dialog.dart';
@@ -19,20 +20,24 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  ProfileUser profileUser = ProfileUser();
-  SaveUid saveUid = SaveUid();
-  late DatabaseNote databaseNote;
   AuthGoogle authGoogle = AuthGoogle();
   AuthEmail authEmail = AuthEmail();
+
   var _listnote = <NoteModel>{};
+  late DatabaseProfile databaseProfile;
+  late DatabaseNote databaseNote;
+
+  String? uidCurrent;
+  SaveUid saveUid = SaveUid();
+  ProfileUser profileUser = ProfileUser();
 
   List<NoteModel>? toListNote;
   List<ProfileModel>? _profile;
-  String? uidCurrent;
 
   @override
   void initState() {
     databaseNote = DatabaseNote(uid: MainState.currentUid.toString());
+    databaseProfile = DatabaseProfile(uid: MainState.currentUid.toString());
     signInCheck();
     parsingData();
     parsingProfile();
@@ -50,20 +55,24 @@ class _HomePageState extends State<HomePage> {
     }).then((value) => toListNote = value.toList());
 
     setState(() {});
-    // print('length toListNote: ${toListNote?.length}');
   }
 
   Future parsingProfile() async {
     await profileUser.getProfile().then((value) async {
-      if (value != null) {
-        _profile = value;
-      }
+      await databaseProfile.readProfile().then((value) {
+        if (mounted) {
+          setState(() {
+            _profile = value;
+          });
+        }
+      });
     });
   }
 
   Future refreshData() async {
     setState(() {
       parsingData();
+      parsingProfile();
     });
   }
 
@@ -137,7 +146,7 @@ class _HomePageState extends State<HomePage> {
                   margin: const EdgeInsets.only(left: 30, top: 25),
                   child: GestureDetector(
                     onTap: () {
-                      debugPrint('trigger button');
+                      // debugPrint('trigger button');
                       showAlertDialog(notemodelList[index]);
                     },
                     child: Text(
@@ -257,10 +266,8 @@ class _HomePageState extends State<HomePage> {
 }
 
 class TittleBar extends StatelessWidget {
-  ProfileModel? listProfile;
-  TittleBar({required this.listProfile, super.key});
-
-  // Lempar list tersebut ke icon profile
+  final ProfileModel? listProfile;
+  const TittleBar({required this.listProfile, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -285,24 +292,36 @@ class TittleBar extends StatelessWidget {
         GestureDetector(
           onTap: () {
             showDialog(
-              context: context,
-              builder: (context) => CustomProfile(
-                  listProfile?.name, listProfile?.email, listProfile?.image),
-            );
+                context: context,
+                builder: (context) => CustomProfile(
+                      listProfile?.key,
+                      listProfile?.name,
+                      listProfile?.email,
+                      listProfile?.image,
+                    ));
           },
           child: Container(
             margin: EdgeInsets.only(left: 20, top: 20, right: 20),
             height: 40,
             width: 40,
             decoration: BoxDecoration(
-              border: listProfile?.image == null ? Border.all(color: Colors.black) : Border.all(color: Colors.transparent) ,
+              border: listProfile?.image == null
+                  ? Border.all(color: Colors.black)
+                  : Border.all(color: Colors.transparent),
               shape: BoxShape.circle,
             ),
             child: listProfile?.image == null
-                ? Visibility(visible: true, child: SizedBox())
+                ? Visibility(
+                    visible: true,
+                    child: Image.asset(
+                      "assets/images/profile.png",
+                      scale: 15,
+                    ))
                 : ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Image.network(listProfile!.image.toString(),)),
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.network(
+                      listProfile!.image.toString(),
+                    )),
           ),
         ),
       ],
