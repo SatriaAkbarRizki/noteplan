@@ -18,6 +18,8 @@ class _ResetPassState extends State<ResetPass> {
 
   @override
   void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
     _focusNodeEmail.dispose();
     super.dispose();
   }
