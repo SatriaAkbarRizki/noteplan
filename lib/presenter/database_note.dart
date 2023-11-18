@@ -25,9 +25,12 @@ class DatabaseNote {
     final reference = await FirebaseDatabase.instance
         .ref()
         .child('Users/UID/${MainState.currentUid.toString()}/Note')
+        .orderByChild('date')
         .once();
 
-    final data = reference.snapshot.value as Map<dynamic, dynamic>;
+    Map data = reference.snapshot.value as Map<dynamic, dynamic>;
+
+    data = sortingData(data);
 
     data.forEach((key, value) {
       NoteModel noteModel = NoteModel.fromMap(key, value);
@@ -42,5 +45,11 @@ class DatabaseNote {
     Map<String, dynamic> update = {};
     update['Users/UID/${noteModel.keyData}/Note/$key'] = note;
     return FirebaseDatabase.instance.ref().update(update);
+  }
+
+  Map sortingData(Map data) {
+    var sortedMap = Map.fromEntries(
+        data.entries.toList()..sort((e1, e2) => e2.key.compareTo(e1.key)));
+    return sortedMap;
   }
 }
