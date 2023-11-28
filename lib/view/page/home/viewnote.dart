@@ -111,8 +111,8 @@ class _ViewNoteState extends State<ViewNote> {
   @override
   Widget build(BuildContext context) {
     final uid = MainState.currentUid;
-    // debugPrint('imageFile oldImageLink : ${oldImageLink}');
-    // debugPrint('_image: _imageName ${_currentImage?.name}');
+    debugPrint('imageFile oldImageLink : ${oldImageLink}');
+    debugPrint('_image: _imageName ${_currentImage?.name}');
     return Scaffold(
       body: GestureDetector(
         onTap: () {
@@ -430,7 +430,7 @@ class ActionNote extends StatelessWidget {
   }
 
   Future cloudImage(BuildContext context) async {
-    if (_ViewNoteState._currentImage!.name == nameImageNow) {
+    if (_ViewNoteState._currentImage?.name == nameImageNow) {
       await updateData(keyData!, title!, oldImageLink, description!)
           .whenComplete(() => Navigator.pushNamed(context, '/Home'));
     } else if (_ViewNoteState._currentImage?.name != nameImageNow) {
