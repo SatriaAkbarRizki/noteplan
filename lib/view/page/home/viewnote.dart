@@ -89,7 +89,7 @@ class _ViewNoteState extends State<ViewNote> {
       titleController.text = current.title;
       textController.text = current.description;
       keyData = current?.keyData;
-      oldImageLink = await current.image;
+      oldImageLink = current.image;
       if (current.image != null) {
         // Donwload image url
         // Convert to name image
@@ -111,7 +111,7 @@ class _ViewNoteState extends State<ViewNote> {
   @override
   Widget build(BuildContext context) {
     final uid = MainState.currentUid;
-    debugPrint('imageFile oldImageLink : ${oldImageLink}');
+    debugPrint('imageFile oldImageLink : $oldImageLink');
     debugPrint('_image: _imageName ${_currentImage?.name}');
     return Scaffold(
       body: GestureDetector(
@@ -134,7 +134,7 @@ class _ViewNoteState extends State<ViewNote> {
                   uid: uid.toString(),
                   title: titleController.text,
                   oldImageLink: oldImageLink,
-                  imagePath: _imageName ?? null,
+                  imagePath: _imageName,
                   description: textController.text,
                 )
               ],
@@ -333,9 +333,9 @@ class _ViewNoteState extends State<ViewNote> {
   }
 
   Future<XFile?> convertUrl(String? url) async {
-    final file = await DefaultCacheManager().getSingleFile("${url!}");
+    final file = await DefaultCacheManager().getSingleFile(url!);
 
-    XFile image = await XFile(file.path);
+    XFile image = XFile(file.path);
     return image;
   }
 }

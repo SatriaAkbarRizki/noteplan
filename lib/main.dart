@@ -31,7 +31,7 @@ void main() async {
 
   ThemeManager.valueNotifierTheme.value = themeMode;
   MainState.currentUid = savedCurrentUser;
-  runApp(MainApp());
+  runApp(const MainApp());
 }
 
 class MainApp extends StatefulWidget {

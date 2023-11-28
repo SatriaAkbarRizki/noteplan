@@ -286,7 +286,7 @@ class _SignInState extends State<SignIn> {
           width: 500,
           child: ElevatedButton(
               onPressed: () async {
-                await authGoogle.SignInGoogle(context).then((value) async {
+                await authGoogle.signInGoogle(context).then((value) async {
                   if (value != null) {
                     await _saveUid.saveUid(value!).whenComplete(() {
                       setState(() {

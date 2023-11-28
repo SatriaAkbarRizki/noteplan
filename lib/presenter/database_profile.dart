@@ -31,7 +31,7 @@ class DatabaseProfile {
 
     data.forEach((key, value) {
       ProfileModel profileModel = ProfileModel.fromMap(key, value);
-      ;
+      
       profilemodelList?.add(profileModel);
     });
 

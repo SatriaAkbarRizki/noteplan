@@ -247,7 +247,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> showAlertDialog(NoteModel notemodelList) async {
-    await Future.delayed(Duration(milliseconds: 200))
+    await Future.delayed(const Duration(milliseconds: 200))
         .whenComplete(() => showDialog(
               context: context,
               builder: (context) => AlertDialog(

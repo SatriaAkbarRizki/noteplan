@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:noteplan/color/colors.dart';
+import 'package:noteplan/local/modeUser.dart';
 import 'package:noteplan/main.dart';
 import 'package:noteplan/presenter/database_profile.dart';
 
@@ -18,11 +19,11 @@ class CustomLogOut extends StatefulWidget {
 class _CustomLogOutState extends State<CustomLogOut> {
   DatabaseProfile databaseProfile =
       DatabaseProfile(uid: MainState.currentUid.toString());
-  final double padding = 20;
-  final double avatarRadius = 45;
-  final double spacingWIdget = 20;
+  final double padding = 20, avatarRadius = 45,spacingWIdget = 20;
+  
   final AuthEmail authEmail = AuthEmail();
   final SaveUid localUid = SaveUid();
+  final ModeUser modeUser = ModeUser();
 
   Widget build(BuildContext context) {
     return Dialog(
@@ -110,15 +111,16 @@ class _CustomLogOutState extends State<CustomLogOut> {
                           await authEmail.signOutEmail().whenComplete(
                               () async =>
                                   await localUid.removeUid().whenComplete(() {
-                                    AuthGoogle()
-                                        .googleSignIn
-                                        .disconnect()
-                                        .whenComplete(() async {
-                                      databaseProfile
-                                          .removeProfile(widget.keyProfile);
-                                      Navigator.pushReplacementNamed(
-                                          context, '/SignIn');
-                                    });
+                                    modeUser.removeThemeUser();
+                                    databaseProfile
+                                        .removeProfile(widget.keyProfile)
+                                        .whenComplete(() => AuthGoogle()
+                                                .googleSignIn
+                                                .disconnect()
+                                                .whenComplete(() async {
+                                              Navigator.pushReplacementNamed(
+                                                  context, '/SignIn');
+                                            }));
                                   }));
                         },
                         child: const Text('Yes'),
