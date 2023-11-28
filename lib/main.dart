@@ -25,9 +25,9 @@ void main() async {
   final savedThemeMode = await modeUser.getThemeUser();
   final savedCurrentUser = await saveUid.getUid();
 
-  final themeMode = savedThemeMode == ThemeMode.dark.toString()
-      ? ThemeMode.dark
-      : ThemeMode.light;
+  final themeMode = savedThemeMode == ThemeMode.light.toString()
+      ? ThemeMode.light
+      : ThemeMode.dark;
 
   ThemeManager.valueNotifierTheme.value = themeMode;
   MainState.currentUid = savedCurrentUser;

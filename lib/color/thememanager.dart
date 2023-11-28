@@ -9,8 +9,8 @@ class ThemeManager {
 
   Future setThemeMode(bool isDark) async {
     await modeUser.saveModeUser(
-        isDark ? ThemeMode.dark.toString() : ThemeMode.light.toString());
+        isDark ? ThemeMode.light.toString() : ThemeMode.dark.toString());
 
-    valueNotifierTheme.value = isDark ? ThemeMode.dark : ThemeMode.light;
+    valueNotifierTheme.value = isDark ? ThemeMode.light : ThemeMode.dark;
   }
 }
