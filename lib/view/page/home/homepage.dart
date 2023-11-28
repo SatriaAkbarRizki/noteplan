@@ -6,7 +6,7 @@ import 'package:noteplan/model/note.dart';
 import 'package:noteplan/model/profile.dart';
 import 'package:noteplan/presenter/database_note.dart';
 import 'package:noteplan/presenter/database_profile.dart';
-import 'package:noteplan/presenter/saveuid.dart';
+import 'package:noteplan/local/saveuid.dart';
 import 'package:noteplan/user/profile_user.dart';
 import 'package:noteplan/widget/custom_dialog.dart';
 
