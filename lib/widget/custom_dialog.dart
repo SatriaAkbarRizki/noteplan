@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:noteplan/auth/authemail.dart';
 import 'package:noteplan/auth/authgoogle.dart';
 import 'package:noteplan/color/colors.dart';
-import 'package:noteplan/presenter/saveuid.dart';
+import 'package:noteplan/color/themechange.dart';
+import 'package:noteplan/color/thememanager.dart';
+import 'package:noteplan/local/saveuid.dart';
 import 'package:noteplan/widget/custom_logout.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -16,11 +18,10 @@ class CustomProfile extends StatefulWidget {
 }
 
 class _CustomProfileState extends State<CustomProfile> {
-  final double padding = 20;
-  final double avatarRadius = 45;
-  final double spacingWIdget = 20;
+  final double padding = 20, avatarRadius = 45, spacingWIdget = 20;
   final AuthEmail authEmail = AuthEmail();
   final SaveUid localUid = SaveUid();
+  ThemeMode _themeMode = ThemeMode.dark;
   bool inClick = true;
 
   @override
@@ -123,6 +124,7 @@ class _CustomProfileState extends State<CustomProfile> {
                           onPressed: () {
                             setState(() {
                               inClick = !inClick;
+                              ThemeManager().setThemeMode(inClick);
                             });
                           },
                           icon: inClick == true
