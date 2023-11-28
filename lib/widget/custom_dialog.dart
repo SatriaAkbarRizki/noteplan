@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:noteplan/auth/authemail.dart';
 import 'package:noteplan/auth/authgoogle.dart';
 import 'package:noteplan/color/colors.dart';
-import 'package:noteplan/color/themechange.dart';
 import 'package:noteplan/color/thememanager.dart';
 import 'package:noteplan/local/saveuid.dart';
 import 'package:noteplan/widget/custom_logout.dart';
