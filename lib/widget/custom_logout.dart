@@ -29,7 +29,7 @@ class _CustomLogOutState extends State<CustomLogOut> {
       shape:
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(padding)),
       elevation: 0,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       child: contentBox(),
     );
   }
@@ -47,8 +47,8 @@ class _CustomLogOutState extends State<CustomLogOut> {
           margin: EdgeInsets.only(top: padding),
           decoration: BoxDecoration(
               shape: BoxShape.rectangle,
-              color: MyColors.colorBackgroundHome,
               borderRadius: BorderRadius.circular(padding),
+              color: Theme.of(context).scaffoldBackgroundColor,
               boxShadow: const [
                 BoxShadow(
                     color: Color.fromARGB(171, 0, 0, 0),

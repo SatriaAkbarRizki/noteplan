@@ -25,12 +25,11 @@ class _CustomProfileState extends State<CustomProfile> {
 
   @override
   Widget build(BuildContext context) {
-
     return Dialog(
       shape:
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(padding)),
       elevation: 0,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       child: contentBox(),
     );
   }
@@ -48,7 +47,7 @@ class _CustomProfileState extends State<CustomProfile> {
           margin: EdgeInsets.only(top: padding),
           decoration: BoxDecoration(
               shape: BoxShape.rectangle,
-              color: MyColors.colorBackgroundHome,
+              color: Theme.of(context).scaffoldBackgroundColor,
               borderRadius: BorderRadius.circular(padding),
               boxShadow: const [
                 BoxShadow(
@@ -139,12 +138,6 @@ class _CustomProfileState extends State<CustomProfile> {
                 width: MediaQuery.of(context).size.width,
                 child: ElevatedButton(
                     onPressed: () {
-                      // await authEmail.signOutEmail().whenComplete(() async =>
-                      //     await localUid.removeUid().whenComplete(() {
-                      //       AuthGoogle().googleSignIn.disconnect();
-                      //       Navigator.pushReplacementNamed(context, '/SignIn');
-                      //     }));
-
                       showDialog(
                         context: context,
                         builder: (context) =>
@@ -171,4 +164,4 @@ class _CustomProfileState extends State<CustomProfile> {
       ],
     );
   }
-}                     
+}

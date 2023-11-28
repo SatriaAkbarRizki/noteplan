@@ -11,7 +11,6 @@ import 'package:noteplan/model/note.dart';
 import 'package:noteplan/presenter/database_note.dart';
 import 'package:noteplan/storage/cloudstorage.dart';
 
-
 class ViewNote extends StatefulWidget {
   List<NoteModel>? currentNote;
   ViewNote({required this.currentNote, super.key});
@@ -115,7 +114,6 @@ class _ViewNoteState extends State<ViewNote> {
     // debugPrint('imageFile oldImageLink : ${oldImageLink}');
     // debugPrint('_image: _imageName ${_currentImage?.name}');
     return Scaffold(
-      backgroundColor: MyColors.colorBackgroundHome,
       body: GestureDetector(
         onTap: () {
           focusTitle.unfocus();
@@ -123,18 +121,24 @@ class _ViewNoteState extends State<ViewNote> {
         },
         child: Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
-          child: ListView(
-            children: [
-              WriteNotes(),
-              ActionNote(
-                keyData: keyData,
-                uid: uid.toString(),
-                title: titleController.text,
-                oldImageLink: oldImageLink,
-                imagePath: _imageName ?? null,
-                description: textController.text,
-              )
-            ],
+          child: NotificationListener<OverscrollIndicatorNotification>(
+            onNotification: (overScroll) {
+              overScroll.disallowIndicator();
+              return true;
+            },
+            child: ListView(
+              children: [
+                WriteNotes(),
+                ActionNote(
+                  keyData: keyData,
+                  uid: uid.toString(),
+                  title: titleController.text,
+                  oldImageLink: oldImageLink,
+                  imagePath: _imageName ?? null,
+                  description: textController.text,
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -164,6 +168,7 @@ class _ViewNoteState extends State<ViewNote> {
                   textAlign: TextAlign.left,
                   controller: titleController,
                   maxLines: null,
+                  style: Theme.of(context).textTheme.titleMedium,
                   decoration: const InputDecoration.collapsed(
                     hintText: "Whats title here..",
                     hintStyle: TextStyle(fontSize: 25),
@@ -198,6 +203,7 @@ class _ViewNoteState extends State<ViewNote> {
                     focusNode: focusDesc,
                     keyboardType: TextInputType.multiline,
                     textAlign: TextAlign.left,
+                    style: Theme.of(context).textTheme.bodyMedium,
                     controller: textController,
                     maxLines: null,
                     decoration: const InputDecoration.collapsed(

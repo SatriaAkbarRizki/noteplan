@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:noteplan/color/mytheme.dart';
 import 'package:noteplan/presenter/saveuid.dart';
 import 'package:noteplan/view/page/home/addnote.dart';
 import 'package:noteplan/view/page/home/homepage.dart';
@@ -22,7 +23,6 @@ void main() async {
 
 class MainApp extends StatefulWidget {
   const MainApp({super.key});
-
 
   @override
   State<StatefulWidget> createState() {
@@ -53,6 +53,8 @@ class MainState extends State<MainApp> {
   Widget build(BuildContext context) {
     // debugPrint('curretn: ${currentUid}');
     return MaterialApp(
+      theme: MyTheme().lightTheme,
+      darkTheme: MyTheme().darkTheme,
       routes: {
         '/Home': (context) => const HomePage(uid: null),
         '/SignIn': (context) => const SignIn(),

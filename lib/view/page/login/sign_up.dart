@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:noteplan/auth/authemail.dart';
 import 'package:noteplan/color/colors.dart';
+import 'package:noteplan/color/mytheme.dart';
 
 class SignUpEmail extends StatefulWidget {
   const SignUpEmail({super.key});
@@ -29,150 +30,151 @@ class _SignUpEmailState extends State<SignUpEmail> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: GestureDetector(
-        onTap: () {
-          _focusNodeEmail.unfocus();
-          _focusNodePasword.unfocus();
-        },
-        child: Stack(
-          children: [
-            Column(
+    return Theme(
+      data: MyTheme().signTheme,
+      child: Builder(builder: (context) {
+        return Scaffold(
+          resizeToAvoidBottomInset: false,
+          body: GestureDetector(
+            onTap: () {
+              _focusNodeEmail.unfocus();
+              _focusNodePasword.unfocus();
+            },
+            child: Stack(
               children: [
-                Container(
-                  height: 400,
-                  decoration:
-                      BoxDecoration(color: MyColors.colorBackgroundLoginOne),
-                ),
-                Expanded(
-                  child: Container(
-                    height: 400,
-                    decoration:
-                        BoxDecoration(color: MyColors.colorBackgroundLogonTwo),
-                  ),
-                ),
-              ],
-            ),
-            Center(
-              child: Container(
-                margin: const EdgeInsets.only(top: 150),
-                width: 350,
-                height: 350,
-                decoration: const BoxDecoration(
-                    color: Color(0xffF5F3F3),
-                    borderRadius: BorderRadius.all(Radius.circular(25))),
-                child: Column(
+                Column(
                   children: [
-                    const SizedBox(
-                      height: 20,
+                    Container(
+                      height: 400,
+                      decoration: BoxDecoration(
+                          color: MyColors.colorBackgroundLoginOne),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(25),
-                      child: TextField(
-                        focusNode: _focusNodeEmail,
-                        controller: emailController,
-                        keyboardType: TextInputType.emailAddress,
-                        style: const TextStyle(
-                            fontFamily: 'wixmadefor',
-                            fontWeight: FontWeight.w600),
-                        decoration: InputDecoration(
-                          labelText: 'Email',
-                          labelStyle: const TextStyle(
-                              fontFamily: 'wixmadefor',
-                              fontWeight: FontWeight.w500),
-                          prefixIcon: Image.asset(
-                            "assets/logo/people.png",
-                            scale: 1.8,
-                          ),
-                          prefixIconColor: Colors.black,
-                          border: const OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.only(topLeft: Radius.circular(20)),
-                          ),
-                        ),
+                    Expanded(
+                      child: Container(
+                        height: 400,
+                        decoration: BoxDecoration(
+                            color: MyColors.colorBackgroundLogonTwo),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 25, right: 25),
-                      child: TextField(
-                        controller: passwordController,
-                        focusNode: _focusNodePasword,
-                        obscureText: true,
-                        keyboardType: TextInputType.visiblePassword,
-                        style: const TextStyle(
-                            fontFamily: 'wixmadefor',
-                            fontWeight: FontWeight.w600),
-                        decoration: InputDecoration(
-                          labelText: 'Password',
-                          labelStyle: const TextStyle(
-                              fontFamily: 'wixmadefor',
-                              fontWeight: FontWeight.w500),
-                          prefixIcon: Image.asset(
-                            "assets/logo/password.png",
-                            scale: 1.8,
-                          ),
-                          border: const OutlineInputBorder(
-                            borderRadius: BorderRadius.only(
-                                bottomRight: Radius.circular(20)),
-                          ),
-                        ),
-                      ),
-                    ),
-                    RegisterAccount(
-                      authEmail: authEmail,
-                      emailController: emailController,
-                      passwordController: passwordController,
                     ),
                   ],
                 ),
-              ),
-            ),
-            Positioned(
-                left: 140,
-                child: Image.asset(
-                  "assets/logo/notes.png",
-                )),
-            Positioned(
-                left: 20,
-                top: 130,
-                child: RichText(
-                    text: const TextSpan(children: [
-                  TextSpan(
-                      text: 'Register in to your',
-                      style: TextStyle(
+                Center(
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 150),
+                    width: 350,
+                    height: 350,
+                    decoration: const BoxDecoration(
+                        color: Color(0xffF5F3F3),
+                        borderRadius: BorderRadius.all(Radius.circular(25))),
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(25),
+                          child: TextField(
+                            focusNode: _focusNodeEmail,
+                            controller: emailController,
+                            keyboardType: TextInputType.emailAddress,
+                            style: Theme.of(context).textTheme.titleSmall,
+                            decoration: InputDecoration(
+                              labelText: 'Email',
+                              labelStyle: const TextStyle(
+                                  fontFamily: 'wixmadefor',
+                                  fontWeight: FontWeight.w500),
+                              prefixIcon: Image.asset(
+                                "assets/logo/people.png",
+                                scale: 1.8,
+                              ),
+                              prefixIconColor: Colors.black,
+                              border: const OutlineInputBorder(
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(20)),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 25, right: 25),
+                          child: TextField(
+                            controller: passwordController,
+                            focusNode: _focusNodePasword,
+                            obscureText: true,
+                            keyboardType: TextInputType.visiblePassword,
+                            style: Theme.of(context).textTheme.bodySmall,
+                            decoration: InputDecoration(
+                              labelText: 'Password',
+                              labelStyle: const TextStyle(
+                                  fontFamily: 'wixmadefor',
+                                  fontWeight: FontWeight.w500),
+                              prefixIcon: Image.asset(
+                                "assets/logo/password.png",
+                                scale: 1.8,
+                              ),
+                              border: const OutlineInputBorder(
+                                borderRadius: BorderRadius.only(
+                                    bottomRight: Radius.circular(20)),
+                              ),
+                            ),
+                          ),
+                        ),
+                        RegisterAccount(
+                          authEmail: authEmail,
+                          emailController: emailController,
+                          passwordController: passwordController,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Positioned(
+                    left: 140,
+                    child: Image.asset(
+                      "assets/logo/notes.png",
+                    )),
+                Positioned(
+                    left: 20,
+                    top: 130,
+                    child: RichText(
+                        text: const TextSpan(children: [
+                      TextSpan(
+                          text: 'Register in to your',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 30,
+                              fontFamily: 'poppins',
+                              fontWeight: FontWeight.w800)),
+                      TextSpan(
+                          text: '\nAccount',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                            fontFamily: 'poppins',
+                          ))
+                    ]))),
+                Positioned(
+                    left: 20,
+                    top: 20,
+                    child: IconButton(
+                        onPressed: () {
+                          Navigator.pushReplacementNamed(context, '/SignIn');
+                        },
+                        icon: Image.asset(
+                          "assets/logo/back.png",
                           color: Colors.black,
-                          fontSize: 30,
-                          fontFamily: 'poppins',
-                          fontWeight: FontWeight.w800)),
-                  TextSpan(
-                      text: '\nAccount',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontFamily: 'poppins',
-                      ))
-                ]))),
-            Positioned(
-                left: 20,
-                top: 20,
-                child: IconButton(
-                    onPressed: () {
-                      Navigator.pushReplacementNamed(context, '/SignIn');
-                    },
-                    icon: Image.asset(
-                      "assets/logo/back.png",
-                      color: Colors.black,
-                    ))),
-            Positioned(
-                left: 20,
-                top: 670,
-                child: Image.asset(
-                  "assets/logo/notes2.png",
-                )),
-          ],
-        ),
-      ),
+                        ))),
+                Positioned(
+                    left: 20,
+                    top: 670,
+                    child: Image.asset(
+                      "assets/logo/notes2.png",
+                    )),
+              ],
+            ),
+          ),
+        );
+      }),
     );
   }
 }

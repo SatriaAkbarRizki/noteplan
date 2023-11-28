@@ -9,7 +9,6 @@ import 'package:noteplan/model/note.dart';
 import 'package:noteplan/presenter/database_note.dart';
 import 'package:noteplan/storage/cloudstorage.dart';
 
-
 class AddNote extends StatefulWidget {
   final String? uid;
   AddNote({required this.uid, super.key});
@@ -80,7 +79,6 @@ class _AddNoteState extends State<AddNote> {
     final uid = ModalRoute.of(context)?.settings.arguments;
 
     return Scaffold(
-      backgroundColor: MyColors.colorBackgroundHome,
       body: GestureDetector(
         onTap: () {
           focusTitle.unfocus();
@@ -88,16 +86,22 @@ class _AddNoteState extends State<AddNote> {
         },
         child: Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
-          child: ListView(
-            children: [
-              writeNotes(),
-              ActionNote(
-                uid: uid,
-                title: titleController.text,
-                imagePath: _image,
-                description: textController.text,
-              )
-            ],
+          child: NotificationListener<OverscrollIndicatorNotification>(
+            onNotification: (overScroll) {
+              overScroll.disallowIndicator();
+              return true;
+            },
+            child: ListView(
+              children: [
+                writeNotes(),
+                ActionNote(
+                  uid: uid,
+                  title: titleController.text,
+                  imagePath: _image,
+                  description: textController.text,
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -127,6 +131,7 @@ class _AddNoteState extends State<AddNote> {
                   textAlign: TextAlign.left,
                   controller: titleController,
                   maxLines: null,
+                  style: Theme.of(context).textTheme.titleMedium,
                   decoration: const InputDecoration.collapsed(
                     hintText: "Whats title here..",
                     hintStyle: TextStyle(fontSize: 25),
@@ -158,6 +163,7 @@ class _AddNoteState extends State<AddNote> {
                     onChanged: (value) {
                       setState(() {});
                     },
+                    style: Theme.of(context).textTheme.bodyMedium,
                     focusNode: focusDesc,
                     keyboardType: TextInputType.multiline,
                     textAlign: TextAlign.left,
