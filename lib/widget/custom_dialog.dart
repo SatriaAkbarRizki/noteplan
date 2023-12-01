@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:noteplan/auth/authemail.dart';
 import 'package:noteplan/color/colors.dart';
 import 'package:noteplan/color/thememanager.dart';
+import 'package:noteplan/local/modeUser.dart';
 import 'package:noteplan/local/saveuid.dart';
 import 'package:noteplan/widget/custom_logout.dart';
 
@@ -18,6 +19,7 @@ class _CustomProfileState extends State<CustomProfile> {
   final double padding = 20, avatarRadius = 45, spacingWIdget = 20;
   final AuthEmail authEmail = AuthEmail();
   final SaveUid localUid = SaveUid();
+
   bool inClick = true;
 
   @override
@@ -116,19 +118,22 @@ class _CustomProfileState extends State<CustomProfile> {
                         style: TextStyle(fontFamily: 'poppins', fontSize: 24),
                       )),
                   Flexible(
-                      child: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              inClick = !inClick;
-                              ThemeManager().setThemeMode(inClick);
-                            });
-                          },
-                          icon: inClick == true
-                              ? const Icon(Icons.sunny)
-                              : Image.asset(
-                                  "assets/icons/moon.png",
-                                  color: Colors.white,
-                                )))
+                      child: ValueListenableBuilder(
+                    valueListenable: ThemeManager.valueNotifierTheme,
+                    builder: (context, value, child) => IconButton(
+                        onPressed: () {
+                          setState(() {
+                            inClick = !inClick;
+                            ThemeManager().setThemeMode(inClick);
+                          });
+                        },
+                        icon: value == ThemeMode.light
+                            ? const Icon(Icons.sunny)
+                            : Image.asset(
+                                "assets/icons/moon.png",
+                                color: Colors.white,
+                              )),
+                  ))
                 ],
               ),
               const SizedBox(
@@ -166,3 +171,9 @@ class _CustomProfileState extends State<CustomProfile> {
     );
   }
 }
+
+// const Icon(Icons.sunny)
+//                               : Image.asset(
+//                                   "assets/icons/moon.png",
+//                                   color: Colors.white,
+//                                 )
