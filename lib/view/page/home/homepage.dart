@@ -9,6 +9,7 @@ import 'package:noteplan/presenter/database_profile.dart';
 import 'package:noteplan/local/saveuid.dart';
 import 'package:noteplan/user/profile_user.dart';
 import 'package:noteplan/widget/custom_dialog.dart';
+import 'package:noteplan/widget/custom_dialognote.dart';
 
 class HomePage extends StatefulWidget {
   final String? uid;
@@ -148,7 +149,6 @@ class _HomePageState extends State<HomePage> {
                   margin: const EdgeInsets.only(left: 30, top: 25),
                   child: GestureDetector(
                     onTap: () {
-                      // debugPrint('trigger button');
                       showAlertDialog(notemodelList[index]);
                     },
                     child: Text(
@@ -246,17 +246,24 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<void> showAlertDialog(NoteModel notemodelList) async {
+  Future<void> showAlertDialog(NoteModel noteModel) async {
+    // await Future.delayed(const Duration(milliseconds: 200))
+    //     .whenComplete(() => showDialog(
+    //           context: context,
+    //           builder: (context) => AlertDialog(
+    //             title: const Text('Date note created'),
+    //             content: Text(
+    //                 'Date: ${notemodelList.date}\nTime: ${notemodelList.time}'),
+    //           ),
+    //         ));
+
     await Future.delayed(const Duration(milliseconds: 200))
         .whenComplete(() => showDialog(
               context: context,
-              builder: (context) => AlertDialog(
-                title: const Text('Date note created'),
-                content: Text(
-                    'Date: ${notemodelList.date}\nTime: ${notemodelList.time}'),
+              builder: (context) => CustomDialogNote(
+                noteModel: noteModel,
               ),
             ));
-    ;
   }
 }
 
