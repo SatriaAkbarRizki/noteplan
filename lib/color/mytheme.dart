@@ -25,7 +25,7 @@ class MyTheme {
               fontSize: 16,
               color: Color.fromARGB(255, 166, 161, 179)),
         ),
-        // ganti warna dialog dengan dialog theme
+        cardColor: Colors.black,
         colorScheme: const ColorScheme.light(background: Color(0xffE19898)),
         primaryColorDark: const Color(0xffC7EBB3),
       );
@@ -57,7 +57,8 @@ class MyTheme {
       ),
       colorScheme: const ColorScheme.dark(background: Color(0xffC7EBB3)),
       primaryColorDark: const Color(0xffE19898),
-      buttonTheme: const ButtonThemeData());
+      buttonTheme: const ButtonThemeData(),
+      cardColor: Color.fromARGB(255, 177, 174, 184));
 
   get signTheme => ThemeData(
       textTheme: const TextTheme(

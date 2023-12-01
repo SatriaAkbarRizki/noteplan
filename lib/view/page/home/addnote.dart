@@ -116,7 +116,8 @@ class _AddNoteState extends State<AddNote> {
           width: 350,
           margin: const EdgeInsets.only(top: 30),
           decoration: BoxDecoration(
-              border: Border.all(style: BorderStyle.solid),
+              border: Border.all(
+                  style: BorderStyle.solid, color: Theme.of(context).cardColor),
               borderRadius: BorderRadius.circular(5)),
           child: Padding(
             padding: const EdgeInsets.all(10),
