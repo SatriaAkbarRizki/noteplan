@@ -9,6 +9,7 @@ import 'package:noteplan/color/colors.dart';
 import 'package:noteplan/color/mytheme.dart';
 import 'package:noteplan/main.dart';
 import 'package:noteplan/local/saveuid.dart';
+import 'package:noteplan/responsive/myresponsive.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -63,7 +64,10 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
+    final sizeDevice = MediaQuery.of(context).size;
     debugPrint('Status Account Google: $currentUser');
+    debugPrint(
+        'size in sign in, heigth:${sizeDevice.height} and width: ${sizeDevice.width}');
     return Theme(
       data: MyTheme().signTheme,
       child: Builder(builder: (context) {
@@ -218,7 +222,7 @@ class _SignInState extends State<SignIn> {
                     ]))),
                 Positioned(
                     left: 20,
-                    top: 690,
+                    top: MyResponsive().height(context) / 2 + 290,
                     child: Image.asset(
                       "assets/logo/notes2.png",
                     )),

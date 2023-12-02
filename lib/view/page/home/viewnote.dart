@@ -150,7 +150,6 @@ class _ViewNoteState extends State<ViewNote> {
       children: [
         Container(
           height: 550,
-          width: 350,
           margin: const EdgeInsets.only(top: 30),
           decoration: BoxDecoration(
               border: Border.all(
@@ -221,7 +220,6 @@ class _ViewNoteState extends State<ViewNote> {
         ),
         Container(
           height: 50,
-          width: 350,
           decoration: BoxDecoration(
               color: Colors.black, borderRadius: BorderRadius.circular(10)),
           child: Row(
@@ -372,59 +370,51 @@ class ActionNote extends StatelessWidget {
     nameImageNow = directoryImage!.path.split('/').last;
     // debugPrint('current image :${_ViewNoteState._currentImage?.name}');
     // debugPrint('image now: $nameImageNow');
-    return Column(
+    return Row(
       children: [
-        Row(
-          children: [
-            SizedBox(
-              height: 50,
-              width: 160,
-              child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/Home');
-                  },
-                  child: const Text('Cancel'),
-                  style: ButtonStyle(
-                      overlayColor:
-                          MaterialStatePropertyAll(MyColors.colorCancel),
-                      backgroundColor: MaterialStatePropertyAll(
-                          MyColors.colorBackgroundHome),
-                      foregroundColor:
-                          const MaterialStatePropertyAll(Colors.black),
-                      shape:
-                          const MaterialStatePropertyAll(BeveledRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
-                        side: BorderSide(color: Colors.black),
-                      )))),
-            ),
-            const SizedBox(
-              width: 30,
-            ),
-            SizedBox(
-              height: 50,
-              width: 160,
-              child: ElevatedButton(
-                  onPressed: () async {
-                    _ViewNoteState.focusTitle.unfocus();
-                    _ViewNoteState.focusDesc.unfocus();
-                    //
-                    cloudImage(context);
-                  },
-                  child: const Text('Save'),
-                  style: ButtonStyle(
-                      overlayColor:
-                          MaterialStatePropertyAll(MyColors.colorButton),
-                      backgroundColor:
-                          MaterialStatePropertyAll(MyColors.colorButton),
-                      foregroundColor:
-                          const MaterialStatePropertyAll(Colors.black),
-                      shape:
-                          const MaterialStatePropertyAll(BeveledRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
-                        side: BorderSide(color: Colors.black),
-                      )))),
-            )
-          ],
+        SizedBox(
+          height: 50,
+          width: 160,
+          child: ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/Home');
+              },
+              child: const Text('Cancel'),
+              style: ButtonStyle(
+                  overlayColor: MaterialStatePropertyAll(MyColors.colorCancel),
+                  backgroundColor:
+                      MaterialStatePropertyAll(MyColors.colorBackgroundHome),
+                  foregroundColor: const MaterialStatePropertyAll(Colors.black),
+                  shape: const MaterialStatePropertyAll(BeveledRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                    side: BorderSide(color: Colors.black),
+                  )))),
+        ),
+        Expanded(
+          child: const SizedBox(
+            width: 30,
+          ),
+        ),
+        SizedBox(
+          height: 50,
+          width: 160,
+          child: ElevatedButton(
+              onPressed: () async {
+                _ViewNoteState.focusTitle.unfocus();
+                _ViewNoteState.focusDesc.unfocus();
+                //
+                cloudImage(context);
+              },
+              child: const Text('Save'),
+              style: ButtonStyle(
+                  overlayColor: MaterialStatePropertyAll(MyColors.colorButton),
+                  backgroundColor:
+                      MaterialStatePropertyAll(MyColors.colorButton),
+                  foregroundColor: const MaterialStatePropertyAll(Colors.black),
+                  shape: const MaterialStatePropertyAll(BeveledRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                    side: BorderSide(color: Colors.black),
+                  )))),
         )
       ],
     );

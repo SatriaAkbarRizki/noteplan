@@ -19,8 +19,8 @@ class CustomLogOut extends StatefulWidget {
 class _CustomLogOutState extends State<CustomLogOut> {
   DatabaseProfile databaseProfile =
       DatabaseProfile(uid: MainState.currentUid.toString());
-  final double padding = 20, avatarRadius = 45,spacingWIdget = 20;
-  
+  final double padding = 20, avatarRadius = 45, spacingWIdget = 20;
+
   final AuthEmail authEmail = AuthEmail();
   final SaveUid localUid = SaveUid();
   final ModeUser modeUser = ModeUser();
@@ -100,8 +100,10 @@ class _CustomLogOutState extends State<CustomLogOut> {
                               side: BorderSide(color: Colors.black),
                             )))),
                   ),
-                  SizedBox(
-                    width: 25,
+                  Expanded(
+                    child: const SizedBox(
+                      width: 25,
+                    ),
                   ),
                   SizedBox(
                     height: 45,

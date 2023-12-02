@@ -5,6 +5,8 @@ import 'package:noteplan/auth/authemail.dart';
 import 'package:noteplan/color/colors.dart';
 import 'package:noteplan/color/mytheme.dart';
 
+import '../../../responsive/myresponsive.dart';
+
 class SignUpEmail extends StatefulWidget {
   const SignUpEmail({super.key});
 
@@ -166,7 +168,7 @@ class _SignUpEmailState extends State<SignUpEmail> {
                         ))),
                 Positioned(
                     left: 20,
-                    top: 670,
+                    top: MyResponsive().height(context) / 2 + 260,
                     child: Image.asset(
                       "assets/logo/notes2.png",
                     )),

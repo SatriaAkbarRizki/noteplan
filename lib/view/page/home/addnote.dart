@@ -113,7 +113,6 @@ class _AddNoteState extends State<AddNote> {
       children: [
         Container(
           height: 550,
-          width: 350,
           margin: const EdgeInsets.only(top: 30),
           decoration: BoxDecoration(
               border: Border.all(
@@ -184,7 +183,6 @@ class _AddNoteState extends State<AddNote> {
         ),
         Container(
           height: 50,
-          width: 350,
           decoration: BoxDecoration(
               color: Colors.black, borderRadius: BorderRadius.circular(10)),
           child: Row(
@@ -318,68 +316,58 @@ class ActionNote extends StatelessWidget {
   Widget build(BuildContext context) {
     directoryImage = File(imagePath?.path != null ? imagePath!.path : "");
 
-    return Column(
+    return Row(
       children: [
-        Row(
-          children: [
-            SizedBox(
-              height: 50,
-              width: 160,
-              child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/Home');
-                  },
-                  child: const Text('Cancel'),
-                  style: ButtonStyle(
-                      overlayColor:
-                          MaterialStatePropertyAll(MyColors.colorCancel),
-                      backgroundColor: MaterialStatePropertyAll(
-                          MyColors.colorBackgroundHome),
-                      foregroundColor:
-                          const MaterialStatePropertyAll(Colors.black),
-                      shape:
-                          const MaterialStatePropertyAll(BeveledRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
-                        side: BorderSide(color: Colors.black),
-                      )))),
-            ),
-            const SizedBox(
-              width: 30,
-            ),
-            SizedBox(
-              height: 50,
-              width: 160,
-              child: ElevatedButton(
-                  onPressed: () async {
-                    _AddNoteState.focusTitle.unfocus();
-                    _AddNoteState.focusDesc.unfocus();
-                    await cloudStorage
-                        .uploadImage(directoryImage)
-                        .then((value) {
-                      linkImage = value;
-                      debugPrint('result links??: ${value}');
-                    }).whenComplete(() async {
-                      await addingData(
-                              uid.toString(), title!, linkImage, description!)
-                          .whenComplete(
-                              () => Navigator.pushNamed(context, '/Home'));
-                    });
-                  },
-                  child: const Text('Save'),
-                  style: ButtonStyle(
-                      overlayColor:
-                          MaterialStatePropertyAll(MyColors.colorButton),
-                      backgroundColor:
-                          MaterialStatePropertyAll(MyColors.colorButton),
-                      foregroundColor:
-                          const MaterialStatePropertyAll(Colors.black),
-                      shape:
-                          const MaterialStatePropertyAll(BeveledRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
-                        side: BorderSide(color: Colors.black),
-                      )))),
-            )
-          ],
+        SizedBox(
+          height: 50,
+          width: 160,
+          child: ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/Home');
+              },
+              child: const Text('Cancel'),
+              style: ButtonStyle(
+                  overlayColor: MaterialStatePropertyAll(MyColors.colorCancel),
+                  backgroundColor:
+                      MaterialStatePropertyAll(MyColors.colorBackgroundHome),
+                  foregroundColor: const MaterialStatePropertyAll(Colors.black),
+                  shape: const MaterialStatePropertyAll(BeveledRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                    side: BorderSide(color: Colors.black),
+                  )))),
+        ),
+        Expanded(
+          child: const SizedBox(
+            width: 30,
+          ),
+        ),
+        SizedBox(
+          height: 50,
+          width: 160,
+          child: ElevatedButton(
+              onPressed: () async {
+                _AddNoteState.focusTitle.unfocus();
+                _AddNoteState.focusDesc.unfocus();
+                await cloudStorage.uploadImage(directoryImage).then((value) {
+                  linkImage = value;
+                  debugPrint('result links??: ${value}');
+                }).whenComplete(() async {
+                  await addingData(
+                          uid.toString(), title!, linkImage, description!)
+                      .whenComplete(
+                          () => Navigator.pushNamed(context, '/Home'));
+                });
+              },
+              child: const Text('Save'),
+              style: ButtonStyle(
+                  overlayColor: MaterialStatePropertyAll(MyColors.colorButton),
+                  backgroundColor:
+                      MaterialStatePropertyAll(MyColors.colorButton),
+                  foregroundColor: const MaterialStatePropertyAll(Colors.black),
+                  shape: const MaterialStatePropertyAll(BeveledRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                    side: BorderSide(color: Colors.black),
+                  )))),
         )
       ],
     );

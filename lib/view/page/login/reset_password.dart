@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:noteplan/auth/authemail.dart';
 import 'package:noteplan/color/colors.dart';
 import 'package:noteplan/color/mytheme.dart';
+import 'package:noteplan/responsive/myresponsive.dart';
 
 class ResetPass extends StatefulWidget {
   const ResetPass({super.key});
@@ -149,7 +150,7 @@ class _ResetPassState extends State<ResetPass> {
                         ))),
                 Positioned(
                     left: 20,
-                    top: 670,
+                    top: MyResponsive().height(context) / 2 + 260,
                     child: Image.asset(
                       "assets/logo/notes2.png",
                     )),
