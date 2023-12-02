@@ -1,12 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:noteplan/presenter/saveuid.dart';
+import 'package:noteplan/local/saveuid.dart';
 
 class AuthGoogle {
   SaveUid saveUid = SaveUid();
   GoogleSignIn googleSignIn = GoogleSignIn(scopes: ['email']);
-  Future<String?> SignInGoogle(BuildContext context) async {
+  Future<String?> signInGoogle(BuildContext context) async {
     try {
       final GoogleSignInAccount? signInAccount = await googleSignIn.signIn();
       final GoogleSignInAuthentication? googleAuth =
@@ -34,6 +34,7 @@ class AuthGoogle {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('data')));
     }
+    return null;
   }
 
   Future signOut() async {

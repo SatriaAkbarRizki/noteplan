@@ -6,8 +6,10 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:noteplan/auth/authemail.dart';
 import 'package:noteplan/auth/authgoogle.dart';
 import 'package:noteplan/color/colors.dart';
+import 'package:noteplan/color/mytheme.dart';
 import 'package:noteplan/main.dart';
-import 'package:noteplan/presenter/saveuid.dart';
+import 'package:noteplan/local/saveuid.dart';
+import 'package:noteplan/responsive/myresponsive.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -54,180 +56,181 @@ class _SignInState extends State<SignIn> {
     super.dispose();
   }
 
-
-
   Future signInCheck() async {
     if (!await authGoogle.googleSignIn.isSignedIn()) {
       authGoogle.googleSignIn.signInSilently();
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
+    final sizeDevice = MediaQuery.of(context).size;
     debugPrint('Status Account Google: $currentUser');
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: GestureDetector(
-        onTap: () {
-          _focusNodeEmail.unfocus();
-          _focusNodePasword.unfocus();
-        },
-        child: Stack(
-          children: [
-            Column(
+    debugPrint(
+        'size in sign in, heigth:${sizeDevice.height} and width: ${sizeDevice.width}');
+    return Theme(
+      data: MyTheme().signTheme,
+      child: Builder(builder: (context) {
+        return Scaffold(
+          resizeToAvoidBottomInset: false,
+          body: GestureDetector(
+            onTap: () {
+              _focusNodeEmail.unfocus();
+              _focusNodePasword.unfocus();
+            },
+            child: Stack(
               children: [
-                Container(
-                  height: 400,
-                  decoration:
-                      BoxDecoration(color: MyColors.colorBackgroundLoginOne),
-                ),
-                Expanded(
-                  child: Container(
-                    height: 400,
-                    decoration:
-                        BoxDecoration(color: MyColors.colorBackgroundLogonTwo),
-                  ),
-                ),
-              ],
-            ),
-            Center(
-              child: Container(
-                margin: const EdgeInsets.only(top: 150),
-                width: 350,
-                height: 450,
-                decoration: const BoxDecoration(
-                    color: Color(0xffF5F3F3),
-                    borderRadius: BorderRadius.all(Radius.circular(25))),
-                child: Column(
+                Column(
                   children: [
-                    const SizedBox(
-                      height: 20,
+                    Container(
+                      height: 400,
+                      decoration: BoxDecoration(
+                          color: MyColors.colorBackgroundLoginOne),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(25),
-                      child: TextField(
-                        controller: emailController,
-                        focusNode: _focusNodeEmail,
-                        keyboardType: TextInputType.emailAddress,
-                        style: const TextStyle(
-                            fontFamily: 'wixmadefor',
-                            fontWeight: FontWeight.w600),
-                        decoration: InputDecoration(
-                          labelText: 'Email',
-                          labelStyle: const TextStyle(
-                              fontFamily: 'wixmadefor',
-                              fontWeight: FontWeight.w500),
-                          prefixIcon: Image.asset(
-                            "assets/logo/people.png",
-                            scale: 1.8,
-                          ),
-                          prefixIconColor: Colors.black,
-                          border: const OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.only(topLeft: Radius.circular(20)),
-                          ),
-                        ),
+                    Expanded(
+                      child: Container(
+                        height: 400,
+                        decoration: BoxDecoration(
+                            color: MyColors.colorBackgroundLogonTwo),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 25, right: 25),
-                      child: TextField(
-                        controller: passwordController,
-                        focusNode: _focusNodePasword,
-                        obscureText: true,
-                        keyboardType: TextInputType.visiblePassword,
-                        style: const TextStyle(
-                            fontFamily: 'wixmadefor',
-                            fontWeight: FontWeight.w600),
-                        decoration: InputDecoration(
-                          labelText: 'Password',
-                          labelStyle: const TextStyle(
-                              fontFamily: 'wixmadefor',
-                              fontWeight: FontWeight.w500),
-                          prefixIcon: Image.asset(
-                            "assets/logo/password.png",
-                            scale: 1.8,
-                          ),
-                          border: const OutlineInputBorder(
-                            borderRadius: BorderRadius.only(
-                                bottomRight: Radius.circular(20)),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const ButtonResset(),
-                    buttonLogin(),
-                    Padding(
-                        padding:
-                            const EdgeInsets.only(left: 25, right: 25, top: 5),
-                        child: SizedBox(
-                          height: 55,
-                          width: 500,
-                          child: Row(
-                            children: [
-                              const SizedBox(
-                                width: 100,
-                                child: Divider(
-                                  color: Colors.black,
-                                ),
-                              ),
-                              Container(
-                                  margin: const EdgeInsets.only(
-                                      left: 10, right: 10),
-                                  child: const Text(
-                                    'Or login with',
-                                    style: TextStyle(fontFamily: 'ubuntu'),
-                                  )),
-                              const SizedBox(
-                                width: 90,
-                                child: Divider(
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ],
-                          ),
-                        )),
-                    buttonGoogle(),
-                    const ButtonRegister()
                   ],
                 ),
-              ),
+                Center(
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 150),
+                    width: 350,
+                    height: 450,
+                    decoration: const BoxDecoration(
+                        color: Color(0xffF5F3F3),
+                        borderRadius: BorderRadius.all(Radius.circular(25))),
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(25),
+                          child: TextField(
+                            controller: emailController,
+                            focusNode: _focusNodeEmail,
+                            keyboardType: TextInputType.emailAddress,
+                            style: Theme.of(context).textTheme.titleSmall,
+                            decoration: InputDecoration(
+                              labelText: 'Email',
+                              labelStyle: const TextStyle(
+                                  fontFamily: 'wixmadefor',
+                                  fontWeight: FontWeight.w500),
+                              prefixIcon: Image.asset(
+                                "assets/logo/people.png",
+                                scale: 1.8,
+                              ),
+                              prefixIconColor: Colors.black,
+                              border: const OutlineInputBorder(
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(20)),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 25, right: 25),
+                          child: TextField(
+                            controller: passwordController,
+                            focusNode: _focusNodePasword,
+                            obscureText: true,
+                            keyboardType: TextInputType.visiblePassword,
+                            style: Theme.of(context).textTheme.bodySmall,
+                            decoration: InputDecoration(
+                              labelText: 'Password',
+                              labelStyle: const TextStyle(
+                                  fontFamily: 'wixmadefor',
+                                  fontWeight: FontWeight.w500),
+                              prefixIcon: Image.asset(
+                                "assets/logo/password.png",
+                                scale: 1.8,
+                              ),
+                              border: const OutlineInputBorder(
+                                borderRadius: BorderRadius.only(
+                                    bottomRight: Radius.circular(20)),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const ButtonResset(),
+                        buttonLogin(),
+                        Padding(
+                            padding: const EdgeInsets.only(
+                                left: 25, right: 25, top: 5),
+                            child: SizedBox(
+                              height: 55,
+                              width: 500,
+                              child: Row(
+                                children: [
+                                  const SizedBox(
+                                    width: 100,
+                                    child: Divider(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  Container(
+                                      margin: const EdgeInsets.only(
+                                          left: 10, right: 10),
+                                      child: const Text(
+                                        'Or login with',
+                                        style: TextStyle(fontFamily: 'ubuntu'),
+                                      )),
+                                  const SizedBox(
+                                    width: 90,
+                                    child: Divider(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )),
+                        buttonGoogle(),
+                        const ButtonRegister()
+                      ],
+                    ),
+                  ),
+                ),
+                Positioned(
+                    left: 140,
+                    child: Image.asset(
+                      "assets/logo/notes.png",
+                    )),
+                Positioned(
+                    left: 30,
+                    top: 130,
+                    child: RichText(
+                        text: const TextSpan(children: [
+                      TextSpan(
+                          text: 'Sign in to your',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 30,
+                              fontFamily: 'poppins',
+                              fontWeight: FontWeight.w800)),
+                      TextSpan(
+                          text: '\nAccount',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                            fontFamily: 'poppins',
+                          ))
+                    ]))),
+                Positioned(
+                    left: 20,
+                    top: MyResponsive().height(context) / 2 + 290,
+                    child: Image.asset(
+                      "assets/logo/notes2.png",
+                    )),
+              ],
             ),
-            Positioned(
-                left: 140,
-                child: Image.asset(
-                  "assets/logo/notes.png",
-                )),
-            Positioned(
-                left: 30,
-                top: 130,
-                child: RichText(
-                    text: const TextSpan(children: [
-                  TextSpan(
-                      text: 'Sign in to your',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 30,
-                          fontFamily: 'poppins',
-                          fontWeight: FontWeight.w800)),
-                  TextSpan(
-                      text: '\nAccount',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontFamily: 'poppins',
-                      ))
-                ]))),
-            Positioned(
-                left: 20,
-                top: 670,
-                child: Image.asset(
-                  "assets/logo/notes2.png",
-                )),
-          ],
-        ),
-      ),
+          ),
+        );
+      }),
     );
   }
 
@@ -287,7 +290,7 @@ class _SignInState extends State<SignIn> {
           width: 500,
           child: ElevatedButton(
               onPressed: () async {
-                await authGoogle.SignInGoogle(context).then((value) async {
+                await authGoogle.signInGoogle(context).then((value) async {
                   if (value != null) {
                     await _saveUid.saveUid(value!).whenComplete(() {
                       setState(() {

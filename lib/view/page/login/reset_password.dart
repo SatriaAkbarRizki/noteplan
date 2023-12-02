@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:noteplan/auth/authemail.dart';
 import 'package:noteplan/color/colors.dart';
+import 'package:noteplan/color/mytheme.dart';
+import 'package:noteplan/responsive/myresponsive.dart';
 
 class ResetPass extends StatefulWidget {
   const ResetPass({super.key});
@@ -26,134 +28,137 @@ class _ResetPassState extends State<ResetPass> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: GestureDetector(
-        onTap: () {
-          _focusNodeEmail.unfocus();
-        },
-        child: Stack(
-          children: [
-            Column(
+    return Theme(
+      data: MyTheme().signTheme,
+      child: Builder(builder: (context) {
+        return Scaffold(
+          resizeToAvoidBottomInset: false,
+          body: GestureDetector(
+            onTap: () {
+              _focusNodeEmail.unfocus();
+            },
+            child: Stack(
               children: [
-                Container(
-                  height: 400,
-                  decoration:
-                      BoxDecoration(color: MyColors.colorBackgroundLoginOne),
-                ),
-                Expanded(
-                  child: Container(
-                    height: 400,
-                    decoration:
-                        BoxDecoration(color: MyColors.colorBackgroundLogonTwo),
-                  ),
-                ),
-              ],
-            ),
-            Center(
-              child: Container(
-                margin: const EdgeInsets.only(top: 150),
-                width: 350,
-                height: 300,
-                decoration: const BoxDecoration(
-                    color: Color(0xffF5F3F3),
-                    borderRadius: BorderRadius.all(Radius.circular(25))),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Column(
                   children: [
-                    const SizedBox(
-                      height: 20,
+                    Container(
+                      height: 400,
+                      decoration: BoxDecoration(
+                          color: MyColors.colorBackgroundLoginOne),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(25),
-                      child: TextField(
-                        focusNode: _focusNodeEmail,
-                        controller: emailController,
-                        keyboardType: TextInputType.emailAddress,
-                        style: const TextStyle(
-                            fontFamily: 'wixmadefor',
-                            fontWeight: FontWeight.w600),
-                        decoration: InputDecoration(
-                          labelText: 'Email',
-                          labelStyle: const TextStyle(
-                              fontFamily: 'wixmadefor',
-                              fontWeight: FontWeight.w500),
-                          prefixIcon: Image.asset(
-                            "assets/logo/people.png",
-                            scale: 1.8,
-                          ),
-                          prefixIconColor: Colors.black,
-                          border: const OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.only(topLeft: Radius.circular(20)),
-                          ),
-                        ),
+                    Expanded(
+                      child: Container(
+                        height: 400,
+                        decoration: BoxDecoration(
+                            color: MyColors.colorBackgroundLogonTwo),
                       ),
                     ),
-                    ButtonResetPass(
-                      authEmail: authEmail,
-                      emailController: emailController,
-                      passwordController: passwordController,
-                    ),
-                    const Padding(
-                      padding:
-                          EdgeInsets.only(left: 25, top: 50, right: 25),
-                      child: Text(
-                        '*this will reset your password aaccount, please be careful!',
-                        style: TextStyle(color: Color(0xffFF8989)),
-                      ),
-                    )
                   ],
                 ),
-              ),
-            ),
-            Positioned(
-                top: 20,
-                left: 160,
-                child: Image.asset(
-                  "assets/logo/reset.png",
-                  scale: 1.2,
-                )),
-            Positioned(
-                left: 30,
-                top: 150,
-                child: RichText(
-                    text: const TextSpan(children: [
-                  TextSpan(
-                      text: 'Reset in to your',
-                      style: TextStyle(
+                Center(
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 150),
+                    width: 350,
+                    height: 300,
+                    decoration: const BoxDecoration(
+                        color: Color(0xffF5F3F3),
+                        borderRadius: BorderRadius.all(Radius.circular(25))),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(25),
+                          child: TextField(
+                            focusNode: _focusNodeEmail,
+                            controller: emailController,
+                            keyboardType: TextInputType.emailAddress,
+                            style: Theme.of(context).textTheme.titleSmall,
+                            decoration: InputDecoration(
+                              labelText: 'Email',
+                              labelStyle: const TextStyle(
+                                  fontFamily: 'wixmadefor',
+                                  fontWeight: FontWeight.w500),
+                              prefixIcon: Image.asset(
+                                "assets/logo/people.png",
+                                scale: 1.8,
+                              ),
+                              prefixIconColor: Colors.black,
+                              border: const OutlineInputBorder(
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(20)),
+                              ),
+                            ),
+                          ),
+                        ),
+                        ButtonResetPass(
+                          authEmail: authEmail,
+                          emailController: emailController,
+                          passwordController: passwordController,
+                        ),
+                        const Padding(
+                          padding:
+                              EdgeInsets.only(left: 25, top: 50, right: 25),
+                          child: Text(
+                            '*this will reset your password aaccount, please be careful!',
+                            style: TextStyle(color: Color(0xffFF8989)),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                Positioned(
+                    top: 20,
+                    left: 160,
+                    child: Image.asset(
+                      "assets/logo/reset.png",
+                      scale: 1.2,
+                    )),
+                Positioned(
+                    left: 30,
+                    top: 150,
+                    child: RichText(
+                        text: const TextSpan(children: [
+                      TextSpan(
+                          text: 'Reset in to your',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 30,
+                              fontFamily: 'poppins',
+                              fontWeight: FontWeight.w800)),
+                      TextSpan(
+                          text: '\nAccount',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                            fontFamily: 'poppins',
+                          ))
+                    ]))),
+                Positioned(
+                    left: 20,
+                    top: 20,
+                    child: IconButton(
+                        onPressed: () {
+                          Navigator.pushReplacementNamed(context, '/SignIn');
+                        },
+                        icon: Image.asset(
+                          "assets/logo/back.png",
                           color: Colors.black,
-                          fontSize: 30,
-                          fontFamily: 'poppins',
-                          fontWeight: FontWeight.w800)),
-                  TextSpan(
-                      text: '\nAccount',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontFamily: 'poppins',
-                      ))
-                ]))),
-            Positioned(
-                left: 20,
-                top: 20,
-                child: IconButton(
-                    onPressed: () {
-                      Navigator.pushReplacementNamed(context, '/SignIn');
-                    },
-                    icon: Image.asset(
-                      "assets/logo/back.png",
-                      color: Colors.black,
-                    ))),
-            Positioned(
-                left: 20,
-                top: 670,
-                child: Image.asset(
-                  "assets/logo/notes2.png",
-                )),
-          ],
-        ),
-      ),
+                        ))),
+                Positioned(
+                    left: 20,
+                    top: MyResponsive().height(context) / 2 + 260,
+                    child: Image.asset(
+                      "assets/logo/notes2.png",
+                    )),
+              ],
+            ),
+          ),
+        );
+      }),
     );
   }
 }
@@ -184,8 +189,9 @@ class ButtonResetPass extends StatelessWidget {
                         await authEmail.resetPassword(emailController.text);
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         content: Text('Succes request reset password')));
-                    Future.delayed(const Duration(milliseconds: 2000)).whenComplete(
-                        () => Navigator.pushNamed(context, '/SignIn'));
+                    Future.delayed(const Duration(milliseconds: 2000))
+                        .whenComplete(
+                            () => Navigator.pushNamed(context, '/SignIn'));
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Please enter email')));

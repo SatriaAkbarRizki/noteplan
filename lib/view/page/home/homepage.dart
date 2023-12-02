@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:noteplan/auth/authemail.dart';
 import 'package:noteplan/auth/authgoogle.dart';
-import 'package:noteplan/color/colors.dart';
 import 'package:noteplan/main.dart';
 import 'package:noteplan/model/note.dart';
 import 'package:noteplan/model/profile.dart';
 import 'package:noteplan/presenter/database_note.dart';
 import 'package:noteplan/presenter/database_profile.dart';
-import 'package:noteplan/presenter/saveuid.dart';
+import 'package:noteplan/local/saveuid.dart';
 import 'package:noteplan/user/profile_user.dart';
 import 'package:noteplan/widget/custom_dialog.dart';
+import 'package:noteplan/widget/custom_dialognote.dart';
 
 class HomePage extends StatefulWidget {
   final String? uid;
@@ -79,8 +79,8 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     debugPrint('Uid on Home: ${MainState.currentUid}');
+
     return Scaffold(
-      backgroundColor: MyColors.colorBackgroundHome,
       floatingActionButton: GestureDetector(
         onTap: () {
           Navigator.pushNamed(context, '/AddNote',
@@ -90,10 +90,13 @@ class _HomePageState extends State<HomePage> {
           height: 60,
           width: 60,
           decoration: BoxDecoration(
-              color: MyColors.colorButton,
+              color: Theme.of(context).primaryColorDark,
               border: Border.all(style: BorderStyle.solid, color: Colors.black),
               borderRadius: BorderRadius.circular(10)),
-          child: const Icon(Icons.add),
+          child: const Icon(
+            Icons.add,
+            color: Colors.black,
+          ),
         ),
       ),
       body: RefreshIndicator(
@@ -113,7 +116,7 @@ class _HomePageState extends State<HomePage> {
                   );
                 } else {
                   if (snapshot.hasData) {
-                    return listNotes(toListNote);
+                    return listNotes(toListNote, context);
                   } else {
                     return const Expanded(child: EmptyNote());
                   }
@@ -126,7 +129,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget listNotes(List<NoteModel>? notemodelList) {
+  Widget listNotes(List<NoteModel>? notemodelList, BuildContext context) {
     return Expanded(
       child: NotificationListener<OverscrollIndicatorNotification>(
         onNotification: (overScroll) {
@@ -146,15 +149,11 @@ class _HomePageState extends State<HomePage> {
                   margin: const EdgeInsets.only(left: 30, top: 25),
                   child: GestureDetector(
                     onTap: () {
-                      // debugPrint('trigger button');
                       showAlertDialog(notemodelList[index]);
                     },
                     child: Text(
                       notemodelList[index].date,
-                      style: const TextStyle(
-                          fontFamily: 'wixmadefor',
-                          fontSize: 16,
-                          color: Color.fromARGB(255, 166, 161, 179)),
+                      style: Theme.of(context).textTheme.displaySmall,
                     ),
                   ),
                 ),
@@ -186,7 +185,7 @@ class _HomePageState extends State<HomePage> {
                               width: 300,
                               constraints: const BoxConstraints(minHeight: 150),
                               decoration: BoxDecoration(
-                                color: const Color(0xffE19898),
+                                color: Theme.of(context).colorScheme.background,
                                 borderRadius: BorderRadius.circular(30),
                               ),
                               child: Padding(
@@ -196,19 +195,15 @@ class _HomePageState extends State<HomePage> {
                                   children: [
                                     Text(
                                       notemodelList[index].title,
-                                      style: const TextStyle(
-                                          fontSize: 18,
-                                          fontFamily: 'wixmadefor',
-                                          height: 2,
-                                          fontWeight: FontWeight.w600),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleSmall,
                                     ),
                                     Text(
                                       notemodelList[index].description,
                                       maxLines: 2,
-                                      style: const TextStyle(
-                                        fontFamily: 'wixmadefor',
-                                        height: 2,
-                                      ),
+                                      style:
+                                          Theme.of(context).textTheme.bodySmall,
                                     ),
                                     const SizedBox(
                                       height: 15,
@@ -251,17 +246,24 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<void> showAlertDialog(NoteModel notemodelList) async {
-    await Future.delayed(Duration(milliseconds: 200))
+  Future<void> showAlertDialog(NoteModel noteModel) async {
+    // await Future.delayed(const Duration(milliseconds: 200))
+    //     .whenComplete(() => showDialog(
+    //           context: context,
+    //           builder: (context) => AlertDialog(
+    //             title: const Text('Date note created'),
+    //             content: Text(
+    //                 'Date: ${notemodelList.date}\nTime: ${notemodelList.time}'),
+    //           ),
+    //         ));
+
+    await Future.delayed(const Duration(milliseconds: 200))
         .whenComplete(() => showDialog(
               context: context,
-              builder: (context) => AlertDialog(
-                title: const Text('Date note created'),
-                content: Text(
-                    'Date: ${notemodelList.date}\nTime: ${notemodelList.time}'),
+              builder: (context) => CustomDialogNote(
+                noteModel: noteModel,
               ),
             ));
-    ;
   }
 }
 

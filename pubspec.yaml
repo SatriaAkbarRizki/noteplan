@@ -45,6 +45,7 @@ flutter:
     - assets/icons/bold.png
     - assets/icons/italic.png
     - assets/icons/image.png
+    - assets/icons/moon.png
 
   fonts:
     - family: wixmadefor

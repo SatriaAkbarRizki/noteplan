@@ -9,7 +9,7 @@ class CloudStorage {
     try {
       final String nameImage = basename(imagePath!.path);
       final storageRef =
-          FirebaseStorage.instance.ref().child('images/${nameImage}');
+          FirebaseStorage.instance.ref().child('images/$nameImage');
       final upload = storageRef.putFile(imagePath);
       final snapshot = await upload.then((v) async {
         if (v.state == TaskState.success) {
@@ -29,7 +29,7 @@ class CloudStorage {
 
   Future deleteImage(String? links) async {
     try {
-      final gsReference = await FirebaseStorage.instance.refFromURL("${links}");
+      final gsReference = FirebaseStorage.instance.refFromURL("$links");
       debugPrint('Name Image Old: ${gsReference.name}');
       // final u
       //rl = links.toString();
@@ -46,5 +46,3 @@ class CloudStorage {
     }
   }
 }
-
-// Dikit lagi tinggal masukkin aja gambar ke cloud storage

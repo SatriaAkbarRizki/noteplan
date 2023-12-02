@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:noteplan/auth/authemail.dart';
-import 'package:noteplan/auth/authgoogle.dart';
 import 'package:noteplan/color/colors.dart';
-import 'package:noteplan/presenter/saveuid.dart';
+import 'package:noteplan/color/thememanager.dart';
+import 'package:noteplan/local/modeUser.dart';
+import 'package:noteplan/local/saveuid.dart';
 import 'package:noteplan/widget/custom_logout.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomProfile extends StatefulWidget {
   final String? keyProfile, name, email, image;
-  CustomProfile(this.keyProfile, this.name, this.email, this.image,
+  const CustomProfile(this.keyProfile, this.name, this.email, this.image,
       {super.key});
 
   @override
@@ -16,21 +16,19 @@ class CustomProfile extends StatefulWidget {
 }
 
 class _CustomProfileState extends State<CustomProfile> {
-  final double padding = 20;
-  final double avatarRadius = 45;
-  final double spacingWIdget = 20;
+  final double padding = 20, avatarRadius = 45, spacingWIdget = 20;
   final AuthEmail authEmail = AuthEmail();
   final SaveUid localUid = SaveUid();
+
   bool inClick = true;
 
   @override
   Widget build(BuildContext context) {
-
     return Dialog(
       shape:
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(padding)),
       elevation: 0,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       child: contentBox(),
     );
   }
@@ -48,7 +46,7 @@ class _CustomProfileState extends State<CustomProfile> {
           margin: EdgeInsets.only(top: padding),
           decoration: BoxDecoration(
               shape: BoxShape.rectangle,
-              color: MyColors.colorBackgroundHome,
+              color: Theme.of(context).scaffoldBackgroundColor,
               borderRadius: BorderRadius.circular(padding),
               boxShadow: const [
                 BoxShadow(
@@ -89,7 +87,7 @@ class _CustomProfileState extends State<CustomProfile> {
                               "assets/images/profile.png",
                               scale: 5.0,
                             )
-                          : Visibility(visible: true, child: SizedBox())),
+                          : const Visibility(visible: true, child: SizedBox())),
                 ),
               ),
               SizedBox(
@@ -120,15 +118,22 @@ class _CustomProfileState extends State<CustomProfile> {
                         style: TextStyle(fontFamily: 'poppins', fontSize: 24),
                       )),
                   Flexible(
-                      child: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              inClick = !inClick;
-                            });
-                          },
-                          icon: inClick == true
-                              ? Icon(Icons.sunny)
-                              : Icon(Icons.mood)))
+                      child: ValueListenableBuilder(
+                    valueListenable: ThemeManager.valueNotifierTheme,
+                    builder: (context, value, child) => IconButton(
+                        onPressed: () {
+                          setState(() {
+                            inClick = !inClick;
+                            ThemeManager().setThemeMode(inClick);
+                          });
+                        },
+                        icon: value == ThemeMode.light
+                            ? const Icon(Icons.sunny)
+                            : Image.asset(
+                                "assets/icons/moon.png",
+                                color: Colors.white,
+                              )),
+                  ))
                 ],
               ),
               const SizedBox(
@@ -139,12 +144,6 @@ class _CustomProfileState extends State<CustomProfile> {
                 width: MediaQuery.of(context).size.width,
                 child: ElevatedButton(
                     onPressed: () {
-                      // await authEmail.signOutEmail().whenComplete(() async =>
-                      //     await localUid.removeUid().whenComplete(() {
-                      //       AuthGoogle().googleSignIn.disconnect();
-                      //       Navigator.pushReplacementNamed(context, '/SignIn');
-                      //     }));
-
                       showDialog(
                         context: context,
                         builder: (context) =>
@@ -171,4 +170,10 @@ class _CustomProfileState extends State<CustomProfile> {
       ],
     );
   }
-}                     
+}
+
+// const Icon(Icons.sunny)
+//                               : Image.asset(
+//                                   "assets/icons/moon.png",
+//                                   color: Colors.white,
+//                                 )
