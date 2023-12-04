@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:noteplan/auth/authemail.dart';
 import 'package:noteplan/auth/authgoogle.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:noteplan/main.dart';
 import 'package:noteplan/model/note.dart';
 import 'package:noteplan/model/profile.dart';
 import 'package:noteplan/presenter/database_note.dart';
 import 'package:noteplan/presenter/database_profile.dart';
 import 'package:noteplan/local/saveuid.dart';
+import 'package:noteplan/responsive/myresponsive.dart';
 import 'package:noteplan/user/profile_user.dart';
 import 'package:noteplan/widget/custom_dialog.dart';
 import 'package:noteplan/widget/custom_dialognote.dart';
@@ -101,6 +103,9 @@ class _HomePageState extends State<HomePage> {
       ),
       body: RefreshIndicator(
         edgeOffset: 80,
+        color: Theme.of(context).progressIndicatorTheme.color,
+        backgroundColor:
+            Theme.of(context).progressIndicatorTheme.refreshBackgroundColor,
         onRefresh: refreshData,
         child: Column(
           children: [
@@ -110,13 +115,12 @@ class _HomePageState extends State<HomePage> {
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Expanded(
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
+                    child: Center(child: LoadingNote()),
                   );
                 } else {
                   if (snapshot.hasData) {
-                    return listNotes(toListNote, context);
+                    // return listNotes(toListNote, context);
+                    return listNotes(snapshot.data, context);
                   } else {
                     return const Expanded(child: EmptyNote());
                   }
@@ -247,16 +251,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> showAlertDialog(NoteModel noteModel) async {
-    // await Future.delayed(const Duration(milliseconds: 200))
-    //     .whenComplete(() => showDialog(
-    //           context: context,
-    //           builder: (context) => AlertDialog(
-    //             title: const Text('Date note created'),
-    //             content: Text(
-    //                 'Date: ${notemodelList.date}\nTime: ${notemodelList.time}'),
-    //           ),
-    //         ));
-
     await Future.delayed(const Duration(milliseconds: 200))
         .whenComplete(() => showDialog(
               context: context,
@@ -373,6 +367,124 @@ class EmptyNote extends StatelessWidget {
                           fontSize: 18))
                 ])))
       ],
+    );
+  }
+}
+
+class LoadingNote extends StatelessWidget {
+  const LoadingNote({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: NotificationListener<OverscrollIndicatorNotification>(
+        onNotification: (overScroll) {
+          overScroll.disallowIndicator();
+          return true;
+        },
+        child: ListView.builder(
+          physics: const AlwaysScrollableScrollPhysics(),
+          shrinkWrap: true,
+          scrollDirection: Axis.vertical,
+          itemCount: 3,
+          itemBuilder: (context, index) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(left: 30, right: 10, top: 20),
+                      child: SizedBox(
+                        height: 150,
+                        width: 2,
+                        child: VerticalDivider(
+                          thickness: 6,
+                          color: Color(0xffD8D9DA),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: FittedBox(
+                          fit: BoxFit.fitHeight,
+                          child: Container(
+                            width: 300,
+                            constraints: const BoxConstraints(minHeight: 150),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.background,
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Animate(
+                                    effects: [
+                                      ShimmerEffect(duration: 800.milliseconds)
+                                    ],
+                                    onPlay: (controller) => controller.repeat(),
+                                    child: Padding(
+                                        padding: const EdgeInsets.all(10),
+                                        child: Container(
+                                          height: 10,
+                                          width:
+                                              MyResponsive().width(context) / 3,
+                                          decoration: BoxDecoration(
+                                              color: Theme.of(context)
+                                                  .canvasColor),
+                                        )),
+                                  ),
+                                  Animate(
+                                    effects: [
+                                      ShimmerEffect(duration: 800.milliseconds)
+                                    ],
+                                    onPlay: (controller) => controller.repeat(),
+                                    child: Padding(
+                                        padding: const EdgeInsets.all(10),
+                                        child: Container(
+                                          height: 10,
+                                          width:
+                                              MyResponsive().width(context) / 2,
+                                          decoration: BoxDecoration(
+                                              color: Theme.of(context)
+                                                  .canvasColor),
+                                        )),
+                                  ),
+                                  Animate(
+                                    effects: [
+                                      ShimmerEffect(duration: 800.milliseconds)
+                                    ],
+                                    onPlay: (controller) => controller.repeat(),
+                                    child: Padding(
+                                        padding: const EdgeInsets.all(10),
+                                        child: Container(
+                                          height: 250,
+                                          width: MyResponsive().width(context),
+                                          decoration: BoxDecoration(
+                                              color:
+                                                  Theme.of(context).canvasColor,
+                                              borderRadius:
+                                                  BorderRadius.circular(15)),
+                                        )),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          },
+        ),
+      ),
     );
   }
 }

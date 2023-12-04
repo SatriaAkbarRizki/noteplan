@@ -2,33 +2,38 @@ import 'package:flutter/material.dart';
 
 class MyTheme {
   get lightTheme => ThemeData(
-        brightness: Brightness.light,
-        scaffoldBackgroundColor: const Color(0xffF8F0E5),
-        primaryColor: const Color(0xffF8F0E5),
-        textTheme: const TextTheme(
-          titleSmall: TextStyle(
-              color: Colors.black,
-              fontSize: 18,
-              fontFamily: 'wixmadefor',
-              height: 2,
-              fontWeight: FontWeight.w600),
-          titleMedium: TextStyle(color: Colors.black, fontSize: 25),
-          bodySmall: TextStyle(
-            fontSize: 14,
+      brightness: Brightness.light,
+      scaffoldBackgroundColor: const Color(0xffF8F0E5),
+      primaryColor: const Color(0xffF8F0E5),
+      textTheme: const TextTheme(
+        titleSmall: TextStyle(
             color: Colors.black,
+            fontSize: 18,
             fontFamily: 'wixmadefor',
             height: 2,
-          ),
-          bodyMedium: TextStyle(color: Colors.black, fontSize: 16),
-          displaySmall: TextStyle(
-              fontFamily: 'wixmadefor',
-              fontSize: 16,
-              color: Color.fromARGB(255, 166, 161, 179)),
+            fontWeight: FontWeight.w600),
+        titleMedium: TextStyle(color: Colors.black, fontSize: 25),
+        bodySmall: TextStyle(
+          fontSize: 14,
+          color: Colors.black,
+          fontFamily: 'wixmadefor',
+          height: 2,
         ),
-        cardColor: Colors.black,
-        colorScheme: const ColorScheme.light(background: Color(0xffE19898)),
-        primaryColorDark: const Color(0xffC7EBB3),
-      );
+        bodyMedium: TextStyle(color: Colors.black, fontSize: 16),
+        displaySmall: TextStyle(
+            fontFamily: 'wixmadefor',
+            fontSize: 16,
+            color: Color.fromARGB(255, 166, 161, 179)),
+      ),
+      cardColor: Colors.black,
+      colorScheme: const ColorScheme.light(
+        background: Color(0xffE19898),
+      ),
+      primaryColorDark: const Color(0xffC7EBB3),
+      canvasColor: Color.fromARGB(255, 233, 204, 204),
+      indicatorColor: Color(0xffE19898),
+      progressIndicatorTheme: ProgressIndicatorThemeData(
+          color: Color(0xffE19898), refreshBackgroundColor: Color(0xffF8F0E5)));
 
   get darkTheme => ThemeData(
       brightness: Brightness.dark,
@@ -58,7 +63,10 @@ class MyTheme {
       colorScheme: const ColorScheme.dark(background: Color(0xffC7EBB3)),
       primaryColorDark: const Color(0xffE19898),
       buttonTheme: const ButtonThemeData(),
-      cardColor: Color.fromARGB(255, 177, 174, 184));
+      cardColor: Color.fromARGB(255, 177, 174, 184),
+      canvasColor: Colors.grey,
+      progressIndicatorTheme: ProgressIndicatorThemeData(
+          color: Color(0xffC7EBB3), refreshBackgroundColor: Colors.black));
 
   get signTheme => ThemeData(
       textTheme: const TextTheme(
