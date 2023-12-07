@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:noteplan/auth/authemail.dart';
 import 'package:noteplan/auth/authgoogle.dart';
@@ -29,6 +30,7 @@ class _HomePageState extends State<HomePage> {
   late DatabaseProfile databaseProfile;
   late DatabaseNote databaseNote;
 
+  late Offset locationClick;
   String? uidCurrent;
   SaveUid saveUid = SaveUid();
   ProfileUser profileUser = ProfileUser();
@@ -72,10 +74,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future refreshData() async {
-    setState(() {
-      parsingData();
-      parsingProfile();
-    });
+    await parsingData();
+    await parsingProfile();
+    setState(() {});
   }
 
   @override
@@ -165,6 +166,12 @@ class _HomePageState extends State<HomePage> {
                   onTap: () async {
                     Navigator.pushNamed(context, '/ViewNote',
                         arguments: notemodelList[index]);
+                  },
+                  onTapDown: (details) =>
+                      locationClick = details.globalPosition,
+                  onLongPress: () {
+                    debugPrint('its long press');
+                    showMenuNote(locationClick, notemodelList[index]);
                   },
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -258,6 +265,35 @@ class _HomePageState extends State<HomePage> {
                 noteModel: noteModel,
               ),
             ));
+  }
+
+  void showMenuNote(Offset locationMe, NoteModel noteModel) {
+    final RenderObject? overlay =
+        Overlay.of(context).context.findRenderObject();
+
+    showMenu(
+      color: Theme.of(context).popupMenuTheme.color,
+      shape: BeveledRectangleBorder(borderRadius: BorderRadius.circular(5)),
+      context: context,
+      position: RelativeRect.fromRect(locationClick & const Size(40, 40),
+          Offset.zero & overlay!.semanticBounds.size),
+      items: [
+        PopupMenuItem(
+          onTap: () =>
+              Navigator.pushNamed(context, '/ViewNote', arguments: noteModel),
+          height: 50,
+          child: Text('Edit', style: Theme.of(context).textTheme.titleSmall),
+        ),
+        PopupMenuItem(
+          onTap: () {
+            databaseNote.removeData(noteModel.keyData);
+            refreshData();
+          },
+          height: 50,
+          child: Text('Delete', style: Theme.of(context).textTheme.titleSmall),
+        ),
+      ],
+    );
   }
 }
 

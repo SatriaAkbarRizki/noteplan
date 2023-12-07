@@ -30,10 +30,12 @@ class MyTheme {
         background: Color(0xffE19898),
       ),
       primaryColorDark: const Color(0xffC7EBB3),
-      canvasColor: Color.fromARGB(255, 233, 204, 204),
-      indicatorColor: Color(0xffE19898),
-      progressIndicatorTheme: ProgressIndicatorThemeData(
-          color: Color(0xffE19898), refreshBackgroundColor: Color(0xffF8F0E5)));
+      canvasColor: const Color.fromARGB(255, 233, 204, 204),
+      indicatorColor: const Color(0xffE19898),
+      progressIndicatorTheme: const ProgressIndicatorThemeData(
+          color: Color(0xffE19898), refreshBackgroundColor: Color(0xffF8F0E5)),
+      popupMenuTheme:
+          PopupMenuThemeData(color: const Color(0xffF8F0E5), elevation: 0));
 
   get darkTheme => ThemeData(
       brightness: Brightness.dark,
@@ -63,10 +65,12 @@ class MyTheme {
       colorScheme: const ColorScheme.dark(background: Color(0xffC7EBB3)),
       primaryColorDark: const Color(0xffE19898),
       buttonTheme: const ButtonThemeData(),
-      cardColor: Color.fromARGB(255, 177, 174, 184),
+      cardColor: const Color.fromARGB(255, 177, 174, 184),
       canvasColor: Colors.grey,
-      progressIndicatorTheme: ProgressIndicatorThemeData(
-          color: Color(0xffC7EBB3), refreshBackgroundColor: Colors.black));
+      progressIndicatorTheme: const ProgressIndicatorThemeData(
+          color: Color(0xffC7EBB3), refreshBackgroundColor: Colors.black),
+      popupMenuTheme:
+          PopupMenuThemeData(color: Color(0xffC7EBB3), elevation: 0));
 
   get signTheme => ThemeData(
       textTheme: const TextTheme(

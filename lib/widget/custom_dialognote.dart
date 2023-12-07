@@ -6,7 +6,7 @@ class CustomDialogNote extends StatelessWidget {
 
   final double padding = 20, avatarRadius = 45;
   CustomDialogNote({required this.noteModel, super.key});
-
+  
   @override
   Widget build(BuildContext context) {
     return Dialog(

@@ -47,6 +47,14 @@ class DatabaseNote {
     return FirebaseDatabase.instance.ref().update(update);
   }
 
+  Future removeData(String key) async {
+    final reference = await FirebaseDatabase.instance
+        .ref()
+        .child('Users/UID/${MainState.currentUid.toString()}/Note/${key}');
+
+    return reference.remove();
+  }
+
   Map sortingData(Map data) {
     var sortedMap = Map.fromEntries(
         data.entries.toList()..sort((e1, e2) => e2.key.compareTo(e1.key)));
