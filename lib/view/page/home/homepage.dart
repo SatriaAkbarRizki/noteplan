@@ -53,6 +53,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future parsingData() async {
+    _listnote.clear();
+    toListNote?.clear();
     await databaseNote.readData().then((value) async {
       _listnote = value!.toSet();
       return _listnote;
@@ -121,7 +123,7 @@ class _HomePageState extends State<HomePage> {
                 } else {
                   if (snapshot.hasData) {
                     // return listNotes(toListNote, context);
-                    return listNotes(snapshot.data, context);
+                    return listNotes(toListNote, context);
                   } else {
                     return const Expanded(child: EmptyNote());
                   }
@@ -147,109 +149,119 @@ class _HomePageState extends State<HomePage> {
           scrollDirection: Axis.vertical,
           itemCount: notemodelList!.length,
           itemBuilder: (context, index) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(left: 30, top: 25),
-                  child: GestureDetector(
-                    onTap: () {
-                      showAlertDialog(notemodelList[index]);
-                    },
-                    child: Text(
-                      notemodelList[index].date,
-                      style: Theme.of(context).textTheme.displaySmall,
+            return Animate(
+              effects: [
+                FadeEffect(duration: 500.ms, delay: 200.ms),
+              ],
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(left: 30, top: 25),
+                    child: GestureDetector(
+                      onTap: () {
+                        showAlertDialog(notemodelList[index]);
+                      },
+                      child: Text(
+                        notemodelList[index].date,
+                        style: Theme.of(context).textTheme.displaySmall,
+                      ),
                     ),
                   ),
-                ),
-                GestureDetector(
-                  onTap: () async {
-                    Navigator.pushNamed(context, '/ViewNote',
-                        arguments: notemodelList[index]);
-                  },
-                  onTapDown: (details) =>
-                      locationClick = details.globalPosition,
-                  onLongPress: () {
-                    debugPrint('its long press');
-                    showMenuNote(locationClick, notemodelList[index]);
-                  },
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.only(left: 30, right: 10, top: 20),
-                        child: SizedBox(
-                          height: 150,
-                          width: 2,
-                          child: VerticalDivider(
-                            thickness: 6,
-                            color: Color(0xffD8D9DA),
+                  GestureDetector(
+                    onTap: () async {
+                      Navigator.pushNamed(context, '/ViewNote',
+                          arguments: notemodelList[index]);
+                    },
+                    onTapDown: (details) =>
+                        locationClick = details.globalPosition,
+                    onLongPress: () {
+                      debugPrint('its long press');
+                      showMenuNote(locationClick, notemodelList[index]);
+                    },
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Padding(
+                          padding:
+                              EdgeInsets.only(left: 30, right: 10, top: 20),
+                          child: SizedBox(
+                            height: 150,
+                            width: 2,
+                            child: VerticalDivider(
+                              thickness: 6,
+                              color: Color(0xffD8D9DA),
+                            ),
                           ),
                         ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: FittedBox(
-                            fit: BoxFit.fitHeight,
-                            child: Container(
-                              width: 300,
-                              constraints: const BoxConstraints(minHeight: 150),
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.background,
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(20),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      notemodelList[index].title,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleSmall,
-                                    ),
-                                    Text(
-                                      notemodelList[index].description,
-                                      maxLines: 2,
-                                      style:
-                                          Theme.of(context).textTheme.bodySmall,
-                                    ),
-                                    const SizedBox(
-                                      height: 15,
-                                    ),
-                                    Visibility(
-                                        visible:
-                                            notemodelList[index].image == null
-                                                ? false
-                                                : true,
-                                        child: Container(
-                                          height: 200,
-                                          width: 300,
-                                          decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                                image: NetworkImage(
-                                                  notemodelList[index]
-                                                      .image
-                                                      .toString(),
-                                                ),
-                                                fit: BoxFit.cover),
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                          ),
-                                        )),
-                                  ],
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: FittedBox(
+                              fit: BoxFit.fitHeight,
+                              child: Container(
+                                width: 300,
+                                constraints:
+                                    const BoxConstraints(minHeight: 150),
+                                decoration: BoxDecoration(
+                                  color:
+                                      Theme.of(context).colorScheme.background,
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(20),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        notemodelList[index].title,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleSmall,
+                                      ),
+                                      Text(
+                                        notemodelList[index].description,
+                                        maxLines: 2,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall,
+                                      ),
+                                      const SizedBox(
+                                        height: 15,
+                                      ),
+                                      Visibility(
+                                          visible:
+                                              notemodelList[index].image == null
+                                                  ? false
+                                                  : true,
+                                          child: Container(
+                                            height: 200,
+                                            width: 300,
+                                            decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                  image: NetworkImage(
+                                                    notemodelList[index]
+                                                        .image
+                                                        .toString(),
+                                                  ),
+                                                  fit: BoxFit.cover),
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                            ),
+                                          )),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             );
           },
         ),
