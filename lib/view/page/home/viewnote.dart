@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
@@ -179,14 +180,17 @@ class _ViewNoteState extends State<ViewNote> {
                 ),
                 Visibility(
                     visible: _imageName == null ? false : true,
-                    child: Container(
-                      width: 200,
-                      height: 200,
-                      decoration: BoxDecoration(
-                          border: Border.all(style: BorderStyle.solid),
-                          borderRadius: BorderRadius.circular(5)),
-                      child: Image.file(File(_imageName?.path ?? ''),
-                          fit: BoxFit.cover),
+                    child: Animate(
+                      effects: [FadeEffect(duration: 500.ms, delay: 100.ms)],
+                      child: Container(
+                        width: 200,
+                        height: 200,
+                        decoration: BoxDecoration(
+                            border: Border.all(style: BorderStyle.solid),
+                            borderRadius: BorderRadius.circular(5)),
+                        child: Image.file(File(_imageName?.path ?? ''),
+                            fit: BoxFit.cover),
+                      ),
                     )),
                 Visibility(
                   visible: _imageName != null ? true : false,
