@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:noteplan/color/colors.dart';
@@ -8,6 +9,7 @@ import 'package:noteplan/format/markdowncustom.dart';
 import 'package:noteplan/model/note.dart';
 import 'package:noteplan/presenter/database_note.dart';
 import 'package:noteplan/storage/cloudstorage.dart';
+import 'package:photo_view/photo_view.dart';
 
 class AddNote extends StatefulWidget {
   final String? uid;
@@ -18,7 +20,7 @@ class AddNote extends StatefulWidget {
 }
 
 class _AddNoteState extends State<AddNote> {
-  XFile? _image;
+  XFile? _imageName;
 
   static FocusNode focusTitle = FocusNode();
   static FocusNode focusDesc = FocusNode();
@@ -97,7 +99,7 @@ class _AddNoteState extends State<AddNote> {
                 ActionNote(
                   uid: uid,
                   title: titleController.text,
-                  imagePath: _image,
+                  imagePath: _imageName,
                   description: textController.text,
                 )
               ],
@@ -141,18 +143,36 @@ class _AddNoteState extends State<AddNote> {
                   height: 15,
                 ),
                 Visibility(
-                    visible: _image == null ? false : true,
-                    child: Container(
-                      width: 200,
-                      height: 200,
-                      decoration: BoxDecoration(
-                          border: Border.all(style: BorderStyle.solid),
-                          borderRadius: BorderRadius.circular(5)),
-                      child: Image.file(File(_image?.path ?? ''),
-                          fit: BoxFit.cover),
+                    visible: _imageName == null ? false : true,
+                    child: Animate(
+                      effects: [FadeEffect(duration: 500.ms, delay: 100.ms)],
+                      child: GestureDetector(
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Scaffold(
+                              body: Center(
+                                child: PhotoView(
+                                  imageProvider:
+                                      FileImage(File(_imageName?.path ?? '')),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        child: Container(
+                          width: 200,
+                          height: 200,
+                          decoration: BoxDecoration(
+                              border: Border.all(style: BorderStyle.solid),
+                              borderRadius: BorderRadius.circular(5)),
+                          child: Image.file(File(_imageName?.path ?? ''),
+                              fit: BoxFit.cover),
+                        ),
+                      ),
                     )),
                 Visibility(
-                  visible: _image != null ? true : false,
+                  visible: _imageName != null ? true : false,
                   child: const SizedBox(
                     height: 15,
                   ),
@@ -216,8 +236,8 @@ class _AddNoteState extends State<AddNote> {
               ),
               GestureDetector(
                 onTap: () async {
-                  _image = await getImage();
-                  debugPrint('Source Image : ${_image!.path}');
+                  _imageName = await getImage();
+                  debugPrint('Source Image : ${_imageName!.path}');
                   setState(() {});
                 },
                 child: Image.asset(

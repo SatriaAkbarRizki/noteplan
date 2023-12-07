@@ -294,7 +294,13 @@ class _HomePageState extends State<HomePage> {
           onTap: () =>
               Navigator.pushNamed(context, '/ViewNote', arguments: noteModel),
           height: 50,
-          child: Text('Edit', style: Theme.of(context).textTheme.titleSmall),
+          child: Row(children: [
+            const Icon(Icons.edit),
+            const SizedBox(
+              width: 10,
+            ),
+            Text('Edit', style: Theme.of(context).textTheme.titleSmall)
+          ]),
         ),
         PopupMenuItem(
           onTap: () {
@@ -302,7 +308,15 @@ class _HomePageState extends State<HomePage> {
             refreshData();
           },
           height: 50,
-          child: Text('Delete', style: Theme.of(context).textTheme.titleSmall),
+          child: Row(
+            children: [
+              const Icon(Icons.remove_circle),
+              const SizedBox(
+                width: 10,
+              ),
+              Text('Delete', style: Theme.of(context).textTheme.titleSmall)
+            ],
+          ),
         ),
       ],
     );

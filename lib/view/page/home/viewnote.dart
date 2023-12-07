@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:noteplan/color/colors.dart';
@@ -13,8 +14,8 @@ import 'package:noteplan/presenter/database_note.dart';
 import 'package:noteplan/storage/cloudstorage.dart';
 
 class ViewNote extends StatefulWidget {
-  List<NoteModel>? currentNote;
-  ViewNote({required this.currentNote, super.key});
+  final List<NoteModel>? currentNote;
+  const ViewNote({required this.currentNote, super.key});
 
   @override
   State<ViewNote> createState() => _ViewNoteState();
@@ -182,14 +183,32 @@ class _ViewNoteState extends State<ViewNote> {
                     visible: _imageName == null ? false : true,
                     child: Animate(
                       effects: [FadeEffect(duration: 500.ms, delay: 100.ms)],
-                      child: Container(
-                        width: 200,
-                        height: 200,
-                        decoration: BoxDecoration(
-                            border: Border.all(style: BorderStyle.solid),
-                            borderRadius: BorderRadius.circular(5)),
-                        child: Image.file(File(_imageName?.path ?? ''),
-                            fit: BoxFit.cover),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Scaffold(
+                                body: Center(
+                                  child: PhotoView(
+                                    imageProvider:
+                                        FileImage(File(_imageName?.path ?? '')),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                          ;
+                        },
+                        child: Container(
+                          width: 200,
+                          height: 200,
+                          decoration: BoxDecoration(
+                              border: Border.all(style: BorderStyle.solid),
+                              borderRadius: BorderRadius.circular(5)),
+                          child: Image.file(File(_imageName?.path ?? ''),
+                              fit: BoxFit.cover),
+                        ),
                       ),
                     )),
                 Visibility(
