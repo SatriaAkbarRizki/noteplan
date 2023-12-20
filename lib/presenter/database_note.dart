@@ -36,6 +36,8 @@ class DatabaseNote {
       NoteModel noteModel = NoteModel.fromMap(key, value);
       notemodelList?.add(noteModel);
     });
+
+    await Future.delayed(Duration(milliseconds: 500));
     return notemodelList;
   }
 

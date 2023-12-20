@@ -7,6 +7,9 @@ import 'package:noteplan/local/modeUser.dart';
 import 'package:noteplan/local/saveuid.dart';
 import 'package:noteplan/view/page/home/addnote.dart';
 import 'package:noteplan/view/page/home/homepage.dart';
+import 'package:noteplan/view/page/home/plan/addplan.dart';
+import 'package:noteplan/view/page/home/plan/editplan.dart';
+import 'package:noteplan/view/page/home/plan/homeplan.dart';
 import 'package:noteplan/view/page/home/viewnote.dart';
 import 'package:noteplan/view/page/login/reset_password.dart';
 import 'package:noteplan/view/page/login/sign_in.dart';
@@ -68,6 +71,13 @@ class MainState extends State<MainApp> {
           '/AddNote': (context) => AddNote(uid: null),
           '/ViewNote': (context) => ViewNote(
                 currentNote: const [],
+              ),
+          '/PlanHome': (context) => HomePlan(),
+          '/AddPlan': (context) => AddPlan(),
+          '/EditPlan': (context) => EditPlan(
+                keyUser: null,
+                title: null,
+                subListUser: null,
               )
         },
         debugShowCheckedModeBanner: false,

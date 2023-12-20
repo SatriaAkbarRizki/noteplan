@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:noteplan/auth/authemail.dart';
 import 'package:noteplan/auth/authgoogle.dart';
@@ -11,6 +10,7 @@ import 'package:noteplan/presenter/database_profile.dart';
 import 'package:noteplan/local/saveuid.dart';
 import 'package:noteplan/responsive/myresponsive.dart';
 import 'package:noteplan/user/profile_user.dart';
+import 'package:noteplan/view/page/home/plan/homeplan.dart';
 import 'package:noteplan/widget/custom_dialog.dart';
 import 'package:noteplan/widget/custom_dialognote.dart';
 
@@ -26,7 +26,9 @@ class _HomePageState extends State<HomePage> {
   AuthGoogle authGoogle = AuthGoogle();
   AuthEmail authEmail = AuthEmail();
 
+  int indexNavBar = 0;
   var _listnote = <NoteModel>{};
+  late PageController _pageController = PageController();
   late DatabaseProfile databaseProfile;
   late DatabaseNote databaseNote;
 
@@ -40,6 +42,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    _pageController = PageController(initialPage: 0, keepPage: true);
+
     databaseNote = DatabaseNote(uid: MainState.currentUid.toString());
     databaseProfile = DatabaseProfile(uid: MainState.currentUid.toString());
     signInCheck();
@@ -81,6 +85,18 @@ class _HomePageState extends State<HomePage> {
     setState(() {});
   }
 
+  void changeIndexBar(int index) {
+    setState(() {
+      indexNavBar = index;
+    });
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     debugPrint('Uid on Home: ${MainState.currentUid}');
@@ -88,8 +104,13 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       floatingActionButton: GestureDetector(
         onTap: () {
-          Navigator.pushNamed(context, '/AddNote',
-              arguments: MainState.currentUid);
+          if (indexNavBar == 0) {
+            Navigator.pushNamed(context, '/AddNote',
+                arguments: MainState.currentUid);
+          } else {
+            Navigator.pushNamed(context, '/AddPlan',
+                arguments: MainState.currentUid);
+          }
         },
         child: Container(
           height: 60,
@@ -104,34 +125,59 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      body: RefreshIndicator(
-        edgeOffset: 80,
-        color: Theme.of(context).progressIndicatorTheme.color,
-        backgroundColor:
-            Theme.of(context).progressIndicatorTheme.refreshBackgroundColor,
-        onRefresh: refreshData,
-        child: Column(
-          children: [
-            TittleBar(listProfile: _profile?[0]),
-            FutureBuilder<List<NoteModel>?>(
-              future: databaseNote.readData(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Expanded(
-                    child: Center(child: LoadingNote()),
-                  );
-                } else {
-                  if (snapshot.hasData) {
-                    // return listNotes(toListNote, context);
-                    return listNotes(toListNote, context);
-                  } else {
-                    return const Expanded(child: EmptyNote());
-                  }
-                }
-              },
-            )
-          ],
-        ),
+      body: PageView(
+
+        physics: NeverScrollableScrollPhysics(),
+        controller: _pageController,
+        children: [
+          RefreshIndicator(
+            edgeOffset: 80,
+            color: Theme.of(context).progressIndicatorTheme.color,
+            backgroundColor:
+                Theme.of(context).progressIndicatorTheme.refreshBackgroundColor,
+            onRefresh: refreshData,
+            child: Column(
+              children: [
+                TittleBar(listProfile: _profile?[0]),
+                FutureBuilder<List<NoteModel>?>(
+                  future: databaseNote.readData(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Expanded(
+                        child: Center(child: LoadingNote()),
+                      );
+                    } else {
+                      if (snapshot.hasData) {
+                        return listNotes(toListNote, context);
+                      } else {
+                        return const Expanded(child: EmptyNote());
+                      }
+                    }
+                  },
+                )
+              ],
+            ),
+          ),
+          HomePlan()
+        ],
+        onPageChanged: (index) => setState(() {
+          changeIndexBar(index);
+        }),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(
+            label: 'Note',
+            icon: Icon(Icons.note_alt),
+          ),
+          BottomNavigationBarItem(label: 'Plan', icon: Icon(Icons.list))
+        ],
+        fixedColor: ColorEffect.neutralValue,
+        currentIndex: indexNavBar,
+        onTap: (index) {
+          _pageController.jumpToPage(index);
+          changeIndexBar(index);
+        },
       ),
     );
   }
