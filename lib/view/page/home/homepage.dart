@@ -60,11 +60,14 @@ class _HomePageState extends State<HomePage> {
     _listnote.clear();
     toListNote?.clear();
     await databaseNote.readData().then((value) async {
-      _listnote = value!.toSet();
-      return _listnote;
-    }).then((value) => toListNote = value.toList());
-
-    setState(() {});
+      if (value != null) {
+        _listnote = value.toSet();
+        return _listnote;
+      } else {
+        return null;
+      }
+    }).then((value) => toListNote = value?.toList());
+    return toListNote;
   }
 
   Future parsingProfile() async {
@@ -126,8 +129,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       body: PageView(
-
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         controller: _pageController,
         children: [
           RefreshIndicator(
@@ -139,18 +141,16 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               children: [
                 TittleBar(listProfile: _profile?[0]),
-                FutureBuilder<List<NoteModel>?>(
-                  future: databaseNote.readData(),
+                FutureBuilder(
+                  future: parsingData(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Expanded(
-                        child: Center(child: LoadingNote()),
-                      );
+                      return const LoadingNote();
                     } else {
                       if (snapshot.hasData) {
-                        return listNotes(toListNote, context);
+                        return Flexible(child: listNotes(toListNote));
                       } else {
-                        return const Expanded(child: EmptyNote());
+                        return const EmptyNote();
                       }
                     }
                   },
@@ -158,7 +158,7 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
-          HomePlan()
+          const HomePlan()
         ],
         onPageChanged: (index) => setState(() {
           changeIndexBar(index);
@@ -182,135 +182,128 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget listNotes(List<NoteModel>? notemodelList, BuildContext context) {
-    return Expanded(
-      child: NotificationListener<OverscrollIndicatorNotification>(
-        onNotification: (overScroll) {
-          overScroll.disallowIndicator();
-          return true;
-        },
-        child: ListView.builder(
-          physics: const AlwaysScrollableScrollPhysics(),
-          shrinkWrap: true,
-          scrollDirection: Axis.vertical,
-          itemCount: notemodelList!.length,
-          itemBuilder: (context, index) {
-            return Animate(
-              effects: [
-                FadeEffect(duration: 500.ms, delay: 200.ms),
-              ],
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(left: 30, top: 25),
-                    child: GestureDetector(
-                      onTap: () {
-                        showAlertDialog(notemodelList[index]);
-                      },
-                      child: Text(
-                        notemodelList[index].date,
-                        style: Theme.of(context).textTheme.displaySmall,
-                      ),
+  Widget listNotes(List<NoteModel>? notemodelList) {
+    return NotificationListener<OverscrollIndicatorNotification>(
+      onNotification: (overScroll) {
+        overScroll.disallowIndicator();
+        return true;
+      },
+      child: ListView.builder(
+        physics: const AlwaysScrollableScrollPhysics(),
+        shrinkWrap: true,
+        scrollDirection: Axis.vertical,
+        itemCount: notemodelList!.length,
+        itemBuilder: (context, index) {
+          return Animate(
+            effects: [
+              FadeEffect(duration: 500.ms, delay: 200.ms),
+            ],
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(left: 30, top: 25),
+                  child: GestureDetector(
+                    onTap: () {
+                      showAlertDialog(notemodelList[index]);
+                    },
+                    child: Text(
+                      notemodelList[index].date,
+                      style: Theme.of(context).textTheme.displaySmall,
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () async {
-                      Navigator.pushNamed(context, '/ViewNote',
-                          arguments: notemodelList[index]);
-                    },
-                    onTapDown: (details) =>
-                        locationClick = details.globalPosition,
-                    onLongPress: () {
-                      debugPrint('its long press');
-                      showMenuNote(locationClick, notemodelList[index]);
-                    },
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Padding(
-                          padding:
-                              EdgeInsets.only(left: 30, right: 10, top: 20),
-                          child: SizedBox(
-                            height: 150,
-                            width: 2,
-                            child: VerticalDivider(
-                              thickness: 6,
-                              color: Color(0xffD8D9DA),
-                            ),
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    Navigator.pushNamed(context, '/ViewNote',
+                        arguments: notemodelList[index]);
+                  },
+                  onTapDown: (details) =>
+                      locationClick = details.globalPosition,
+                  onLongPress: () {
+                    debugPrint('its long press');
+                    showMenuNote(locationClick, notemodelList[index]);
+                  },
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(left: 30, right: 10, top: 20),
+                        child: SizedBox(
+                          height: 150,
+                          width: 2,
+                          child: VerticalDivider(
+                            thickness: 6,
+                            color: Color(0xffD8D9DA),
                           ),
                         ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.all(20),
-                            child: FittedBox(
-                              fit: BoxFit.fitHeight,
-                              child: Container(
-                                width: 300,
-                                constraints:
-                                    const BoxConstraints(minHeight: 150),
-                                decoration: BoxDecoration(
-                                  color:
-                                      Theme.of(context).colorScheme.background,
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(20),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        notemodelList[index].title,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleSmall,
-                                      ),
-                                      Text(
-                                        notemodelList[index].description,
-                                        maxLines: 2,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall,
-                                      ),
-                                      const SizedBox(
-                                        height: 15,
-                                      ),
-                                      Visibility(
-                                          visible:
-                                              notemodelList[index].image == null
-                                                  ? false
-                                                  : true,
-                                          child: Container(
-                                            height: 200,
-                                            width: 300,
-                                            decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                  image: NetworkImage(
-                                                    notemodelList[index]
-                                                        .image
-                                                        .toString(),
-                                                  ),
-                                                  fit: BoxFit.cover),
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
-                                            ),
-                                          )),
-                                    ],
-                                  ),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: FittedBox(
+                            fit: BoxFit.fitHeight,
+                            child: Container(
+                              width: 300,
+                              constraints: const BoxConstraints(minHeight: 150),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.background,
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(20),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      notemodelList[index].title,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleSmall,
+                                    ),
+                                    Text(
+                                      notemodelList[index].description,
+                                      maxLines: 2,
+                                      style:
+                                          Theme.of(context).textTheme.bodySmall,
+                                    ),
+                                    const SizedBox(
+                                      height: 15,
+                                    ),
+                                    Visibility(
+                                        visible:
+                                            notemodelList[index].image == null
+                                                ? false
+                                                : true,
+                                        child: Container(
+                                          height: 200,
+                                          width: 300,
+                                          decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                                image: NetworkImage(
+                                                  notemodelList[index]
+                                                      .image
+                                                      .toString(),
+                                                ),
+                                                fit: BoxFit.cover),
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                          ),
+                                        )),
+                                  ],
                                 ),
                               ),
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            );
-          },
-        ),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
@@ -330,6 +323,7 @@ class _HomePageState extends State<HomePage> {
         Overlay.of(context).context.findRenderObject();
 
     showMenu(
+      elevation: 20,
       color: Theme.of(context).popupMenuTheme.color,
       shape: BeveledRectangleBorder(borderRadius: BorderRadius.circular(5)),
       context: context,
@@ -341,7 +335,13 @@ class _HomePageState extends State<HomePage> {
               Navigator.pushNamed(context, '/ViewNote', arguments: noteModel),
           height: 50,
           child: Row(children: [
-            const Icon(Icons.edit),
+            const Padding(
+              padding: EdgeInsets.only(top: 10),
+              child: Icon(
+                Icons.edit,
+                color: Colors.black,
+              ),
+            ),
             const SizedBox(
               width: 10,
             ),
@@ -356,7 +356,13 @@ class _HomePageState extends State<HomePage> {
           height: 50,
           child: Row(
             children: [
-              const Icon(Icons.remove_circle),
+              const Padding(
+                padding: EdgeInsets.only(top: 10),
+                child: Icon(
+                  Icons.remove_circle,
+                  color: Colors.black,
+                ),
+              ),
               const SizedBox(
                 width: 10,
               ),
@@ -438,43 +444,53 @@ class EmptyNote extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 40, right: 40, top: 150),
-              child: Image.asset("assets/images/thinking.png"),
-            ),
-            Positioned(
-                left: 230,
-                bottom: 240,
-                child: Image.asset(
-                  "assets/images/idea.png",
-                  height: 100,
-                )),
-          ],
-        ),
-        Container(
-            margin: const EdgeInsets.only(top: 30),
-            child: RichText(
-                text: const TextSpan(
-                    text: "Notes is Empty, let's ",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'poppins',
-                        fontWeight: FontWeight.w200,
-                        fontSize: 18),
-                    children: [
-                  TextSpan(
-                      text: "Create",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontFamily: 'poppins',
-                          fontWeight: FontWeight.w600,
-                          fontSize: 18))
-                ])))
+    return Animate(
+      effects: [
+        FadeEffect(duration: 500.ms, delay: 200.ms),
       ],
+      child: Column(
+        children: [
+          Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 40, right: 40, top: 150),
+                child: Image.asset("assets/images/thinking.png"),
+              ),
+              Positioned(
+                  left: 230,
+                  bottom: 240,
+                  child: Image.asset(
+                    "assets/images/idea.png",
+                    height: 100,
+                  )),
+            ],
+          ),
+          Container(
+              margin: const EdgeInsets.only(top: 30),
+              child: RichText(
+                  text: TextSpan(
+                      text: "Notes is Empty, let's ",
+                      style: TextStyle(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
+                          fontFamily: 'poppins',
+                          fontWeight: FontWeight.w200,
+                          fontSize: 18),
+                      children: [
+                    TextSpan(
+                        text: "Create",
+                        style: TextStyle(
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
+                            fontFamily: 'poppins',
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18))
+                  ])))
+        ],
+      ),
     );
   }
 }

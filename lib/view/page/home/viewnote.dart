@@ -90,7 +90,7 @@ class _ViewNoteState extends State<ViewNote> {
     if (current.title.isNotEmpty) {
       titleController.text = current.title;
       textController.text = current.description;
-      keyData = current?.keyData;
+      keyData = current.keyData;
       oldImageLink = current.image;
       if (current.image != null) {
         // Donwload image url

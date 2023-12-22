@@ -28,16 +28,21 @@ class DatabaseNote {
         .orderByChild('date')
         .once();
 
-    Map data = reference.snapshot.value as Map<dynamic, dynamic>;
+    var data = reference.snapshot.value as Map?;
 
-    data = sortingData(data);
+    if (data != null) {
+      data = sortingData(data);
 
-    data.forEach((key, value) {
-      NoteModel noteModel = NoteModel.fromMap(key, value);
-      notemodelList?.add(noteModel);
-    });
+      data.forEach((key, value) {
+        NoteModel noteModel = NoteModel.fromMap(key, value);
+        notemodelList?.add(noteModel);
+      });
+    } else {
+      await Future.delayed(const Duration(milliseconds: 500));
+      return null;
+    }
 
-    await Future.delayed(Duration(milliseconds: 500));
+    await Future.delayed(const Duration(milliseconds: 500));
     return notemodelList;
   }
 

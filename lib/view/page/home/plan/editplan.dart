@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:noteplan/main.dart';
@@ -55,6 +57,14 @@ class _EditPlanState extends State<EditPlan> {
     controllers[index] = updatePlan;
   }
 
+  void removevPlanItem(int index) {
+    listPlan.removeAt(index);
+  }
+
+  void removeValueController(int index) {
+    controllers.removeAt(index);
+  }
+
   void toMapPlan(String title, List<String?> listPlan) {
     if (valuePlan.length > 0) {
       valuePlan.remove(valuePlan.keys.first);
@@ -100,7 +110,7 @@ class _EditPlanState extends State<EditPlan> {
               children: [
                 writeNotes(),
                 ActionPlan(
-                  keyPlan: keyPlan!,
+                  keyPlan: keyPlan,
                   listPlanUser: valuePlan,
                 )
               ],
@@ -115,7 +125,7 @@ class _EditPlanState extends State<EditPlan> {
     return Column(
       children: [
         Container(
-          height: 550,
+          height: 600,
           margin: const EdgeInsets.only(top: 30),
           decoration: BoxDecoration(
               border: Border.all(
@@ -154,27 +164,42 @@ class _EditPlanState extends State<EditPlan> {
                   child: ListView.builder(
                     itemCount: listPlan.length,
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) => ListTile(
-                        contentPadding: EdgeInsets.only(left: 5, right: 5),
-                        title: TextField(
-                            controller: controllers[index],
-                            onChanged: (value) => updatePlanItem(index, value),
-                            style: Theme.of(context).textTheme.bodyMedium,
-                            decoration: const InputDecoration.collapsed(
-                              hintText: "Write plan..",
-                              hintStyle: TextStyle(fontSize: 18),
-                            )),
-                        trailing: IconButton(
-                          icon: new Icon(Icons.add),
-                          color: Colors.black26,
-                          onPressed: () {
-                            setState(() {
-                              addPlanItem(controllers[index]?.text);
-                              addValueController(controllers[index]?.text);
-                            });
-                          },
-                        )),
+                      contentPadding: const EdgeInsets.only(right: 5),
+                      leading: IconButton(
+                        icon: const Icon(Icons.add),
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? const Color.fromARGB(255, 166, 161, 179)
+                            : Colors.black,
+                        onPressed: () {
+                          setState(() {
+                            addPlanItem(controllers[index]?.text);
+                            addValueController(controllers[index]?.text);
+                          });
+                        },
+                      ),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete),
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? const Color.fromARGB(255, 166, 161, 179)
+                            : Colors.black,
+                        onPressed: () {
+                          setState(() {
+                            removevPlanItem(index);
+                            removeValueController(index);
+                          });
+                        },
+                      ),
+                      title: TextField(
+                          controller: controllers[index],
+                          onChanged: (value) => updatePlanItem(index, value),
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          decoration: const InputDecoration.collapsed(
+                            hintText: "Write plan..",
+                            hintStyle: TextStyle(fontSize: 18),
+                          )),
+                    ),
                   ),
                 ),
               ],
@@ -184,69 +209,24 @@ class _EditPlanState extends State<EditPlan> {
         const SizedBox(
           height: 20,
         ),
-        Container(
-          height: 50,
-          decoration: BoxDecoration(
-              color: Colors.black, borderRadius: BorderRadius.circular(10)),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              GestureDetector(
-                onTap: () {},
-                child: Image.asset(
-                  "assets/icons/bold.png",
-                  color: Colors.white,
-                  scale: 5,
-                ),
-              ),
-              const SizedBox(
-                width: 20,
-              ),
-              GestureDetector(
-                onTap: () {},
-                child: Image.asset(
-                  "assets/icons/italic.png",
-                  color: Colors.white,
-                  scale: 2.5,
-                ),
-              ),
-              const SizedBox(
-                width: 20,
-              ),
-              GestureDetector(
-                onTap: () async {
-                  showListPlan();
-                },
-                child: Image.asset(
-                  "assets/icons/image.png",
-                  color: Colors.white,
-                  scale: 2.5,
-                ),
-              )
-            ],
-          ),
-        ),
-        const SizedBox(
-          height: 20,
-        ),
       ],
     );
   }
 
-  void showListPlan() {
-    // listPlan.forEach((element) {
-    //   print('list on item: ${element}');
-    // });
+  // void showListPlan() {
+  //   // listPlan.forEach((element) {
+  //   //   print('list on item: ${element}');
+  //   // });
 
-    // controllers.forEach((element) {
-    //   print('list on controllers: ${element?.text}');
-    // });
+  //   // controllers.forEach((element) {
+  //   //   print('list on controllers: ${element?.text}');
+  //   // });
 
-    valuePlan.forEach((key, value) {
-      print('key: ${key} and value: ${value}');
-    });
-    print(valuePlan.length);
-  }
+  //   valuePlan.forEach((key, value) {
+  //     print('key: ${key} and value: ${value}');
+  //   });
+  //   print(valuePlan.length);
+  // }
 }
 
 class ActionPlan extends StatelessWidget {
@@ -290,13 +270,10 @@ class ActionPlan extends StatelessWidget {
           width: 160,
           child: ElevatedButton(
               onPressed: () async {
-                listPlanUser.forEach((key, value) {
-                  print('key: ${key} && value: ${value}');
-                });
-                Future.delayed(Duration(milliseconds: 500)).whenComplete(
-                    () async => await updateData(keyPlan!, listPlanUser)
-                        .whenComplete(
-                            () => Navigator.pushNamed(context, '/Home')));
+                if (listPlanUser.isNotEmpty) {
+                  await updateData(keyPlan!, listPlanUser).whenComplete(
+                      () => Navigator.pushNamed(context, '/Home'));
+                }
               },
               child: const Text('Save'),
               style: ButtonStyle(
