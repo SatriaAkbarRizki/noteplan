@@ -160,12 +160,7 @@ class _AddNoteState extends State<AddNote> {
                             ),
                           ),
                         ),
-                        child: Container(
-                          width: 200,
-                          height: 200,
-                          decoration: BoxDecoration(
-                              border: Border.all(style: BorderStyle.solid),
-                              borderRadius: BorderRadius.circular(5)),
+                        child: Card(
                           child: Image.file(File(_imageName?.path ?? ''),
                               fit: BoxFit.cover),
                         ),

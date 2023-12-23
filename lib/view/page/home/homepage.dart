@@ -275,19 +275,12 @@ class _HomePageState extends State<HomePage> {
                                             notemodelList[index].image == null
                                                 ? false
                                                 : true,
-                                        child: Container(
-                                          height: 200,
-                                          width: 300,
-                                          decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                                image: NetworkImage(
-                                                  notemodelList[index]
-                                                      .image
-                                                      .toString(),
-                                                ),
-                                                fit: BoxFit.cover),
-                                            borderRadius:
-                                                BorderRadius.circular(15),
+                                        child: Card(
+                                          child: Image.network(
+                                            notemodelList[index]
+                                                .image
+                                                .toString(),
+                                            fit: BoxFit.contain,
                                           ),
                                         )),
                                   ],
